@@ -1072,6 +1072,10 @@ namespace HDS_ID_Marker
                 while (isReady)
                 {
                     DateTime startTactTime = DateTime.Now;
+                    TactLog.BeginCycle();
+                    long tTact = TactLog.Now;
+                    bool tactChecked = false;
+                    int tactStripID = ptrMain.model.stripID;
 
                     //0. 마킹쉬프트 결과 초기화 
                     Array.Clear(ptrMain.laserManagement.markShift,0,ptrMain.laserManagement.markShift.Length);
@@ -1080,10 +1084,14 @@ namespace HDS_ID_Marker
                     Action action = delegate { ptrMain.workInfoViewer.lblStripID.Content = ptrMain.model.stripID; }; ptrMain.Dispatcher.Invoke(action);
 
                     //1. Align 위치로 이동
+                    tTact = TactLog.Now;
                     MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopAlignY);
+                    TactLog.Add("ALIGN_MOVE", tTact);
 
                     //진동
+                    tTact = TactLog.Now;
                     Thread.Sleep(500);
+                    TactLog.Add("VIB_WAIT", tTact);
 
                     //2. 누름롤러 동작
                     //MainWindow.MCS2.RollerDown();
@@ -1091,13 +1099,17 @@ namespace HDS_ID_Marker
                     //3. SearchAlign -> GlobalOffset 적용
                     int ret = 0;
 
+                    tTact = TactLog.Now;
                     if(ptrMain.model.stripID == 2)
                         ret = ptrMain.teachingManagement.MarkingAlignToROI_RightOnly(true, alignLogPath + ptrMain.model.stripID);
                     else
                         ret = ptrMain.teachingManagement.MarkingAlignToROI(true, alignLogPath + ptrMain.model.stripID);
+                    TactLog.Add("ALIGN", tTact);
 
                     //4. 조명 확인, 항상 꺼줌(오토포커스)
+                    tTact = TactLog.Now;
                     ptrMain.PCSInstance.Lights[0].Set3ChLightValue(0, 0, 0);
+                    TactLog.Add("LIGHT_OFF", tTact);
 
                     //오더 완료 판단
                     if (ret < 0)
@@ -1153,6 +1165,7 @@ namespace HDS_ID_Marker
                     }
 
                     //5. AOI 확인
+                    tTact = TactLog.Now;
                     if (ptrMain.model.modelInformation.UseAOIMark)
                     {
                         ptrMain.PCSInstance.Lights[0].SetXChLightValue(3, lightValue[3]);
@@ -1195,7 +1208,11 @@ namespace HDS_ID_Marker
                         }
                     }
 
+                    if (ptrMain.model.modelInformation.UseAOIMark) TactLog.Add("AOI", tTact);
+                    tactStripID = ptrMain.model.stripID;
+
                     //6. Tension 값 변경 (파이 값에 따른 변경)
+                    tTact = TactLog.Now;
                     if (MainWindow.tempTensionVal == 0)
                     {
                         if (Math.Abs(ptrMain.model.stripID - ptrMain.model.fisrtID) > 100)
@@ -1214,6 +1231,7 @@ namespace HDS_ID_Marker
                         Int1_id[i] = GetInternal1IDString(MainWindow.lots[i], ptrMain.model.stripID, ptrMain.model.markingInformation.customerInformation.MarkingLocation);                        
                     } 
                     if (!CheckCustomID_Length(Cust1_id, ptrMain.model.markingInformation.customerInformation.MarkingLength)) { nErrorCode = eErrorCode.MARKING_LENGTH_MISMATCH; break; }
+                    TactLog.Add("TENSION_DATA", tTact);
 
                     // Both Marking
                     if (ptrMain.model.markingInformation.customerInformation.MarkingMethod == 3) //All Marking
@@ -1227,25 +1245,33 @@ namespace HDS_ID_Marker
                         for (int i = 0; i < ptrMain.model.modelInformation.StripIter.Count; i++)
                         {
                             //스트립 간격 만큼  이동 
+                            tTact = TactLog.Now;
                             MainWindow.MCS2.MoveMultiPos(1, 2, pos1 + ptrMain.model.modelInformation.StripIter[i], pos2 + ptrMain.model.modelInformation.StripIter[i]);
+                            TactLog.Add($"C{i + 1}_MOVE_MARK", tTact);
 
                             MainWindow.logger.WriteLog(LogType.Motion, string.Format($"Top Laser Offset Y : {Setting.Device.laserConfigs[0].CamToY}, Bottom Laser Offset Y : {Setting.Device.laserConfigs[1].CamToY}"));
                             MainWindow.logger.WriteLog(LogType.Motion, string.Format($"Top Marking Y : {pos1 + ptrMain.model.modelInformation.StripIter[i]}, Bottom Marking Y : {pos2 + ptrMain.model.modelInformation.StripIter[i]}"));
+                            tTact = TactLog.Now;
                             if (!ptrMain.laserManagement.BothMarking(Cust1_id[i], Cust2_id[i], Int1_id[i], i))
                             {
                                 isMarkingFail = true;
                                 
                             }
+                            TactLog.Add($"C{i + 1}_MARK", tTact);
                             //SaveWorkHistory(Int1_id[0], ptrMain.model.markingInformation.customerInformation.MarkingLocation);
 
+                            tTact = TactLog.Now;
                             if (!WriteITSOneShot(ConvertInternal1ID(Int1_id, ptrMain.model.markingInformation.customerInformation.MarkingLocation)[i], Cust1_id[i], isEnd,i))
                             {
                                 nErrorCode = eErrorCode.ITS_FILE_ACCESS_ERROR;
                                 break;
                             }
+                            TactLog.Add($"C{i + 1}_ITS", tTact);
                         }
 
+                        tTact = TactLog.Now;
                         SaveWorkHistory(Int1_id[0], ptrMain.model.markingInformation.customerInformation.MarkingLocation);
+                        TactLog.Add("SAVE_HISTORY", tTact);
 
                         if (isMarkingFail)
                         {
@@ -1257,10 +1283,15 @@ namespace HDS_ID_Marker
 
                         if (MainWindow.useMarkingCheck)
                         {
+                            tTact = TactLog.Now;
                             ptrMain.PCSInstance.Lights[0].Set3ChLightValue(lightValue[1], lightValue[2], lightValue[3]);
+                            TactLog.Add("LIGHT_ON", tTact);
 
                             if (cntCycle % MainWindow.cntMarkingCheck == 0)
-                                nErrorCode = CheckMarks2(Cust1_id, Cust2_id, ptrMain.model.markingInformation.customerInformation.MarkingMethod, ptrMain.teachingManagement.lastFoundAlignPos);
+                            {
+                                tactChecked = true;
+                                nErrorCode = RunMarkCheck(Cust1_id, Cust2_id, ptrMain.model.markingInformation.customerInformation.MarkingMethod, ptrMain.teachingManagement.lastFoundAlignPos);
+                            }
                             if (nErrorCode == eErrorCode.TOP_MARK_COGNITION_FAIL || nErrorCode == eErrorCode.BOTTOM_MARK_COGNITION_FAIL || nErrorCode == eErrorCode.BOTH_MARK_COGNITION_FAIL || nErrorCode == eErrorCode.TOP_LASER_MARKING_FAIL || nErrorCode == eErrorCode.BOTTOM_LASER_MARKING_FAIL || nErrorCode == eErrorCode.OVERLAP_MARKING)
                                 break;
                         }
@@ -1318,10 +1349,15 @@ namespace HDS_ID_Marker
 
                         if (MainWindow.useMarkingCheck)
                         {
+                            tTact = TactLog.Now;
                             ptrMain.PCSInstance.Lights[0].Set3ChLightValue(lightValue[1], lightValue[2], lightValue[3]);
+                            TactLog.Add("LIGHT_ON", tTact);
 
                             if (cntCycle % MainWindow.cntMarkingCheck == 0)
-                                nErrorCode = CheckMarks2(Cust1_id, Cust2_id, ptrMain.model.markingInformation.customerInformation.MarkingMethod, ptrMain.teachingManagement.lastFoundAlignPos);
+                            {
+                                tactChecked = true;
+                                nErrorCode = RunMarkCheck(Cust1_id, Cust2_id, ptrMain.model.markingInformation.customerInformation.MarkingMethod, ptrMain.teachingManagement.lastFoundAlignPos);
+                            }
                             if (nErrorCode == eErrorCode.TOP_MARK_COGNITION_FAIL || nErrorCode == eErrorCode.BOTTOM_MARK_COGNITION_FAIL || nErrorCode == eErrorCode.BOTH_MARK_COGNITION_FAIL || nErrorCode == eErrorCode.TOP_LASER_MARKING_FAIL || nErrorCode == eErrorCode.BOTTOM_LASER_MARKING_FAIL || nErrorCode == eErrorCode.OVERLAP_MARKING)
                                 break;
                         }
@@ -1375,10 +1411,15 @@ namespace HDS_ID_Marker
 
                         if (ptrMain.model.modelInformation.MarkingCheck)
                         {
+                            tTact = TactLog.Now;
                             ptrMain.PCSInstance.Lights[0].Set3ChLightValue(lightValue[1], lightValue[2], lightValue[3]);
+                            TactLog.Add("LIGHT_ON", tTact);
 
                             if (cntCycle % MainWindow.cntMarkingCheck == 0)
-                                nErrorCode = CheckMarks2(Cust1_id, Cust2_id, ptrMain.model.markingInformation.customerInformation.MarkingMethod, ptrMain.teachingManagement.lastFoundAlignPos);
+                            {
+                                tactChecked = true;
+                                nErrorCode = RunMarkCheck(Cust1_id, Cust2_id, ptrMain.model.markingInformation.customerInformation.MarkingMethod, ptrMain.teachingManagement.lastFoundAlignPos);
+                            }
                             if (nErrorCode == eErrorCode.TOP_MARK_COGNITION_FAIL || nErrorCode == eErrorCode.BOTTOM_MARK_COGNITION_FAIL || nErrorCode == eErrorCode.BOTH_MARK_COGNITION_FAIL || nErrorCode == eErrorCode.TOP_LASER_MARKING_FAIL || nErrorCode == eErrorCode.BOTTOM_LASER_MARKING_FAIL || nErrorCode == eErrorCode.OVERLAP_MARKING)
                                 break;
                         }
@@ -1401,15 +1442,23 @@ namespace HDS_ID_Marker
                     }
 
                     //시작 위치 복귀
+                    tTact = TactLog.Now;
                     MainWindow.MCS2.MoveMultiPos(1, 2, ptrMain.model.markingInformation.TopMarkY, ptrMain.model.markingInformation.BotMarkY);
+                    TactLog.Add("RETURN_MOVE", tTact);
 
                     //누름 롤러 off
+                    tTact = TactLog.Now;
                     MainWindow.MCS2.RollerUp();
+                    TactLog.Add("ROLLER_UP", tTact);
 
                     //피딩 진행
+                    tTact = TactLog.Now;
                     MainWindow.MCS2.GripMoveDistance(ptrMain.model.modelInformation.PanelLength + ptrMain.teachingManagement.alignOffset[0].X);
+                    TactLog.Add("FEED", tTact);
 
+                    tTact = TactLog.Now;
                     MainWindow.MCS2.RollerDown();
+                    TactLog.Add("ROLLER_DOWN", tTact);
 
                     if (MainWindow.IsBindOrder)
                     {
@@ -1487,10 +1536,15 @@ namespace HDS_ID_Marker
                     };
                     ptrMain.Dispatcher.Invoke(action);
 
+                    TactLog.EndCycle(string.Format("strip={0} check={1} decode={2}", tactStripID, tactChecked ? "Y" : "N", Setting.General.ParallelMarkCheck ? "PARALLEL" : "SERIAL"));
+
                     //Marking Check
                     if (cntCycle == 10) cntCycle = 0;
                     cntCycle++;
                 }
+
+                // break 로 빠져나온 사이클의 단계 기록 (정상 종료 사이클은 이미 기록되어 무시됨)
+                TactLog.EndCycle(string.Format("STOP err={0}", nErrorCode));
 
                 //LOT, EOL 기록
                 if (isEnd)
@@ -1511,11 +1565,13 @@ namespace HDS_ID_Marker
             }
             catch (AccessViolationException memoryEx)
             {
+                TactLog.EndCycle("EXCEPTION");
                 logger.WriteLog(LogType.Exception, memoryEx.ToString());
                 Action action = delegate { ExceptionStopMarking(memoryEx.ToString()); }; ptrMain.Dispatcher.Invoke(action);
             }
             catch (Exception ex)
             {
+                TactLog.EndCycle("EXCEPTION");
                 logger.WriteLog(LogType.Exception, ex.ToString());
                 Action action = delegate { ExceptionStopMarking(ex.ToString()); }; ptrMain.Dispatcher.Invoke(action);
             }
@@ -2337,6 +2393,7 @@ namespace HDS_ID_Marker
                     isFailReading1[i] = false;
                     isFailReading2[i] = false;
 
+                    long tTact = TactLog.Now;
                     if (Setting.General.TestMode == "0")
                     {
                         if (type == 1)
@@ -2352,6 +2409,7 @@ namespace HDS_ID_Marker
                             MainWindow.MCS2.MoveMultiPos(1, 2, ptrMain.model.markingInformation.TopMarkY + ptrMain.model.modelInformation.StripIter[i], ptrMain.model.markingInformation.BotMarkY + ptrMain.model.modelInformation.StripIter[i]);
                         }
                     }
+                    TactLog.Add($"C{i + 1}_MOVE_CAM", tTact);
 
                     if (type == 1 || type == 3) // 상부할때
                     {
@@ -2375,11 +2433,15 @@ namespace HDS_ID_Marker
                                 customType = 1;
                             }
                         }
+                        tTact = TactLog.Now;
                         bms = ptrMain.PCSInstance.Visions[0].GetTopMarkBmpToROI(roi);
+                        TactLog.Add($"C{i + 1}_TOP_GRAB", tTact);
                         var roirect = ptrMain.PCSInstance.Visions[0].GetRoiRect();
                         markFormat = ptrMain.workSettingWindow.topHRControl.customMarks[0].format;
                         System.Drawing.Point dummyDataMatrixCenter;
+                        tTact = TactLog.Now;
                         var result = ptrMain.dataMatrix.Decode(bms, "TOP", 0, MainWindow.ri.TopCamResolution, out dummyDataMatrixCenter);
+                        TactLog.Add($"C{i + 1}_TOP_DECODE1", tTact);
 
                         if (Setting.General.TestMode == "1")
                         {
@@ -2422,11 +2484,15 @@ namespace HDS_ID_Marker
                             {
                                 if (result[0] == "NG" || result[0] == "FailFindRect" || result[0] != CheckID[i])//////////// 기존 방식이 실패할 경우
                                 {
+                                    tTact = TactLog.Now;
                                     result = ptrMain.dataMatrix.Get_Algo_Conv_Square_DataMatrixHJ(bms, "TOP", i, KeyenceProtocol.GetSimbolSize(markFormat));
+                                    TactLog.Add($"C{i + 1}_TOP_DECODE2", tTact);
                                 }
 
                                 if (result[0] == null) MainWindow.logger.WriteLog(LogType.Exception, "TOP result[0] is null ! Count = " + result.Count);
+                                tTact = TactLog.Now;
                                 action = delegate { viewer.tbTopMatrixMarkResult.Text = result[0].ToString(); }; ptrMain.Dispatcher.Invoke(action);
+                                TactLog.Add($"C{i + 1}_TOP_UI_TEXT", tTact);
                                 //실패시 확인
                                 if (result[0].IndexOf("Rect") > -1) errCode = eErrorCode.TOP_LASER_MARKING_FAIL;
                                 if (result[0].ToString() != CheckID[i]) isFailReading1[i] = true;
@@ -2451,7 +2517,9 @@ namespace HDS_ID_Marker
                                 isFailReading1[i] = true;
                             }
                         }
+                        tTact = TactLog.Now;
                         action = delegate { viewer.imgTopMark.Source = bms.Clone(); }; ptrMain.Dispatcher.Invoke(action);
+                        TactLog.Add($"C{i + 1}_TOP_UI_IMG", tTact);
                     }
 
                     if (type == 2 || type == 3)
@@ -2471,10 +2539,14 @@ namespace HDS_ID_Marker
                                 CheckID[i] = cust_id2[i];
                         }
 
+                        tTact = TactLog.Now;
                         bms = ptrMain.PCSInstance.Visions[1].GetBotMarkBmpToROI(roi);
+                        TactLog.Add($"C{i + 1}_BOT_GRAB", tTact);
                         markFormat = ptrMain.workSettingWindow.topHRControl.customMarks[0].format;
                         System.Drawing.Point dummyDataMatrixCenter;
+                        tTact = TactLog.Now;
                         var result = ptrMain.dataMatrix.Decode(bms, "BOT", 0, MainWindow.ri.BotCamResolution, out dummyDataMatrixCenter);
+                        TactLog.Add($"C{i + 1}_BOT_DECODE1", tTact);
                         // Save Mark image
                         //try
                         //{
@@ -2512,10 +2584,14 @@ namespace HDS_ID_Marker
                             {
                                 if (result[0] == "NG" || result[0] == "FailFindRect" || result[0] != CheckID[i])//////////// 기존 방식이 실패할 경우
                                 {
+                                    tTact = TactLog.Now;
                                     result = ptrMain.dataMatrix.Get_Algo_Conv_Square_DataMatrixHJ(bms, "BOT", i, KeyenceProtocol.GetSimbolSize(markFormat));
+                                    TactLog.Add($"C{i + 1}_BOT_DECODE2", tTact);
                                 }
                                 if (result[0] == null) MainWindow.logger.WriteLog(LogType.Exception, "BOT result[0] is null ! Count = " + result.Count);
+                                tTact = TactLog.Now;
                                 action = delegate { viewer.tbBotMatrixMarkResult.Text = result[0].ToString(); }; ptrMain.Dispatcher.Invoke(action);
+                                TactLog.Add($"C{i + 1}_BOT_UI_TEXT", tTact);
                                 //실패시 확인
                                 if (result[0].IndexOf("Rect") > -1) errCode = eErrorCode.BOTTOM_LASER_MARKING_FAIL;
                                 if (result[0].ToString() != CheckID[i]) isFailReading2[i] = true;
@@ -2529,7 +2605,9 @@ namespace HDS_ID_Marker
 
                             
                         }
+                        tTact = TactLog.Now;
                         action = delegate { viewer.imgBotMark.Source = bms; }; ptrMain.Dispatcher.Invoke(action);
+                        TactLog.Add($"C{i + 1}_BOT_UI_IMG", tTact);
                     }
                 }
 
@@ -2544,6 +2622,260 @@ namespace HDS_ID_Marker
                 errCode = eErrorCode.TOP_MARK_COGNITION_FAIL;
                 return errCode;
             }
+        }
+
+        /// <summary>
+        /// 자동 마킹 인식 진입점. Setting.General.ParallelMarkCheck 에 따라 병렬 / 기존(CheckMarks2) 방식 선택
+        /// </summary>
+        private eErrorCode RunMarkCheck(string[] cust_id1, string[] cust_id2, int type, System.Windows.Point alignPos)
+        {
+            bool parallel = Setting.General.ParallelMarkCheck;
+            long tTact = TactLog.Now;
+            eErrorCode ret = parallel ? CheckMarksParallel(cust_id1, cust_id2, type, alignPos)
+                                      : CheckMarks2(cust_id1, cust_id2, type, alignPos);
+            TactLog.Add(parallel ? "CHECK_TOTAL(PARALLEL)" : "CHECK_TOTAL(SERIAL)", tTact);
+            return ret;
+        }
+
+        private class MarkDecodeJob
+        {
+            public int Col;
+            public bool IsTop;
+            public BitmapSource Bmp;
+            public System.Windows.Rect RoiRect;
+            public string CheckID;
+            public string MarkFormat;
+            public int CustomType;
+        }
+
+        /// <summary>
+        /// CheckMarks2 와 판정 결과 동일. 차이점:
+        ///  - 각 열 위치에서는 이동 + 촬상만 하고 바로 다음 열로 이동
+        ///  - 디코딩 / 마크쉬프트 검사 / UI 표시는 디코딩 전용 스레드 1개가 촬상 순서대로 처리
+        ///    (DataMatrix 의 디코더 인스턴스가 공유되므로 동시 호출하지 않음)
+        ///  - 모든 열 촬상 후 디코딩 완료까지 대기한 뒤 판정 → 피딩 전에 판정하는 시점은 기존과 동일
+        /// </summary>
+        internal eErrorCode CheckMarksParallel(string[] cust_id1, string[] cust_id2, int type, System.Windows.Point alignPos)
+        {
+            int colCount = ptrMain.model.modelInformation.StripIter.Count;
+            bool[] isFailReading1 = new bool[colCount];
+            bool[] isFailReading2 = new bool[colCount];
+            eErrorCode errCode = eErrorCode.DEFUALT;    // 디코딩 스레드에서만 갱신 (촬상 순서대로 처리 → 기존과 같은 덮어쓰기 순서)
+            Exception decodeException = null;
+            Exception captureException = null;
+
+            var queue = new System.Collections.Concurrent.BlockingCollection<MarkDecodeJob>();
+            Thread decodeThread = new Thread(() =>
+            {
+                foreach (var job in queue.GetConsumingEnumerable())
+                {
+                    // 기존 방식은 예외 발생 시 즉시 종료하므로 이후 작업은 디코딩하지 않음
+                    if (decodeException != null) continue;
+                    try
+                    {
+                        eErrorCode jobErr = DecodeMarkJob(job, alignPos, isFailReading1, isFailReading2);
+                        if (jobErr != eErrorCode.DEFUALT) errCode = jobErr;
+                    }
+                    catch (Exception ex)
+                    {
+                        decodeException = ex;
+                    }
+                }
+            });
+            decodeThread.SetApartmentState(ApartmentState.STA);
+            decodeThread.IsBackground = true;
+            decodeThread.Start();
+
+            try
+            {
+                int customType = 0;
+                for (int i = colCount - 1; i >= 0; i--)
+                {
+                    string checkID = null;
+
+                    long tTact = TactLog.Now;
+                    if (Setting.General.TestMode == "0")
+                    {
+                        if (type == 1)
+                        {
+                            MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopMarkY + ptrMain.model.modelInformation.StripIter[i]);
+                        }
+                        else if (type == 2)
+                        {
+                            MainWindow.MCS2.BotMoveToPos(ptrMain.model.markingInformation.BotMarkY + ptrMain.model.modelInformation.StripIter[i]);
+                        }
+                        else
+                        {
+                            MainWindow.MCS2.MoveMultiPos(1, 2, ptrMain.model.markingInformation.TopMarkY + ptrMain.model.modelInformation.StripIter[i], ptrMain.model.markingInformation.BotMarkY + ptrMain.model.modelInformation.StripIter[i]);
+                        }
+                    }
+                    TactLog.Add($"C{i + 1}_MOVE_CAM", tTact);
+
+                    if (type == 1 || type == 3) // 상부
+                    {
+                        ptrMain.workSettingWindow.topHRControl.customMarks.Sort(new RefComparer());
+                        string roi = "";
+                        if (ptrMain.workSettingWindow.topHRControl.customMarks.Count == 0)
+                        {
+                            roi = ptrMain.workSettingWindow.topHRControl.interMarks[0].roi;
+                        }
+                        else
+                        {
+                            roi = ptrMain.workSettingWindow.topHRControl.customMarks[0].roi;
+                            if (ptrMain.workSettingWindow.topHRControl.customMarks[0].reference == "고객1")
+                            {
+                                checkID = cust_id1[i];
+                                customType = 0;
+                            }
+                            else if (ptrMain.workSettingWindow.topHRControl.customMarks[0].reference == "고객2")
+                            {
+                                checkID = cust_id2[i];
+                                customType = 1;
+                            }
+                        }
+
+                        tTact = TactLog.Now;
+                        BitmapSource bms = ptrMain.PCSInstance.Visions[0].GetTopMarkBmpToROI(roi);
+                        // GetRoiRect 는 비전 클래스의 공유 필드를 읽으므로 촬상 직후 값 복사
+                        System.Windows.Rect roirect = ptrMain.PCSInstance.Visions[0].GetRoiRect();
+                        TactLog.Add($"C{i + 1}_TOP_GRAB", tTact);
+
+                        queue.Add(new MarkDecodeJob
+                        {
+                            Col = i,
+                            IsTop = true,
+                            Bmp = bms,
+                            RoiRect = roirect,
+                            CheckID = checkID,
+                            MarkFormat = ptrMain.workSettingWindow.topHRControl.customMarks[0].format,
+                            CustomType = customType
+                        });
+                    }
+
+                    if (type == 2 || type == 3) // 하부
+                    {
+                        ptrMain.workSettingWindow.botHRControl.customMarks.Sort(new RefComparer());
+                        string roi = "";
+                        if (ptrMain.workSettingWindow.botHRControl.customMarks.Count == 0)
+                        {
+                            roi = ptrMain.workSettingWindow.botHRControl.interMarks[0].roi;
+                        }
+                        else
+                        {
+                            roi = ptrMain.workSettingWindow.botHRControl.customMarks[0].roi;
+                            if (ptrMain.workSettingWindow.botHRControl.customMarks[0].reference == "고객1")
+                                checkID = cust_id1[i];
+                            else if (ptrMain.workSettingWindow.botHRControl.customMarks[0].reference == "고객2")
+                                checkID = cust_id2[i];
+                        }
+
+                        tTact = TactLog.Now;
+                        BitmapSource bms = ptrMain.PCSInstance.Visions[1].GetBotMarkBmpToROI(roi);
+                        TactLog.Add($"C{i + 1}_BOT_GRAB", tTact);
+
+                        queue.Add(new MarkDecodeJob
+                        {
+                            Col = i,
+                            IsTop = false,
+                            Bmp = bms,
+                            CheckID = checkID,
+                            // 기존 CheckMarks2 와 동일하게 상부 포맷 사용
+                            MarkFormat = ptrMain.workSettingWindow.topHRControl.customMarks[0].format,
+                            CustomType = customType
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                captureException = ex;
+            }
+            finally
+            {
+                queue.CompleteAdding();
+                long tJoin = TactLog.Now;
+                decodeThread.Join();
+                TactLog.Add("CHECK_DECODE_WAIT", tJoin);
+                queue.Dispose();
+            }
+
+            if (captureException != null || decodeException != null)
+            {
+                logger.WriteLog(LogType.Exception, $"CheckMarksParallel Exception!! - {(captureException ?? decodeException).Message}");
+                return eErrorCode.TOP_MARK_COGNITION_FAIL;
+            }
+
+            // 기존 CheckMarks2 와 동일한 최종 판정
+            if (isFailReading1.Count(n => n == true) > 0) errCode = eErrorCode.TOP_MARK_COGNITION_FAIL;
+            if (isFailReading2.Count(n => n == true) > 0) errCode = eErrorCode.BOTH_MARK_COGNITION_FAIL;
+            if (isFailReading1.Count(n => n == true) > 0 && isFailReading2.Count(n => n == true) > 0) errCode = eErrorCode.BOTH_MARK_COGNITION_FAIL;
+            return errCode;
+        }
+
+        /// <summary>
+        /// 디코딩 스레드에서 실행. 열 1개(상부 또는 하부) 디코딩 + 판정 + UI 표시.
+        /// 반환값 : 레이저 마킹 실패(Rect) 감지 시 해당 에러코드, 그 외 DEFUALT
+        /// </summary>
+        private eErrorCode DecodeMarkJob(MarkDecodeJob job, System.Windows.Point alignPos, bool[] isFailReading1, bool[] isFailReading2)
+        {
+            eErrorCode errCode = eErrorCode.DEFUALT;
+            int i = job.Col;
+            string side = job.IsTop ? "TOP" : "BOT";
+            bool[] isFailReading = job.IsTop ? isFailReading1 : isFailReading2;
+            double resolution = job.IsTop ? MainWindow.ri.TopCamResolution : MainWindow.ri.BotCamResolution;
+            System.Drawing.Point dummyDataMatrixCenter;
+
+            long tTact = TactLog.Now;
+            var result = ptrMain.dataMatrix.Decode(job.Bmp, side, 0, resolution, out dummyDataMatrixCenter);
+            TactLog.Add($"C{i + 1}_{side}_DECODE1", tTact);
+
+            if (result != null)
+            {
+                if (result.Count > 0)
+                {
+                    if (result[0] == "NG" || result[0] == "FailFindRect" || result[0] != job.CheckID) // 기존 방식이 실패할 경우
+                    {
+                        tTact = TactLog.Now;
+                        result = ptrMain.dataMatrix.Get_Algo_Conv_Square_DataMatrixHJ(job.Bmp, side, i, KeyenceProtocol.GetSimbolSize(job.MarkFormat));
+                        TactLog.Add($"C{i + 1}_{side}_DECODE2", tTact);
+                    }
+
+                    if (result[0] == null) MainWindow.logger.WriteLog(LogType.Exception, side + " result[0] is null ! Count = " + result.Count);
+                    string text = result[0].ToString();     // null 이면 기존과 동일하게 예외 → 인식 실패 처리
+
+                    // 결과 대기 없이 UI 갱신 요청만 (Invoke → BeginInvoke)
+                    if (job.IsTop)
+                        ptrMain.Dispatcher.BeginInvoke(new Action(() => { viewer.tbTopMatrixMarkResult.Text = text; }));
+                    else
+                        ptrMain.Dispatcher.BeginInvoke(new Action(() => { viewer.tbBotMatrixMarkResult.Text = text; }));
+
+                    //실패시 확인
+                    if (text.IndexOf("Rect") > -1) errCode = job.IsTop ? eErrorCode.TOP_LASER_MARKING_FAIL : eErrorCode.BOTTOM_LASER_MARKING_FAIL;
+                    if (text != job.CheckID) isFailReading[i] = true;
+
+                    if (job.IsTop && ptrMain.model.modelInformation.MakringShiftCheck && job.CustomType == 0)
+                    {
+                        // 마크 쉬프트 검사 (현재는 customMark만 검사), 마크의 상대좌표를 절대좌표로 변환
+                        System.Drawing.Point absoluteMarkCenter = new System.Drawing.Point(
+                            (int)job.RoiRect.X + dummyDataMatrixCenter.X,
+                            (int)job.RoiRect.Y + dummyDataMatrixCenter.Y
+                        );
+                        CheckMarkShift(absoluteMarkCenter, alignPos, job.CustomType, i);
+                    }
+                }
+                else
+                {
+                    isFailReading[i] = true;
+                }
+            }
+
+            BitmapSource bmp = job.Bmp;
+            if (job.IsTop)
+                ptrMain.Dispatcher.BeginInvoke(new Action(() => { viewer.imgTopMark.Source = bmp.Clone(); }));
+            else
+                ptrMain.Dispatcher.BeginInvoke(new Action(() => { viewer.imgBotMark.Source = bmp; }));
+
+            return errCode;
         }
 
         void CheckMarkShift(System.Drawing.Point pt, System.Windows.Point alignPt, int customType , int col)

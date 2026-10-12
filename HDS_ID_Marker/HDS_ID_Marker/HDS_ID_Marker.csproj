@@ -214,6 +214,7 @@
       <DependentUpon>MainControlViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="ManagementClass\LaserMarkingManagement.cs" />
+    <Compile Include="ManagementClass\TactLog.cs" />
     <Compile Include="ManagementClass\TeachingManagement.cs" />
     <Compile Include="ManagementClass\WorkManagement.cs" />
     <Compile Include="MainControl.xaml.cs">

@@ -941,6 +941,7 @@ namespace HDS_ID_Marker
             double TopOffsetZ = 0;
             bool flip = ptrMain.workSettingWindow.topHRControl.customMarks[0].flip ? true : false;
 
+            long tFocus = TactLog.Now;
             for (int i = 0; i < 3; i++)
             {
                 TopOffsetZ = ptrMain.PCSInstance.Lasers[0].FocusCheck(Setting.Device.laserConfigs[0].FocusIndex);
@@ -948,6 +949,7 @@ namespace HDS_ID_Marker
                 if (MainWindow.ri.TopFocusLimit - 3 <= TopOffsetZ && TopOffsetZ <= MainWindow.ri.TopFocusLimit + 3)
                 {
                     MainWindow.logger.WriteLog(LogType.Laser, string.Format("[TopMark] 고객 코드 : {0}, 상부 포커스 값 : {1}", cust1_code, TopOffsetZ));
+                    TactLog.Add($"C{colStrip + 1}_TOP_FOCUS(try{i + 1})", tFocus);
                     break;
                 }
                 else
@@ -1051,7 +1053,9 @@ namespace HDS_ID_Marker
                 cnt++;
             }
             cmd += KeyenceProtocol.ETX;
+            long tLoad = TactLog.Now;
             ptrMain.PCSInstance.Lasers[0].LoadLaser(cmd);
+            TactLog.Add($"C{colStrip + 1}_TOP_LOAD", tLoad);
 
             MainWindow.logger.WriteLog(LogType.Laser, "TopMark : " + cmd);
 
@@ -1060,7 +1064,9 @@ namespace HDS_ID_Marker
             cmd += KeyenceProtocol.START_MARKING;
             cmd += KeyenceProtocol.ETX;
 
+            long tStart = TactLog.Now;
             ptrMain.PCSInstance.Lasers[0].MarkingAsync(cmd);
+            TactLog.Add($"C{colStrip + 1}_TOP_START", tStart);
 
             return true;
         }
@@ -1219,6 +1225,7 @@ namespace HDS_ID_Marker
 
             bool flip = ptrMain.workSettingWindow.botHRControl.customMarks[0].flip ? true : false;
 
+            long tFocus = TactLog.Now;
             for (int i = 0; i < 3; i++)
             {
                 BotOffsetZ = ptrMain.PCSInstance.Lasers[1].FocusCheck(Setting.Device.laserConfigs[1].FocusIndex);
@@ -1226,6 +1233,7 @@ namespace HDS_ID_Marker
                 if (MainWindow.ri.BotFocusLimit - 3 <= BotOffsetZ && BotOffsetZ <= MainWindow.ri.BotFocusLimit + 3)
                 {
                     MainWindow.logger.WriteLog(LogType.Laser, string.Format("[BotMark] 고객 코드 : {0}, 하부 포커스 값 : {1}", cust1_code, BotOffsetZ));
+                    TactLog.Add($"C{colStrip + 1}_BOT_FOCUS(try{i + 1})", tFocus);
                     break;
                 }
                 else
@@ -1316,7 +1324,9 @@ namespace HDS_ID_Marker
                 cnt++;
             }
             cmd += KeyenceProtocol.ETX;
+            long tLoad = TactLog.Now;
             ptrMain.PCSInstance.Lasers[1].LoadLaser(cmd);
+            TactLog.Add($"C{colStrip + 1}_BOT_LOAD", tLoad);
 
             MainWindow.logger.WriteLog(LogType.Laser, "BotMark : " + cmd);
 
@@ -1324,7 +1334,9 @@ namespace HDS_ID_Marker
             cmd += KeyenceProtocol.START_MARKING;
             cmd += KeyenceProtocol.ETX;
 
+            long tStart = TactLog.Now;
             ptrMain.PCSInstance.Lasers[1].MarkingAsync(cmd);
+            TactLog.Add($"C{colStrip + 1}_BOT_START", tStart);
 
             return true;
         }
@@ -1488,12 +1500,27 @@ namespace HDS_ID_Marker
             Thread thdTop = new Thread(()=> { TopDone = TopMark(cust1_code, cust2_code, int1_code, colStrip , markPos); });
             Thread thdBot = new Thread(() => { BotDone = BotMark(cust1_code, cust2_code, int1_code, colStrip, markPos); });
 
+            long tThread = TactLog.Now;
             thdTop.Start();
             thdBot.Start();
             thdTop.Join();
             thdBot.Join();
+            TactLog.Add($"C{colStrip + 1}_BOTH_SEND", tThread);
 
-            if (!ptrMain.PCSInstance.Lasers[0].MarkDone() || !ptrMain.PCSInstance.Lasers[1].MarkDone() || !TopDone || !BotDone)
+            // 기존 조건식(A.MarkDone() || B.MarkDone() ...)의 단락 평가 순서 유지: 상부 MarkDone 실패 시 하부 MarkDone 호출 안 함
+            long tDone = TactLog.Now;
+            bool topAck = ptrMain.PCSInstance.Lasers[0].MarkDone();
+            TactLog.Add($"C{colStrip + 1}_TOP_MARKDONE", tDone);
+
+            bool botAck = false;
+            if (topAck)
+            {
+                tDone = TactLog.Now;
+                botAck = ptrMain.PCSInstance.Lasers[1].MarkDone();
+                TactLog.Add($"C{colStrip + 1}_BOT_MARKDONE", tDone);
+            }
+
+            if (!topAck || !botAck || !TopDone || !BotDone)
             {
                 return false;
             }

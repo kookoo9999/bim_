@@ -70,6 +70,8 @@ namespace Common
             public static string ITSIP = "127.0.0.1";
             public static string TestMode = "0";
             public static double AlignAlarmThreshold = 0.2;
+            // 자동 마킹 인식(마킹 확인) 시 디코딩을 백그라운드로 병렬 처리 (false : 기존 순차 처리)
+            public static bool ParallelMarkCheck = true;
         }
         public static class SubSystem
         {
@@ -127,6 +129,7 @@ namespace Common
                 General.ITSIP = ini.ReadValue(SECTION_GENERAL, "ITSIP", General.ITSIP);
                 General.TestMode = ini.ReadValue(SECTION_GENERAL, "TestMode", General.TestMode);
                 General.AlignAlarmThreshold = ini.ReadValue(SECTION_GENERAL, "AlignAlarmThreshold", General.AlignAlarmThreshold);
+                General.ParallelMarkCheck = ini.ReadValue(SECTION_GENERAL, "ParallelMarkCheck", General.ParallelMarkCheck);
 
                 SubSystem.Database.Use = ini.ReadValue(SECTION_SUBSYSTEM, "Database/Use", SubSystem.Database.Use);
                 SubSystem.Database.Type = ini.ReadValue(SECTION_SUBSYSTEM, "Database/Type", SubSystem.Database.Type);
@@ -245,6 +248,7 @@ namespace Common
                 ini.WriteValue(SECTION_GENERAL, "ITSIP", General.ITSIP);
                 ini.WriteValue(SECTION_GENERAL, "TestMode", General.TestMode);
                 ini.WriteValue(SECTION_GENERAL, "AlignAlarmThreshold", General.AlignAlarmThreshold);
+                ini.WriteValue(SECTION_GENERAL, "ParallelMarkCheck", General.ParallelMarkCheck);
 
                 ini.DeleteSection(SECTION_SUBSYSTEM);
                 ini.WriteValue(SECTION_SUBSYSTEM, "Database/Use", SubSystem.Database.Use);
