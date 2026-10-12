@@ -1,0 +1,452 @@
+﻿<UserControl x:Class="HDS_ID_Marker.WorkInfoViewer"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:ToggleSwitch="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
+             xmlns:dcs ="clr-namespace:DCS.IDReader;assembly=DCS"
+      xmlns:common="clr-namespace:Common;assembly=Common"
+      mc:Ignorable="d"  FontFamily="Roboto"
+      d:DesignHeight="475" d:DesignWidth="1900" Loaded="UserControl_Loaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Grid.Column="1" Margin="2 0 2 0">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#4c7eb6"
+                                CornerRadius="3"
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                        <Label  Foreground="White" FontSize="23" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40">AOI</Label>
+                    </materialDesign:ColorZone>
+                </Border>
+                <Grid Grid.Row="0" Grid.Column="0" Margin="2 0 2 0">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#4c7eb6"
+                                CornerRadius="3"
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                        <Label  Foreground="White" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="40">Align</Label>
+                    </materialDesign:ColorZone>
+                </Grid>
+                <Border Background="#323232" Grid.Row="1" Grid.Column="1" Margin="5">
+                    <Grid>
+                        <Image x:Name="imgAOI" Grid.Row="1" Grid.Column="0" Stretch="Uniform" Margin="5"/>
+                        <!--<dcs:KeyenceIDReader x:Name="idReaderControl" Visibility="Hidden"/>-->
+                    </Grid>
+                </Border>
+                <Border Background="#323232" Grid.Column="0" Grid.Row="1" Margin="5">
+                    <Image x:Name="imgAlign" Grid.Row="1" Grid.Column="1" Stretch="Uniform" Margin="5"/>
+                </Border>
+                <Border Grid.Row="2" Grid.Column="1" Margin="2" CornerRadius="3" Background="White">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="../images/AOI.png" Width="30"/>
+                            <!--<materialDesign:PackIcon Kind="TextRecognition" Height="34" Width="42" HorizontalAlignment="Center" Margin="18,0"/>-->
+                            <Label Content="인식결과" HorizontalAlignment="Center" FontWeight="Bold" Margin="11,0"/>
+                        </StackPanel>
+
+                        <Grid Grid.Column="1">
+                            <TextBox 
+                                    x:Name="tbAOIResult"
+                                    Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="8 0 8 0"
+                                         materialDesign:HintAssist.Hint="Result of AOI Recognition"
+                                         BorderThickness="1"
+                                         Height="30" IsReadOnly="True"
+                                         VerticalAlignment="Center" />
+                        </Grid>
+
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" Grid.Column="0" Margin="2" CornerRadius="3" Background="White">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+
+                        <Label  Grid.Column="1" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">X :</Label>
+                        <Label  x:Name="lblAlignOffsetX" Grid.Column="2" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0 0 40 0">0.11</Label>
+                        <Label  Grid.Row="1" Grid.Column="1" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Y :</Label>
+                        <Label  x:Name="lblAlignOffsetY" Grid.Row="1" Grid.Column="2" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0 0 40 0">0.21</Label>
+                        <Label  Grid.Column="4" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">M:</Label>
+                        <Label  x:Name="lblAlignMatch" Grid.Column="5" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0 0 40 0">0.99%</Label>
+
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Grid.Column="0" Margin="2 0 2 0">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#4c7eb6"
+                                CornerRadius="3"
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                        <Label  Foreground="White" FontSize="24" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40">Top Mark</Label>
+                    </materialDesign:ColorZone>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="1" Margin="2 0 2 0">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#4c7eb6"
+                                CornerRadius="3"
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                        <Label  Foreground="White" FontSize="23" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40">Align</Label>
+                    </materialDesign:ColorZone>
+                </Border>
+
+                <Border Background="#323232" Grid.Row="1" Margin="5" Grid.Column="0">
+                    <Image x:Name="imgTopMark" Grid.Row="1" Grid.Column="0" Stretch="Uniform" Margin="5"/>
+                </Border>
+                <Border Background="#323232" Grid.Column="1" Grid.Row="1" Margin="5">
+                    <Image x:Name="imgTopAlign" Grid.Row="1" Grid.Column="1" Stretch="Uniform" Margin="5"/>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="0" Margin="2" CornerRadius="3" Background="White">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <!--<StackPanel Orientation="Horizontal">
+                                <Image Source="../images/OCR.png" Width="40"/>
+                                <Label Content="인식결과" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </StackPanel>-->
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="../images/ID_Matrix.png" Width="40"/>
+                                <Label Content="인식결과" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Grid Grid.Column="1">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                <!--<TextBox
+                                        x:Name="tbTopOCRMarkResult"
+                                         Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="3"
+                                         materialDesign:HintAssist.Hint="Result of AOI Recognition"
+                                         BorderThickness="1"
+                                         Height="30"
+                                         VerticalAlignment="Center" />-->
+
+                                <TextBox
+                                        x:Name="tbTopMatrixMarkResult"
+                                         Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="3"
+                                         materialDesign:HintAssist.Hint="Result of AOI Recognition"
+                                         BorderThickness="1"
+                                         Height="30" IsReadOnly="True"
+                                         VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" Grid.Column="1" Margin="2" CornerRadius="3" Background="White">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+
+                        <Label  Grid.Column="1" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">X :</Label>
+                        <Label  x:Name="lblTopOffsetX" Grid.Column="2" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0 0 40 0">0.11</Label>
+                        <Label  Grid.Row="1" Grid.Column="1" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Y :</Label>
+                        <Label  x:Name="lblTopOffsetY" Grid.Row="1" Grid.Column="2" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0 0 40 0">0.21</Label>
+                        <Label  Grid.Column="4" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">M:</Label>
+                        <Label  x:Name="lblTopMatch" Grid.Column="5" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0 0 40 0">0.99%</Label>
+
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Grid.Column="0" Margin="2 0 2 0">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#4c7eb6"
+                                CornerRadius="3"
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                        <Label  Foreground="White" FontSize="24" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40">Bot Mark</Label>
+                    </materialDesign:ColorZone>
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="1" Margin="2 0 2 0">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#4c7eb6"
+                                CornerRadius="3"
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2">
+                        <Label  Foreground="White" FontSize="23" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="40">Align</Label>
+                    </materialDesign:ColorZone>
+                </Border>
+
+                <Border Background="#323232" Grid.Row="1" Margin="5" Grid.Column="0">
+                    <Image x:Name="imgBotMark" Grid.Row="1" Grid.Column="0" Stretch="Uniform" Margin="5"/>
+                </Border>
+                <Border Background="#323232" Grid.Column="1" Grid.Row="1" Margin="5">
+                    <Image x:Name="imgBotAlign" Grid.Row="1" Grid.Column="1" Stretch="Uniform" Margin="5"/>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="0" Margin="2" CornerRadius="3" Background="White">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <!--<StackPanel Orientation="Horizontal">
+                                <Image Source="../images/OCR.png" Width="40"/>
+                                <Label Content="인식결과" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </StackPanel>-->
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="../images/ID_Matrix.png" Width="40"/>
+                                <Label Content="인식결과" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Grid Grid.Column="1">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                <!--<TextBox
+                                        x:Name="tbBotOCRMarkResult"
+                                         Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="3"
+                                         materialDesign:HintAssist.Hint="Result of AOI Recognition"
+                                         BorderThickness="1"
+                                         Height="30"
+                                         VerticalAlignment="Center" />-->
+                                <TextBox
+                                        x:Name="tbBotMatrixMarkResult"
+                                         Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="3"
+                                         materialDesign:HintAssist.Hint="Result of AOI Recognition"
+                                         BorderThickness="1"
+                                         Height="30" IsReadOnly="True"
+                                         VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" Grid.Column="1" Margin="2" CornerRadius="3" Background="White">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+
+                        <Label  Grid.Column="1" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">X :</Label>
+                        <Label  x:Name="lblBotOffsetX" Grid.Column="2" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0 0 40 0">0.11</Label>
+                        <Label  Grid.Row="1" Grid.Column="1" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">Y :</Label>
+                        <Label  x:Name="lblBotOffsetY" Grid.Row="1" Grid.Column="2" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0 0 40 0">0.21</Label>
+                        <Label  Grid.Column="4" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">M:</Label>
+                        <Label  x:Name="lblBotMatch" Grid.Column="5" Foreground="Black" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0 0 40 0">0.99%</Label>
+
+                    </Grid>
+                </Border>
+            </Grid>
+
+        </Grid>
+
+        <Border Grid.Row="1" Margin="2" CornerRadius="3" Background="White">
+            <Grid Grid.Row="1" Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                </Grid.ColumnDefinitions>
+
+                <materialDesign:Card Margin="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Background="#195aa2" Foreground="White" Content="모델" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="40"></Label>
+                        <Label x:Name="lblModel" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="30" Content="Empty"/>
+                    </Grid>
+                </materialDesign:Card>
+
+                <!--<materialDesign:Card Margin="5" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Background="#867c66" Foreground="White" Content="LOT" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="40"></Label>
+                        <Label Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="30" Content="1103"/>
+                    </Grid>
+                </materialDesign:Card>-->
+
+                <materialDesign:Card Margin="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Background="#195aa2" Foreground="White" Content="LOT" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="40"></Label>
+                        <Label x:Name="lblLot" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="30" Content="1"/>
+                    </Grid>
+                </materialDesign:Card>
+
+                <materialDesign:Card Margin="5" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Background="#195aa2" Foreground="White" Content="Strip ID" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="40"></Label>
+                        <Label x:Name="lblStripID" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="30" Content="1"/>
+                    </Grid>
+                </materialDesign:Card>
+
+                <materialDesign:Card Margin="5" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Background="#195aa2" Foreground="White" Content="Tact(s)" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="40"></Label>
+                        <Label x:Name="lblTacTime" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="30" Content="1"/>
+                    </Grid>
+                </materialDesign:Card>
+                
+                <materialDesign:Card Margin="5" Grid.Column="4" Grid.ColumnSpan="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Background="#195aa2" Foreground="White" Content="시작시간" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="36"/>
+                        <Label x:Name="lblStartTime" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="30">00:00:00</Label>
+                    </Grid>
+                </materialDesign:Card>
+
+                <materialDesign:Card Margin="5" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Background="#195aa2" Foreground="White" Content="가동시간" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="36"></Label>
+                        <Label x:Name="lblRunTime" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="40">00:00:00</Label>
+                    </Grid>
+                </materialDesign:Card>
+
+                <materialDesign:Card Margin="5" Grid.Row="0" Grid.RowSpan="2" Grid.Column="6" Grid.ColumnSpan="2">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <Label Background="#195aa2" Foreground="White" Content="마킹 검사" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="36"></Label>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <common:NumberTextBox x:Name="tbCntMarkingCheck" Grid.Row="3" Grid.Column="0" MinValue="0.0" MaxValue="100.0" Round="3" VerticalContentAlignment="Center" Margin="10"
+                                            HorizontalContentAlignment="Center" FontSize="25" Text="1" TextChanged="tbCntMarkingCheck_TextChanged"/>
+                            <ToggleSwitch:HorizontalToggleSwitch x:Name="tsUseMarkingCheck" Grid.Column="1" HorizontalAlignment="Center" IsChecked="False" Style="{StaticResource iOS5ToggleSwitchStyle}" PreviewMouseDown="tsUseMarkingCheck_Click"/>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

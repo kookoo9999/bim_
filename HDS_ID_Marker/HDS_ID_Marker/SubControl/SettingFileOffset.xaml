@@ -1,0 +1,52 @@
+﻿<Window x:Class="HDS_ID_Marker.SubControl.SettingFileOffset"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HDS_ID_Marker.SubControl" WindowStyle="None" WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" FontFamily="Roboto" BorderThickness="1" BorderBrush="Gray" AllowsTransparency="True" Topmost="True"
+        Title="Offset 설정" Height="400" Width="300" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="VisionOffsetX" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
+        <TextBox Grid.Row="0" Grid.Column="1"  x:Name="tbVisionOffsetX" VerticalAlignment="Center" HorizontalAlignment="Center" Width="60" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="CamtoY1" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="tbCamtoY1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="60" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+
+        <Label Grid.Row="2" Grid.Column="0" Content="CamtoX1" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
+        <TextBox Grid.Row="2" Grid.Column="1"  x:Name="tbCamtoX1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="60" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+
+        <Label Grid.Row="3" Grid.Column="0" Content="CamtoY2" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
+        <TextBox Grid.Row="3" Grid.Column="1" x:Name="tbCamtoY2" VerticalAlignment="Center" HorizontalAlignment="Center" Width="60" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+
+        <Label Grid.Row="4" Grid.Column="0" Content="CamtoX2" VerticalAlignment="Center" HorizontalAlignment="Center"></Label>
+        <TextBox Grid.Row="4" Grid.Column="1" x:Name="tbCamtoX2" VerticalAlignment="Center" HorizontalAlignment="Center" Width="60" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+
+        <Grid Grid.Row="5" Grid.ColumnSpan="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Name="btnSave" Height="35" Width="95" Margin="5,0,5,0" Click="btnSaveClick" Cursor="Hand">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <materialDesign:PackIcon Kind="ContentSave" Width="20" Height="20" Foreground="white" Margin="0, 0, 0, 0"/>
+                        <TextBlock FontWeight="Normal" FontSize="15" Text="확 인" VerticalAlignment="Center" Foreground="White"  Margin="10, 0, 10, 0"/>
+                    </StackPanel>
+                </Button>
+                <Button Name="btnClose" Height="35" Width="95" Margin="5,0,5,0" Foreground="White" FontSize="15" Click="btnClose_Click" >취 소</Button>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</Window>

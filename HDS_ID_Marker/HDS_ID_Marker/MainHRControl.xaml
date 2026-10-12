@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="HDS_ID_Marker.MainHRControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:milwpf ="clr-namespace:Matrox.MatroxImagingLibrary.WPF;assembly=Matrox.MatroxImagingLibrary.WPF"
+             mc:Ignorable="d" FontFamily="Roboto" FontWeight="Bold" FontSize="28"
+             d:DesignHeight="1080" d:DesignWidth="1369" Loaded="UserControl_Loaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1004" />
+        </Grid.RowDefinitions>
+
+        <Label  x:Name="Title" Grid.Column="0" Foreground="Wheat" Background="#102641" FontSize="40" Content="Align / TOP" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+
+        <Button Grid.Column="0" Height="50" Width="160" FontSize="20" Click="btnTeachingScreen_Click" Margin="0 0 20 0"
+                                                      Background="#16365d" ToolTip="티칭 화면 보기" HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon Kind="MonitorScreenshot"  Height="30" Width="30" Foreground="White"/>
+                <TextBlock FontWeight="Normal" FontSize="20" Text="티칭 화면" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+            </StackPanel>
+        </Button>
+
+        <Border Grid.Row="1" BorderThickness="2" BorderBrush="#b2b2b2">
+            <Grid Grid.Row="1">
+                <Grid Grid.Row="1" Background="#1e252e" x:Name="sourceGrid" MouseWheel="sourceGrid_MouseWheel" MouseDown="Grid_MouseDown">
+                    
+                    <Canvas  Panel.ZIndex="9">
+                        <Line x:Name="alignLine2" Opacity="0.2" StrokeThickness="2" X1="0" X2="1365" Y1="500" Y2="500" Stroke="Red" Panel.ZIndex="0" Height="1000"/>
+                        <Line x:Name="alignLine1" Opacity="0.2" StrokeThickness="2" X1="682.5" X2="682.5" Y1="0" Y2="1000" Stroke="Red"  Panel.ZIndex="0" Width="1365"/>
+                        
+                    </Canvas>
+                    <milwpf:MILWPFDisplay Grid.Row="1" x:Name="LiveCamViewer"/>
+                    <Grid Background="Transparent">
+                        <Canvas  x:Name="drawingCanvas" Background="Transparent" ClipToBounds="True" Focusable="True"
+                    MouseMove="canvas_MouseMove" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp" Width="1365" Height="1000">
+                        </Canvas>
+
+                        <Canvas MouseLeftButtonUp="canvas_MouseLeftButtonUp">
+                            <Rectangle 
+                                         x:Name="selectionBox"
+                                         Visibility="Visible"
+                                         Stroke="#d2d3d5"
+                                         Fill="#343a42"
+                                         StrokeThickness="2"
+                                         Opacity="0.3"
+                               />
+                        </Canvas>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+
+    </Grid>
+
+</UserControl>

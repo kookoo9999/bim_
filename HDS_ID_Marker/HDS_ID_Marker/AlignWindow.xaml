@@ -1,0 +1,520 @@
+﻿<Window x:Class="HDS_ID_Marker.AlignWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HDS_ID_Marker"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"        
+        Title="AlignWindow" Height="1000" Width="1300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="630"/>
+            <ColumnDefinition Width="630*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="110"/>
+            <RowDefinition Height="350"/>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="130"/>
+            <RowDefinition Height="230"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Column="0" Grid.ColumnSpan="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="35"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" FontSize="20" Margin="3" Name="btnAlign_top">Align</Button>
+            <Button Grid.Column="1" FontSize="20" Margin="3" Name="btnMarking_top">마킹 상부</Button>
+            <!--<Button Grid.Column="2" FontSize="20" Margin="3" Name="btnLight">조명</Button>
+            <Button Grid.Column="3" FontSize="20" Margin="3" Name="btnSave">전체저장</Button>-->
+            <Grid Background="Silver" Grid.Row="1" Grid.ColumnSpan="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Name="Pan_AOIMark" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Visibility="Visible">
+                    <Label FontSize="15" HorizontalAlignment="Left" Width="80">AOI Mark</Label>
+                    <TextBox FontSize="15" Width="200" Name="txtAOIMark" Margin="0,3">인식오류</TextBox>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="1" Width="437" Height="350">
+            <Border BorderThickness="2" BorderBrush="Black" Width="437" Height="350">
+                <Canvas Grid.Row="0" Grid.RowSpan="3" x:Name="Livecanvas_top" Width="437" Height="350" Background="Black">
+                    <Line StrokeThickness="2" X1="218" X2="218" Y1="0" Y2="350" Stroke="Red"/>
+                    <Line StrokeThickness="2" X1="0" X2="437" Y1="175" Y2="175" Stroke="Red"/>
+                    <Rectangle Name="rctAlign_top_1" Width="40" Height="40" Stroke="#FF2646D6" StrokeThickness="3"/>
+                    <Rectangle Name="rctMark_top" Width="28" Height="28" Stroke="Red" StrokeThickness="3" Canvas.Left="40" Canvas.Top="40"/>
+                    <Rectangle Name="rctAoi" Width="300" Height="100" Stroke="Yellow" StrokeThickness="3" Visibility="Visible"/>
+                    <Image Grid.Row="0" Grid.RowSpan="3" x:Name="cam_viewer_top" Stretch="Fill" OpacityMask="#D6F0F0F0" Width="437" Height="350" />
+                </Canvas>
+            </Border>
+            <StackPanel/>
+            <StackPanel>
+                <Button Name="btnAlignROI_top" Width="100" Height="40" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5" FontSize="15" Visibility="Visible">ALIGN SET</Button>
+                <Button Name="btnMarkROI_top" Width="100" Height="40" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5" FontSize="15" Visibility="Visible">MARK SET</Button>
+                <Button Name="btnAOIROI" Width="100" Height="40" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5" FontSize="15" Visibility="Hidden">AOI SET</Button>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.ColumnSpan="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="96"/>
+                <ColumnDefinition Width="437"/>
+                <ColumnDefinition Width="96"/>                
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="104"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="28"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Canvas x:Name="AlignCanvasLeft1" Grid.Column="0" Grid.Row="1" Grid.RowSpan="5" Height="104" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="104" Background="Black">
+                    <Image Height="100" HorizontalAlignment="Left" x:Name="imgAlignFirst_top" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+                </Canvas>
+
+                <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Content="First Align">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF747474" Offset="0"/>
+                            <GradientStop Color="White" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
+
+                <Rectangle Grid.Column="0" Grid.Row="0" Width="20" Height="20" Fill="#FF2646D6"/>
+                <Label Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="X :"/>
+                <Label Grid.Column="3" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="Y :"/>
+                <Label Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="M :"/>
+                <Label Grid.Column="3" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="A :"/>
+                <Label x:Name="lblOffsetXFirst_top" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+                <Label x:Name="lblOffsetYFirst_top" Grid.Column="4" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+                <Label x:Name="lblMatchFirst_top" Grid.Column="2" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+                <!--<Label x:Name="lblAngle1" Grid.Column="4" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>-->
+                <Button x:Name="btnInspectAlignFirst_top" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5" FontSize="20" Content="Align 확인"/>
+                <!--<ComboBox Name="cbPos1" SelectedIndex="0" Visibility="Hidden">
+                    <ComboBoxItem Content="Right"/>
+                    <ComboBoxItem Content="Left"/>
+                </ComboBox>-->
+            </Grid>
+            <!--<Grid Grid.Row="1" Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="104"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="28"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Canvas x:Name="AlignCanvasRight1" Grid.Column="0" Grid.Row="1" Grid.RowSpan="5" Height="104" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="104" Background="Black">
+                    <Image Height="100" Width="100" HorizontalAlignment="Left" Margin="2" x:Name="imgAlignSecond1" Stretch="Fill" VerticalAlignment="Top" />
+                </Canvas>
+
+                <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Content="Second Align">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF747474" Offset="0"/>
+                            <GradientStop Color="White" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
+
+                <Rectangle Grid.Column="0" Grid.Row="0" Width="20" Height="20" Fill="#FF0BF716"/>
+                <Label Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="X :"/>
+                <Label Grid.Column="3" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="Y :"/>
+                <Label Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="M :"/>
+                <Label x:Name="lblOffsetXSecond1" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+                <Label x:Name="lblOffsetYSecond1" Grid.Column="4" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+
+                <Label x:Name="lblMatchSecond1" Grid.Column="2" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+                <Button x:Name="btnInspectAlignSecond1" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4" Grid.RowSpan="2" Margin="5" FontSize="20" Content="Align 확인"/>
+            </Grid>-->
+        </Grid>
+
+        <Grid Grid.Row="3" Grid.ColumnSpan="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="100*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#1"/>
+            <Label Grid.Column="1" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#2"/>
+            <Label Grid.Column="2" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#3"/>
+            <Label Grid.Column="3" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#4"/>
+            <Label Grid.Column="4" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#5"/>
+            <Label Grid.Column="5" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#6"/>
+
+            <Rectangle Grid.Column="0" Grid.Row="0" Width="20" Height="20" Fill="Red" Margin="14,5,68,5" />
+            <Canvas Grid.Column="0" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark1" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+            <Canvas Grid.Column="1" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark2" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+            <Canvas Grid.Column="2" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark3" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+            <Canvas Grid.Column="3" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark4" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+            <Canvas Grid.Column="4" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark5" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+            <Canvas Grid.Column="5" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark6" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+        </Grid>
+
+        <Grid Grid.Column="0" Row="4" Grid.ColumnSpan="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="110"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="2" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="현재 위치"/>
+            <Label Grid.Column="2" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="3" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="저장 위치" />
+            <Label Grid.Column="0" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="1" BorderThickness="2,1,2,2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="X위치" />
+            <Label Grid.Column="0" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="Y위치" />
+            <Label Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#1 위치" />
+            <!--<Label Grid.Column="2" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#2 위치" />-->
+            <Label Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblCurrentXPos_top" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />
+            <Label Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblCurrentYPos_top" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />
+            <Label Grid.Column="3" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblXPos_top_1" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />
+            <Label Grid.Column="4" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblYPos_top_1" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />
+            <!--<Label Grid.Column="3" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblXPos1_2" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00"/>
+            <Label Grid.Column="4" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblYPos1_2" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />-->
+
+            <Label Grid.Column="0" Grid.Row="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="AOI위치" />
+            <Label Grid.Column="1" Grid.Row="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblXROI" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />
+            <Label Grid.Column="2" Grid.Row="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblYROI" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />            
+        </Grid>
+
+        <StackPanel Grid.Row="1">
+            <Button x:Name="btnCam1View" Width="90" Height="40" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,5,0,5" FontSize="15" Visibility="Visible" Content="Align Cam" Grid.ColumnSpan="2" Grid.Row="1"/>
+            <Button x:Name="btnCam2View" Width="90" Height="40" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,5,0,5" FontSize="15" Visibility="Visible" Content="Mark Cam" Grid.ColumnSpan="2" Grid.Row="1"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1" Grid.ColumnSpan="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="35"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!--<Button Grid.Column="0" FontSize="20" Margin="3" Name="btnAlign_bot">Align 하부</Button>-->
+            <Button Grid.Column="1" FontSize="20" Margin="3" Name="btnMarking_bot">마킹 하부</Button>
+            <Button Grid.Column="2" FontSize="20" Margin="3" Name="btnLight">조명</Button>
+            <Button Grid.Column="3" FontSize="20" Margin="3" Name="btnSave">전체저장</Button>
+            <Grid Background="Silver" Grid.Row="1" Grid.ColumnSpan="4">
+                <Grid Grid.Row="0" Grid.ColumnSpan="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.Column="3" FontSize="15" HorizontalAlignment="Right" Width="80">2D Mark</Label>
+                    <TextBox Grid.Row="0" Grid.Column="4" FontSize="15" Name="txt2D" Margin="0,3">123456789111A</TextBox>
+
+                    <!--<StackPanel Name="Pan_AOIMark" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Visibility="Hidden">
+                        <Label FontSize="15" HorizontalAlignment="Left" Width="80">AOI Mark</Label>
+                        <TextBox FontSize="15" Width="200" Name="txtAOIMark" Margin="0,3">인식오류</TextBox>
+                    </StackPanel>-->
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Width="437" Height="350">
+            <Border BorderThickness="2" BorderBrush="Black" Width="437" Height="350">
+                <Canvas Grid.Row="0" Grid.RowSpan="3" x:Name="Livecanvas_bot" Width="437" Height="350" Background="Black">
+                    <Line StrokeThickness="2" X1="218" X2="218" Y1="0" Y2="350" Stroke="Red"/>
+                    <Line StrokeThickness="2" X1="0" X2="437" Y1="175" Y2="175" Stroke="Red"/>
+                    <!--<Rectangle Name="rctAlign_bot_1" Width="40" Height="40" Stroke="#FF2646D6" StrokeThickness="3"/>-->
+                    <!--<Rectangle Name="rctAlign2_2" Width="40" Height="40" Stroke="#FF0BF716" StrokeThickness="3" Canvas.Left="20" Canvas.Top="20"/>-->
+                    <Rectangle Name="rctMark_bot" Width="28" Height="28" Stroke="Red" StrokeThickness="3" Canvas.Left="40" Canvas.Top="40"/>
+                    <Image Grid.Row="0" Grid.RowSpan="3" x:Name="cam_viewer_bot" Stretch="Fill" OpacityMask="#D6F0F0F0" Width="437" Height="350" />
+                </Canvas>
+            </Border>
+            <StackPanel/>
+            <StackPanel>
+                <!--<Button Name="btnAlignROI_bot" Width="100" Height="40" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5" FontSize="15" Visibility="Visible">ALIGN SET</Button>-->
+                <Button Name="btnMarkROI_bot" Width="100" Height="40" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5" FontSize="15" Visibility="Visible">MARK SET</Button>
+            </StackPanel>
+        </Grid>
+
+        <!--<Grid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="115"/>
+                <ColumnDefinition Width="437"/>
+                <ColumnDefinition Width="96"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="104"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="28"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Canvas x:Name="AlignCanvasLeft2" Grid.Column="0" Grid.Row="1" Grid.RowSpan="5" Height="104" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="104" Background="Black">
+                    <Image Height="100" HorizontalAlignment="Left" x:Name="imgAlignFirst_bot" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+                </Canvas>
+
+                <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Content="First Align">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF747474" Offset="0"/>
+                            <GradientStop Color="White" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
+
+                <Rectangle Grid.Column="0" Grid.Row="0" Width="20" Height="20" Fill="#FF2646D6"/>
+                <Label Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="X :"/>
+                <Label Grid.Column="3" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="Y :"/>
+                <Label Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="M :"/>
+                <Label Grid.Column="3" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="A :"/>
+                <Label x:Name="lblOffsetXFirst_bot" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+                <Label x:Name="lblOffsetYFirst_bot" Grid.Column="4" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+                <Label x:Name="lblMatchFirst_bot" Grid.Column="2" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+                --><!--<Label x:Name="lblAngle2" Grid.Column="4" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>--><!--
+                <Button x:Name="btnInspectAlignFirst_bot" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5" FontSize="20" Content="Align 확인"/>
+                --><!--<ComboBox Name="cbPos1" SelectedIndex="0" Visibility="Hidden">
+                    <ComboBoxItem Content="Right"/>
+                    <ComboBoxItem Content="Left"/>
+                </ComboBox>--><!--
+            </Grid>
+            --><!--<Grid Grid.Row="1" Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="104"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="28"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Canvas x:Name="AlignCanvasRight2" Grid.Column="0" Grid.Row="1" Grid.RowSpan="5" Height="104" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="104" Background="Black">
+                    <Image Height="100" Width="100" HorizontalAlignment="Left" Margin="2" x:Name="imgAlignSecond2" Stretch="Fill" VerticalAlignment="Top" />
+                </Canvas>
+
+                <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="14" FontWeight="Bold" Content="Second Align">
+                    <Label.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF747474" Offset="0"/>
+                            <GradientStop Color="White" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Label.Background>
+                </Label>
+
+                <Rectangle Grid.Column="0" Grid.Row="0" Width="20" Height="20" Fill="#FF0BF716"/>
+                <Label Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="X :"/>
+                <Label Grid.Column="3" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="Y :"/>
+                <Label Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" FontSize="13" Content="M :"/>
+                <Label x:Name="lblOffsetXSecond2" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+                <Label x:Name="lblOffsetYSecond2" Grid.Column="4" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+
+                <Label x:Name="lblMatchSecond2" Grid.Column="2" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="15" Content="0"/>
+                <Button x:Name="btnInspectAlignSecond2" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="4" Grid.RowSpan="2" Margin="5" FontSize="20" Content="Align 확인"/>
+            </Grid>--><!--
+        </Grid>-->
+
+        <Grid Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="100*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#1"/>
+            <Label Grid.Column="1" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#2"/>
+            <Label Grid.Column="2" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#3"/>
+            <Label Grid.Column="3" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#4"/>
+            <Label Grid.Column="4" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#5"/>
+            <Label Grid.Column="5" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="17" Background="Gray"
+				    Foreground="White" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#6"/>
+
+            <Rectangle Grid.Column="0" Grid.Row="0" Width="20" Height="20" Fill="Red" Margin="14,5,68,5" />
+            <Canvas Grid.Column="0" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark7" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+            <Canvas Grid.Column="1" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark8" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+            <Canvas Grid.Column="2" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark9" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+            <Canvas Grid.Column="3" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark10" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+            <Canvas Grid.Column="4" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark11" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+            <Canvas Grid.Column="5" Grid.Row="1" Height="100" HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch" Width="100" Background="Black">
+                <Image Height="100" HorizontalAlignment="Left" x:Name="img_mark12" Stretch="Fill" VerticalAlignment="Top" Width="100" Margin="2"/>
+            </Canvas>
+        </Grid>
+
+        <Grid Grid.Column="1" Row="4" Grid.ColumnSpan="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="110"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="2" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="현재 위치"/>
+            <Label Grid.Column="2" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="3" BorderThickness="2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="저장 위치" />
+            <Label Grid.Column="0" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="1" BorderThickness="2,1,2,2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="X위치" />
+            <Label Grid.Column="0" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="Y위치" />
+            <Label Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#1 위치" />
+            <!--<Label Grid.Column="2" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="#2 위치" />-->
+            <Label Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblCurrentXPos_bot" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />
+            <Label Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblCurrentYPos_bot" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />
+            <Label Grid.Column="3" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblXPos_bot_1" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />
+            <Label Grid.Column="4" Grid.Row="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblYPos_bot_1" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />
+            <!--<Label Grid.Column="3" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblXPos2_2" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />
+            <Label Grid.Column="4" Grid.Row="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Background="White"
+				    x:Name="lblYPos2_2" Foreground="Black" Grid.ColumnSpan="1" BorderThickness="2,1,2,1" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="00.00" />-->
+            <Button Grid.Row="4" Grid.ColumnSpan="1" Grid.Column="0" Margin="3" Name="btnRetry" FontSize="14">레이저 재접속</Button>
+            <local:LedLamp x:Name="lampConnect1" Grid.Column="2" HorizontalAlignment="Left" Height="25" Margin="8" Grid.Row="4" VerticalAlignment="Center" Width="25"/>
+            <local:LedLamp x:Name="lampConnect2" Grid.Column="3" HorizontalAlignment="Left" Height="25" Margin="8" Grid.Row="4" VerticalAlignment="Center" Width="25"/>
+            <Label Grid.Row="4" Grid.Column="1" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Width="69" Margin="63,10,0,7" Height="32">연결상태</Label>
+            
+            <!--<Button x:Name="btnSaveDefaultPos" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" FontSize="20" Margin="3" Content="기준 위치로 등록"/>-->
+
+            <Grid Grid.Row="5" Grid.ColumnSpan="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0" Grid.Row="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="15" Background="Gray"
+				    Foreground="White" Grid.ColumnSpan="1" BorderThickness="2,2,2,2" BorderBrush="White" FontFamily="Franklin Gothic Demi" Content="Align 일치율" />
+                <TextBox x:Name="txtAlignMatch" Grid.Row="0" Grid.Column="1" Margin="4" FontSize="22" Text="60" Width="60" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Center"/>
+                <Button x:Name="btnSaveMatch" Grid.Column="1" Grid.Row="0" FontSize="20" Margin="3" Content="설정" Width="100" HorizontalAlignment="Right"/>
+            </Grid>
+            <Button Name="btnClose" Grid.Row="4" Grid.RowSpan="2" Grid.Column="4"  FontSize="20" Margin="3" >나가기</Button>
+        </Grid>
+    </Grid>
+</Window>

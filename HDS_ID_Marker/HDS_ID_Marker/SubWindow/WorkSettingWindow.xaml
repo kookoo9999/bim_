@@ -1,0 +1,1090 @@
+﻿<Window x:Class="HDS_ID_Marker.SubWindow.WorkSettingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HDS_ID_Marker"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+         xmlns:dcs ="clr-namespace:DCS.IDReader;assembly=DCS"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        mc:Ignorable="d" FontFamily="Roboto" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" IsVisibleChanged="Window_IsVisibleChanged"
+        Title="WorkSettingWindow" Height="1080" Width="1920">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1369"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <materialDesign:Transitioner x:Name="tsMain" SelectedIndex="0" AutoApplyTransitionOrigins="True">
+                <materialDesign:Transitioner.InputBindings>
+                    <KeyBinding Key="Left" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"/>
+                    <KeyBinding Key="Right" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}"/>
+                </materialDesign:Transitioner.InputBindings>
+                <materialDesign:TransitionerSlide x:Name="topEffect" OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromLeft}" >
+                    <Grid>
+                        <local:MainHRControl x:Name="topHRControl"></local:MainHRControl>
+                        <Canvas  x:Name="topZoomedViewCanvas" RenderTransformOrigin="0.5,0.5" Margin="1109,820,10,10" Width="250" Height="250">
+                            <Ellipse Fill="Red" Width="4" Height="4" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="125,125,0,0"></Ellipse>
+                        </Canvas>
+                        <Border BorderThickness="2" BorderBrush="White"  Margin="1107,818,8,8" Width="254" Height="254">
+                        </Border>
+                        
+                    </Grid>
+                </materialDesign:TransitionerSlide>
+                <materialDesign:TransitionerSlide x:Name="botEffect" OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromRight}">
+                    <Grid>
+                        <local:MainHRControl x:Name="botHRControl"></local:MainHRControl>
+                        <Border BorderThickness="2" BorderBrush="White"  Margin="1107,818,8,8" Width="254" Height="254">
+                        </Border>
+                        <Canvas  x:Name="botZoomedViewCanvas" RenderTransformOrigin="0.5,0.5" Margin="1109,820,10,10" Width="250" Height="250">
+                            <Ellipse Fill="Red" Width="4" Height="4" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="125,125,0,0"></Ellipse>
+                        </Canvas>
+                        
+                    </Grid>
+                </materialDesign:TransitionerSlide>
+            </materialDesign:Transitioner>
+        </Grid>
+
+        <Grid Grid.Column="1" Background="#0C1E34">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <Grid Background="#0C1E34" Grid.Row="0">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#0C1E34"
+                                CornerRadius="10"
+                                Margin="5"
+                                materialDesign:ShadowAssist.ShadowDepth="Depth0" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
+                        <StackPanel x:Name="pnl_Functions" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <Grid Margin="15" >
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+                                       ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="모드 선택" Background="#0C1E34">
+                                    <Grid Margin="10">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="rbModeTop" Style="{StaticResource MaterialDesignUserForegroundRadioButton}" Content="  상부" FontSize="25" Foreground="White"/>
+                                            <Separator Style="{StaticResource MaterialDesignDarkSeparator}" Width="100"/>
+                                            <RadioButton x:Name="rbModeBot" Style="{StaticResource MaterialDesignUserForegroundRadioButton}" Content="  하부" FontSize="25" Foreground="White"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Expander>
+                            </Grid>
+                            <Grid Margin="15" >
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+           ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="Grid View" Background="#0C1E34">
+                                    <Grid Margin="10">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="rbGridOn" Style="{StaticResource MaterialDesignUserForegroundRadioButton}" Content=" On" FontSize="25" Foreground="White"/>
+                                            <Separator Style="{StaticResource MaterialDesignDarkSeparator}" Width="100"/>
+                                            <RadioButton x:Name="rbGridOff" Style="{StaticResource MaterialDesignUserForegroundRadioButton}" Content=" Off" FontSize="25" Foreground="White"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Expander>
+                            </Grid>
+                            <Grid Margin="15">
+                                <Expander materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+                                          ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="Align" Background="#0C1E34">
+                                    <Grid Margin="10">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="200"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Border Width="Auto" Grid.Row="0" BorderThickness="1" BorderBrush="#b2b2b2" Margin="0 0 0 0">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="1*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Width="Auto" Grid.Column="0" BorderThickness="1" BorderBrush="#b2b2b2" Margin="0 0 0 0">
+                                                    <Image x:Name="imgtemplate" Grid.Column="0" Stretch="Uniform"/>
+                                                </Border>
+                                                <Border Width="Auto" Grid.Column="1" BorderThickness="1" BorderBrush="#b2b2b2" Margin="0 0 0 0">
+                                                    <Image x:Name="imgAlign" Grid.Column="1" Stretch="Uniform"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+
+                                        <StackPanel Orientation="Vertical" Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Label Foreground="White" VerticalContentAlignment="Center" FontSize="30">X :</Label>
+                                                <Label x:Name="lblAlignOffsetX" Foreground="White" VerticalContentAlignment="Center" FontSize="30">0</Label>
+                                                <Separator Width="15" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                                                <Label Foreground="White" VerticalContentAlignment="Center" FontSize="30">Y :</Label>
+                                                <Label x:Name="lblAlignOffsetY" Foreground="White" VerticalContentAlignment="Center" FontSize="30">0</Label>
+                                                <Separator Width="15" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                                                <Label Foreground="White" VerticalContentAlignment="Center" FontSize="30">Match :</Label>
+                                                <Label x:Name="lblAlignMatch" Foreground="White" VerticalContentAlignment="Center" FontSize="30">0</Label>
+                                            </StackPanel>
+                                            <Separator Height="10" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Label Content="크기 : " Foreground="White" FontSize="30"/>
+                                                <TextBox x:Name="tbAlignSize" Width="50" Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="3"
+                                         materialDesign:HintAssist.Hint="Align 크기"
+                                         BorderThickness="1"
+                                         Height="30" Text="2" FontSize="20"
+                                         VerticalAlignment="Center" TextChanged="tbAlignSize_TextChanged"/>
+                                                <Label Content="mm" Foreground="White" FontSize="30" />
+
+                                                <Label Content="매칭율 : " Foreground="White" FontSize="30"/>
+                                                <TextBox x:Name="tbAlignMatch" Width="50" Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="3"
+                                         materialDesign:HintAssist.Hint="Align 매칭율"
+                                         BorderThickness="1"
+                                         Height="30" Text="80" FontSize="20"
+                                         VerticalAlignment="Center" TextChanged="tbAlignMatch_TextChanged"/>
+                                                <Label Content="%" Foreground="White" FontSize="30" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
+                                                <Label Content="타입 : " Foreground="White" FontSize="30"/>
+                                                <ComboBox x:Name="cbAlignType" FontSize="30" Width="100" Style="{StaticResource ComboBoxStyle1}" SelectionChanged="cbAlignType_SelectionChanged">
+                                                    <ComboBoxItem Content="0"/>
+                                                    <ComboBoxItem Content="1"/>
+                                                    <ComboBoxItem Content="2"/>
+                                                    <ComboBoxItem Content="3"/>
+                                                    <ComboBoxItem Content="4"/>
+                                                    <ComboBoxItem Content="5"/>
+                                                </ComboBox>
+                                            </StackPanel>
+                                            <Separator Height="10" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Button Grid.Row="0" Grid.Column="0" Padding="0" Height="50" Width="130" Margin="0" FontSize="20" x:Name="btnAlignROI" Background="#16365d" ToolTip="Align 영역 추가" Cursor="Hand">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="CropFree" Height="30" Width="30" Foreground="Aquamarine"/>
+                                                        <TextBlock FontWeight="Normal" FontSize="20" Text="영역1 추가" VerticalAlignment="Center" Margin="0, 0, 5, 0" Foreground="white"/>
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Grid.Row="0" Grid.Column="0" Padding="0" Height="50" Width="130" Margin="15 0 0 0" FontSize="20" x:Name="btnAlignMove" Background="#16365d" ToolTip="Align 확인">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="MoveToInbox" Height="30" Width="30" Foreground="Aquamarine"/>
+                                                        <TextBlock FontWeight="Normal" FontSize="20" Text="위치 이동" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Grid.Row="0" Grid.Column="0" Padding="0" Height="50" Width="130" Margin="15 0 0 0" FontSize="20" x:Name="btnAlign" Background="#16365d" ToolTip="Align 확인" Cursor="Hand">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="Plus" Height="30" Width="30" Foreground="Aquamarine"/>
+                                                        <TextBlock FontWeight="Normal" FontSize="20" Text="Align1" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                    </StackPanel>
+                                                </Button>
+                                            </StackPanel>
+                                            <Separator Height="10" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Button Grid.Row="0" Grid.Column="0" Padding="0" Height="50" Width="130" Margin="0" FontSize="20" x:Name="btnAlign2ROI" Background="#16365d" ToolTip="Align2 영역 추가" Cursor="Hand">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="CropFree" Height="30" Width="30" Foreground="Aquamarine"/>
+                                                        <TextBlock FontWeight="Normal" FontSize="20" Text="영역2 추가" VerticalAlignment="Center" Margin="0, 0, 5, 0" Foreground="white"/>
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Grid.Row="0" Grid.Column="0" Padding="0" Height="50" Width="130" Margin="15 0 0 0" FontSize="20" x:Name="btnAlign2Move" Background="#16365d" ToolTip="Align 확인">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="MoveToInbox" Height="30" Width="30" Foreground="Aquamarine"/>
+                                                        <TextBlock FontWeight="Normal" FontSize="20" Text="위치 이동" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Grid.Row="0" Grid.Column="0" Padding="0" Height="50" Width="130" Margin="15 0 0 0" FontSize="20" x:Name="btnAlign2" Background="#16365d" ToolTip="Align 확인" Cursor="Hand">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="Plus" Height="30" Width="30" Foreground="Aquamarine"/>
+                                                        <TextBlock FontWeight="Normal" FontSize="20" Text="Align2" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                    </StackPanel>
+                                                </Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </Expander>
+                            </Grid>
+                            <Grid Margin="15">
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+                                       ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="고객 마킹 설정" Background="#0C1E34">
+                                    <Grid Margin="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="200"/>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="2*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Border Background="#1e252e" Grid.Row="0" BorderThickness="2" BorderBrush="#b2b2b2" Margin="50 0 50 0">
+                                            <Grid>
+                                                <Image x:Name="imgCustomMark" Stretch="Uniform" Margin="50 0 50 0"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <Border Grid.Row="1" Grid.Column="1" Margin="1,20,0,20" CornerRadius="3 3 3 3" Background="White">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="2*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Image Source="../images/ID_Matrix.png" Width="40"/>
+                                                        <Label Content="인식결과" VerticalAlignment="Center" FontWeight="Bold"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <Grid Grid.Column="1">
+                                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                        <TextBox
+                                        x:Name="tbCustomMatrixMarkResult"
+                                         Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="3"
+                                         materialDesign:HintAssist.Hint="Result of Custom Recognition"
+                                         BorderThickness="1"
+                                         Height="30"
+                                         VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+
+                                        <Border Grid.Row="2" Grid.Column="1" Margin="1,0,0,20" CornerRadius="3 3 3 3" Background="White">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="2*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Image Source="../images/ID_Matrix.png" Width="40"/>
+                                                        <Label Content="수동 데이터 입력" VerticalAlignment="Center" FontWeight="Bold"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <Grid Grid.Column="1">
+                                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                        <TextBox
+                                        x:Name="tbCustomRandomMark"
+                                         Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="3"
+                                         materialDesign:HintAssist.Hint="수동 마킹 데이터 입력 기능"
+                                         BorderThickness="1"
+                                         Height="30"
+                                         VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+
+                                        <Grid Grid.Row="3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+
+                                            <Button x:Name="btnCustomMarkSetting" Click="btnCustomMarkSetting_Click" Grid.Column="0" Grid.Row="0" Width="160" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="고객 마킹 파라미터 설정">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <materialDesign:PackIcon Kind="CogOutline" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="마크 설정" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="btnCustomMarkROI" Grid.Column="0" Grid.Row="2"  Height="50" Width="160"  FontSize="20"  
+                                                    Background="#16365d" ToolTip="고객 마킹 영역 추가">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="CropFree" Height="30" Width="30" Foreground="Yellow"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="영역 추가" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+
+                                            <Button x:Name="btnCustomMarkMove" Grid.Column="2" Grid.Row="0" Width="160" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="고객 마킹 위치로 이동">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <materialDesign:PackIcon Kind="MoveToInbox" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="마킹 위치" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="btnCustomCamMove" Grid.Column="2" Grid.Row="2"  Height="50" Width="160"  FontSize="20"  
+                                                    Background="#16365d" ToolTip="고객 마크 카메라 위치로 이동" Cursor="Hand">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="Camera" Height="30" Width="30" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="Cam 위치" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+
+                                            <Button x:Name="btnCustomMarking" Grid.Column="4" Grid.Row="0" Width="110" Height="50"  FontSize="20"
+                                                    Background="#16365d" ToolTip="고객 마크 마킹" Cursor="Hand" HorizontalAlignment="Left">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <materialDesign:PackIcon Kind="Marker" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="마킹" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="btnCustomMarkRead" Grid.Column="4" Grid.Row="2"  Height="50" Width="110"  FontSize="20"  
+                                                    Background="#16365d" ToolTip="고객 마크 인식" Cursor="Hand" HorizontalAlignment="Left">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="Read" Height="30" Width="30" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="인식" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+
+                                        </Grid>
+                                    </Grid>
+                                </Expander>
+                            </Grid>
+                            <Grid Margin="15">
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+                                       ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="사내 마킹 설정" Background="#0C1E34">
+                                    <Grid Margin="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="200"/>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="2*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Border Background="#1e252e" Grid.Row="0" BorderThickness="2" BorderBrush="#b2b2b2" Margin="50 0 50 0">
+                                            <Grid>
+                                                <Image x:Name="imgInterMark" Stretch="Uniform" Margin="50 0 50 0"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <Border Grid.Row="1" Grid.Column="1" Margin="1,20,0,20" CornerRadius="3 3 3 3" Background="White">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="2*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Image Source="../images/ID_Matrix.png" Width="40"/>
+                                                        <Label Content="인식결과" VerticalAlignment="Center" FontWeight="Bold"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <Grid Grid.Column="1">
+                                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                        <TextBox
+                                        x:Name="tbInterMatrixMarkResult"
+                                         Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="3"
+                                         materialDesign:HintAssist.Hint="Result of Inter Recognition"
+                                         BorderThickness="1"
+                                         Height="30"
+                                         VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+
+                                        <Grid Grid.Row="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+
+                                            <Button x:Name="btnInterMarkSetting" Click="btnInterMarkSetting_Click" Grid.Column="0" Grid.Row="0" Width="160" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="사내 마킹 파라미터 설정">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <materialDesign:PackIcon Kind="CogOutline" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="마크 설정" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="btnInterMarkROI" Grid.Column="0" Grid.Row="2"  Height="50" Width="160"  FontSize="20"  
+                                                    Background="#16365d" ToolTip="고객 마킹 영역 추가">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="CropFree" Height="30" Width="30" Foreground="LawnGreen"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="영역 추가" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+
+                                            <Button x:Name="btnInterMarkMove" Grid.Column="2" Grid.Row="0" Width="160" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="사내 마킹 위치로 이동">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <materialDesign:PackIcon Kind="MoveToInbox" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="마킹 위치" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="btnInterCamMove" Grid.Column="2" Grid.Row="2"  Height="50" Width="160"  FontSize="20"  
+                                                    Background="#16365d" ToolTip="사내 마크 카메라 위치로 이동" Cursor="Hand">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="Camera" Height="30" Width="30" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="Cam 위치" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+
+                                            <Button x:Name="btnInterMarking" Grid.Column="4" Grid.Row="0" Width="110" Height="50"  FontSize="20"
+                                                    Background="#16365d" ToolTip="사내 마크 마킹" Cursor="Hand" HorizontalAlignment="Left">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <materialDesign:PackIcon Kind="Marker" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="마킹" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="btnInterMarkRead" Grid.Column="4" Grid.Row="2"  Height="50" Width="110"  FontSize="20"  
+                                                    Background="#16365d" ToolTip="사내 마크 인식" Cursor="Hand" HorizontalAlignment="Left">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="Read" Height="30" Width="30" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="인식" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+
+                                        </Grid>
+                                    </Grid>
+                                </Expander>
+                            </Grid>
+                            <Grid Margin="15">
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"                                     
+                                       ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="OCR 설정" Background="#0C1E34">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="2*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Border  Margin="10,0,10,00" CornerRadius="3 3 3 3" Background="White">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="1*"/>
+                                                        <ColumnDefinition Width="2*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Image Source="../images/OCR.png" Width="40"/>
+                                                            <Label Content="수동 데이터 입력" VerticalAlignment="Center" FontWeight="Bold"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+
+                                                    <Grid Grid.Column="1">
+                                                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                            <TextBox
+                                        x:Name="tbCustomRandomOCR"
+                                         Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="3"
+                                         materialDesign:HintAssist.Hint="수동 마킹 데이터 입력 기능"
+                                         BorderThickness="1"
+                                         Height="30"
+                                         VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                        <Grid Margin="10" Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+
+                                            <Button x:Name="btnOCRMarkSetting" Click="btnOCRMarkSetting_Click" Grid.Column="0" Grid.Row="0" Width="160" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="OCR 마킹 파라미터 설정">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <materialDesign:PackIcon Kind="CogOutline" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="마크 설정" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="btnOCRMarkROI" Grid.Column="0" Grid.Row="2"  Height="50" Width="160"  FontSize="20" Click="btnOCRMarkROI_Click"
+                                                    Background="#16365d" ToolTip="OCR 마킹 영역 추가">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="CropFree" Height="30" Width="30" Foreground="White"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="영역 추가" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="btnOCRMarkMove" Grid.Column="2" Grid.Row="0" Width="160" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="OCR 마킹 위치로 이동">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <materialDesign:PackIcon Kind="MoveToInbox" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="마킹 위치" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="btnOCRCamMove" Grid.Column="2" Grid.Row="2"  Height="50" Width="160"  FontSize="20"  
+                                                    Background="#16365d" ToolTip="OCR 마크 카메라 위치로 이동" Cursor="Hand">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="Camera" Height="30" Width="30" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="Cam 위치" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Button x:Name="btnOCRMarking" Grid.Column="4" Grid.Row="0" Width="110" Height="50"  FontSize="20"
+                                                    Background="#16365d" ToolTip="OCR 마크 마킹" Cursor="Hand" HorizontalAlignment="Left">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <materialDesign:PackIcon Kind="Marker" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="마킹" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+
+                                        </Grid>
+                                    </Grid>
+
+                                    <!--<Grid Margin="10">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button x:Name="btnOCRMarkSetting" Click="btnOCRMarkSetting_Click" Grid.Row="2" Width="160" Height="50" Margin="15, 0" FontSize="20"
+                            Background="#16365d">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <materialDesign:PackIcon Kind="CogOutline" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="마크 설정" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Separator Width="20" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                                            <Button Grid.Row="0" Grid.Column="0" Height="50" Width="150" Margin="15, 0" x:Name="btnOCRMarkROI" ToolTip="OCR 마킹 영역 추가" Background="#16365d" Click="btnOCRMarkROI_Click" Cursor="Hand">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="CropFree" Height="30" Width="30" Foreground="White"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="영역 추가" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>-->
+                                </Expander>
+                            </Grid>
+
+                            <!--수동마킹<Grid Margin="15">
+                                <Expander Visibility="Visible" materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource MaterialDesignExpander}"
+                                          ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="수동 마킹" Background="#0C1E34">
+                                    <Grid Margin="10">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button x:Name="btnManualMarkStart" Width="160" Height="60" FontSize="22" Background="#16365d">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="Play" Width="30" Height="30" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="마킹 시작" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <Separator Width="20" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                                            <Button x:Name="btnManualMarkStop" Click="btnManualMarkStop_Click" Width="160" Height="60" FontSize="22" Background="#16365d">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="Stop" Width="30" Height="30" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="정 지" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
+                                        <Grid Grid.Row="2" Margin="0,10,0,0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Label Grid.Row="0" Grid.Column="0" Content="좌/우 마킹" Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="5"/>
+                                            <ComboBox Grid.Row="0" Grid.Column="1" SelectedIndex="0" Name="cmbMarkingMode" FontSize="30" Width="100" Style="{StaticResource ComboBoxStyle1}" SelectionChanged="cbMarkType_SelectionChanged">
+                                                <ComboBoxItem Content="좌"/>
+                                                <ComboBoxItem Content="우"/>
+                                            </ComboBox>
+
+                                            <Label Grid.Row="1" Grid.Column="0" Content="모델" Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="5"/>
+                                            <TextBox Grid.Row="1" Grid.Column="1" x:Name="tbManualModelName" Margin="5" Style="{StaticResource SimpleTextBox}" Foreground="Black" FontSize="18" Height="40" VerticalContentAlignment="Center" materialDesign:HintAssist.Hint="현재 모델명 입력 확인"/>
+
+                                            <Label Grid.Row="2" Grid.Column="0" Content="Lot ID" Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="5"/>
+                                            <TextBox Grid.Row="2" Grid.Column="1" x:Name="tbManualLotId" Margin="5" Style="{StaticResource SimpleTextBox}" Foreground="Black" FontSize="18" Height="40" VerticalContentAlignment="Center" materialDesign:HintAssist.Hint="ITS Lot ID 입력 (Enter)"/>
+
+                                            <Label Grid.Row="4" Grid.Column="0" Content="1열 입력" Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="5"/>
+                                            <TextBox Grid.Row="4" Grid.Column="1" x:Name="tbManualMarkData1" Margin="5" Style="{StaticResource SimpleTextBox}" Foreground="Black" FontSize="18" Height="40" VerticalContentAlignment="Center" materialDesign:HintAssist.Hint="1열 마킹 데이터"/>
+
+                                            <Label Grid.Row="5" Grid.Column="0" Content="2열 입력" Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="5"/>
+                                            <TextBox Grid.Row="5" Grid.Column="1" x:Name="tbManualMarkData2" Margin="5" Style="{StaticResource SimpleTextBox}" Foreground="Black" FontSize="18" Height="40" VerticalContentAlignment="Center" materialDesign:HintAssist.Hint="2열 마킹 데이터"/>
+
+                                            <Label Grid.Row="6" Grid.Column="0" Content="3열 입력" Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="5"/>
+                                            <TextBox Grid.Row="6" Grid.Column="1" x:Name="tbManualMarkData3" Margin="5" Style="{StaticResource SimpleTextBox}" Foreground="Black" FontSize="18" Height="40" VerticalContentAlignment="Center" materialDesign:HintAssist.Hint="3열 마킹 데이터"/>
+
+                                            <Label Grid.Row="7" Grid.Column="0" Content="4열 입력" Foreground="White" FontSize="20" VerticalAlignment="Center" Margin="5"/>
+                                            <TextBox Grid.Row="7" Grid.Column="1" x:Name="tbManualMarkData4" Margin="5" Style="{StaticResource SimpleTextBox}" Foreground="Black" FontSize="18" Height="40" VerticalContentAlignment="Center" materialDesign:HintAssist.Hint="4열 마킹 데이터"/>
+                                        </Grid>
+                                        <TextBlock x:Name="tbManualMarkStatus" Grid.Row="4" Text="준비 완료" Foreground="White" FontSize="20" HorizontalAlignment="Center"/>
+                                    </Grid>
+                                </Expander>
+                            </Grid>-->
+
+
+                            <Grid Margin="15">
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+                                       ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="조명 제어" Background="#0C1E34">
+                                    <Grid Margin="10">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition Height="5"/>
+                                            <RowDefinition />
+                                            <RowDefinition Height="5"/>
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Background="Transparent" Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*"/>
+                                                <ColumnDefinition Width="4*"/>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.RowSpan="2" VerticalAlignment="Center">
+                                                <Button x:Name="btnTopLightOnoff" Width="28" Height="28" Style="{StaticResource MaterialDesignIconButton}" Click="btnTopLightOnoff_Click" >
+                                                    <Image Source="../Images/Light2.png" Width="28" Height="28"/>
+                                                </Button>
+
+                                                <Label Grid.RowSpan="2" Content="TOP" Foreground="White" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <Slider Name="sldrLightTop" Grid.Column="1" HorizontalAlignment="Stretch" Margin="10,0,10,0"  VerticalAlignment="Center" IsSnapToTickEnabled="True" Interval="1" Maximum="255" Minimum="0" Orientation="Horizontal" TickFrequency="10"  Value="0" Delay="100" SmallChange="1" LargeChange="5"/>
+                                            <controls:NumericUpDown Margin="3 18 3 18" Grid.Column="2" Minimum="0" Maximum="255"
+                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                Padding="0 0 0 0"
+                                Name="nudLightTop" Value="{Binding ElementName=sldrLightTop, Path=Value, Mode=OneWay}" Tag="1"></controls:NumericUpDown>
+                                            <Button  Name="btnSaveLightTop" Grid.Column="3" Padding="0"  FontSize="12" Foreground="White" >저장</Button>
+                                        </Grid>
+
+                                        <Grid Background="Transparent" Grid.Row="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*"/>
+                                                <ColumnDefinition Width="4*"/>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.RowSpan="2" VerticalAlignment="Center">
+                                                <Button x:Name="btnBotLightOnoff" Width="28" Height="28" Style="{StaticResource MaterialDesignIconButton}" Click="btnBotLightOnoff_Click" >
+                                                    <Image Source="../Images/Light2.png" Width="28" Height="28"/>
+                                                </Button>
+
+                                                <Label Grid.RowSpan="2" Content="BOT" Foreground="White" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <Slider Name="sldrLightBot" Grid.Column="1" HorizontalAlignment="Stretch" Margin="10,0,10,0"  VerticalAlignment="Center" IsSnapToTickEnabled="True" Interval="1" Maximum="255" Minimum="0" Orientation="Horizontal" TickFrequency="10"  Value="0" Delay="100" SmallChange="1" LargeChange="5"/>
+                                            <controls:NumericUpDown Margin="3 18 3 18" Grid.Column="2" Minimum="0" Maximum="255"
+                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                Padding="0 0 0 0"
+                                Name="nudLightBot" Value="{Binding ElementName=sldrLightBot, Path=Value, Mode=OneWay}" Tag="1"></controls:NumericUpDown>
+                                            <Button  Name="btnSaveLightBot" Grid.Column="3" Padding="0"  FontSize="12" Foreground="White" >저장</Button>
+                                        </Grid>
+
+                                        <Grid Background="Transparent" Grid.Row="4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*"/>
+                                                <ColumnDefinition Width="4*"/>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="1*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.RowSpan="2" VerticalAlignment="Center">
+                                                <Button x:Name="btnIDLightOnoff" Width="28" Height="28" Style="{StaticResource MaterialDesignIconButton}" Click="btnIDLightOnoff_Click" >
+                                                    <Image Source="../Images/Light2.png" Width="28" Height="28"/>
+                                                </Button>
+
+                                                <Label Grid.RowSpan="2" Content="ID" Foreground="White" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <Slider Name="sldrLightID" Grid.Column="1" HorizontalAlignment="Stretch" Margin="10,0,10,0"  VerticalAlignment="Center" IsSnapToTickEnabled="True" Interval="1" Maximum="255" Minimum="0" Orientation="Horizontal" TickFrequency="10"  Value="0" Delay="100" SmallChange="1" LargeChange="5"/>
+                                            <controls:NumericUpDown Margin="3 18 3 18" Grid.Column="2" Minimum="0" Maximum="255"
+                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                Padding="0 0 0 0"
+                                Name="nudLightID" Value="{Binding ElementName=sldrLightID, Path=Value, Mode=OneWay}" Tag="1"></controls:NumericUpDown>
+                                            <Button  Name="btnSaveLightID" Grid.Column="3" Padding="0"  FontSize="12" Foreground="White" >저장</Button>
+                                        </Grid>
+                                    </Grid>
+                                </Expander>
+                            </Grid>
+
+
+                            <Grid Margin="15">
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+                                       ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="마킹 위치 보정" Background="#0C1E34">
+                                    <Grid Margin="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Column="0" Foreground="White" Content="상부" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                                        <TextBox Style="{StaticResource SimpleTextBox}" FontSize="30" Grid.Column="1" Margin="15" x:Name="tbTopMotionOffset" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                        <Button x:Name="btnTopMarkOffset" Grid.Column="2"  Height="45" Width="85" ToolTip="Top 마킹 위치 이동" Click="btnTopMarkOffset_Click" Background="#16365d">
+                                            <StackPanel Orientation="Horizontal" Margin="-5 0 -5 0">
+                                                <materialDesign:PackIcon Margin="-4 0 3 0" Kind="MoveToInbox" Width="25" Height="25" Foreground="White"/>
+                                                <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="보정" FontSize="17" Foreground="White"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Label Grid.Column="0" Foreground="White" Grid.Row="1" Content="하부" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                                        <TextBox Style="{StaticResource SimpleTextBox}" Width="80" FontSize="30" Grid.Column="1" Grid.Row="1" Margin="15" x:Name="tbBotMotionOffset" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                        <Button x:Name="btnBotMarkOffset" Grid.Column="2" Grid.Row="1" Height="45" Width="85" ToolTip="하부 마킹 위치 이동" Click="btnBotMarkOffset_Click" Background="#16365d" Cursor="Hand">
+                                            <StackPanel Orientation="Horizontal" Margin="-5 0 -5 0">
+                                                <materialDesign:PackIcon Margin="-4 0 3 0" Kind="MoveToInbox" Width="25" Height="25" Foreground="White"/>
+                                                <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="보정" FontSize="17" Foreground="White"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Label Grid.Column="0" Foreground="White" Grid.Row="2" Content="그립퍼" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                                        <TextBox Style="{StaticResource SimpleTextBox}" PreviewTextInput="tbGripMotionOffset_PreviewTextInput" FontSize="30" Grid.Column="1" Grid.Row="2" Margin="15" x:Name="tbGripMotionOffset" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                        <Button x:Name="btnGripMarkOffset" Grid.Column="2" Grid.Row="2" Height="45" Width="85" ToolTip="그립퍼 위치 이동" Click="btnGripMarkOffset_Click" Background="#16365d" Cursor="Hand">
+                                            <StackPanel Orientation="Horizontal" Margin="-5 0 -5 0">
+                                                <materialDesign:PackIcon Margin="-4 0 3 0" Kind="MoveToInbox" Width="25" Height="25" Foreground="White"/>
+                                                <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="보정" FontSize="17" Foreground="White"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Separator Style="{StaticResource MaterialDesignDarkSeparator}" Grid.Column="3" Width="15"/>
+                                        <Button x:Name="btnMove1Row" Grid.Column="4" Grid.Row="0" Height="45" Width="130" ToolTip="1열로 이동" Click="btnMove1Row_Click" Background="#16365d">
+                                            <StackPanel Orientation="Horizontal" >
+                                                <materialDesign:PackIcon Kind="MoveToInbox" Width="25" Height="25" Foreground="White"/>
+                                                <Separator Style="{StaticResource MaterialDesignDarkSeparator}" Width="5"/>
+                                                <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="1열이동" FontSize="17" Foreground="White"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="btnMove2Row" Grid.Column="4" Grid.Row="1" Height="45" Width="130" ToolTip="2열로 이동" Click="btnMove2Row_Click" Background="#16365d">
+                                            <StackPanel Orientation="Horizontal" >
+                                                <materialDesign:PackIcon Kind="MoveToInbox" Width="25" Height="25" Foreground="White"/>
+                                                <Separator Style="{StaticResource MaterialDesignDarkSeparator}" Width="5"/>
+                                                <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="2열이동" FontSize="17" Foreground="White"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="btnMove3Row" Grid.Column="4" Grid.Row="2" Height="45" Width="130" ToolTip="3열로 이동" Click="btnMove3Row_Click" Background="#16365d">
+                                            <StackPanel Orientation="Horizontal" >
+                                                <materialDesign:PackIcon Kind="MoveToInbox" Width="25" Height="25" Foreground="White"/>
+                                                <Separator Style="{StaticResource MaterialDesignDarkSeparator}" Width="5"/>
+                                                <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="3열이동" FontSize="17" Foreground="White"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <TextBox Visibility="Hidden" Style="{StaticResource SimpleTextBox}" FontSize="30" Grid.Column="1" Grid.Row="3" Margin="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                        <Button x:Name="btnMove4Row" Grid.Column="4" Grid.Row="3" Height="45" Width="130" ToolTip="4열로 이동" Click="btnMove4Row_Click" Background="#16365d">
+                                            <StackPanel Orientation="Horizontal" >
+                                                <materialDesign:PackIcon Kind="MoveToInbox" Width="25" Height="25" Foreground="White"/>
+                                                <Separator Style="{StaticResource MaterialDesignDarkSeparator}" Width="5"/>
+                                                <TextBlock Margin="0 0 0 0" VerticalAlignment="Center" Text="4열이동" FontSize="17" Foreground="White"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Expander>
+                            </Grid>
+                            <Grid Margin="15">
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+                                       ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="ROI X/Y축 보정" Background="#0C1E34">
+                                    <Grid Margin="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="90"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="90"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="70"/>
+                                            <RowDefinition Height="70"/>
+                                            <RowDefinition Height="70"/>
+                                        </Grid.RowDefinitions>
+                                        <Button Grid.Column="1" Grid.Row="0" Name="btnROITopMove" Cursor="Hand" Tag="Move Y ↑ Pixel" Style="{StaticResource MaterialDesignBlueCircleBtn}"
+                    Width="50" Height="50">
+                                            <StackPanel>
+                                                <materialDesign:PackIcon Kind="ArrowTopBold" Width="40" Height="40" HorizontalAlignment="Center" Foreground="White"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <TextBox Text="0.15" Style="{StaticResource SimpleTextBox}" FontSize="30" Grid.Column="1" Grid.Row="1" Margin="15" x:Name="tbROIMoveOffset" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+                                        <Button Grid.Column="1" Grid.Row="2" Name="btnROIBottomMove" Cursor="Hand" Tag="Move Y ↓ Pixel" Style="{StaticResource MaterialDesignBlueCircleBtn}"
+                    Width="50" Height="50">
+                                            <StackPanel>
+                                                <materialDesign:PackIcon Kind="ArrowBottomBold" Width="40" Height="40" HorizontalAlignment="Center" Foreground="White"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Button Grid.Column="0" Grid.Row="1" Name="btnROILeftMove" Cursor="Hand" Tag="Move X ← Pixel" Style="{StaticResource MaterialDesignBlueCircleBtn}"
+                    Width="50" Height="50">
+                                            <StackPanel>
+                                                <materialDesign:PackIcon Kind="ArrowLeftBold" Width="40" Height="40" HorizontalAlignment="Center" Foreground="White"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Button Grid.Column="2" Grid.Row="1" Name="btnROIRightMove" Cursor="Hand" Tag="Move X → Pixel" Style="{StaticResource MaterialDesignBlueCircleBtn}"
+                    Width="50" Height="50">
+                                            <StackPanel>
+                                                <materialDesign:PackIcon Kind="ArrowRightBold" Width="40" Height="40" HorizontalAlignment="Center" Foreground="White"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </Expander>
+                            </Grid>
+                            <Grid Margin="15">
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+                                       ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="기구 제어" Background="#0C1E34">
+                                    <Grid Margin="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="15"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="15"/>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="15"/>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="15"/>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="15"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <Button x:Name="btnRollerUp" Click="btnRollerUp_Click" Grid.Column="0" Grid.Row="0" Width="170" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="누름 롤러 상승">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <materialDesign:PackIcon Kind="Firewire" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                <TextBlock FontWeight="Normal" FontSize="20" Text="롤러 상승" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="btnRollerDown" Click="btnRollerDown_Click" Grid.Column="2" Grid.Row="0" Width="170" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="누름 롤러 하강">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <materialDesign:PackIcon Kind="Firewire" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                <TextBlock FontWeight="Normal" FontSize="20" Text="롤러 하강" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Button x:Name="btnGripOn" Click="btnGripOn_Click" Grid.Column="0" Grid.Row="2" Width="170" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="그립퍼 그립 on">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <materialDesign:PackIcon Kind="DragHorizontalVariant" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                <TextBlock FontWeight="Normal" FontSize="20" Text="그립 On" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="btnGripOff" Click="btnGripOff_Click" Grid.Column="2" Grid.Row="2" Width="170" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="그립퍼 그립 off" Cursor="Hand">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <materialDesign:PackIcon Kind="DragHorizontalVariant" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                <TextBlock FontWeight="Normal" FontSize="20" Text="그립 Off" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Button x:Name="btnTensionOn" Click="btnTensionOn_Click" Grid.Column="0" Grid.Row="4" Width="170" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="그립퍼 텐션 on">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <materialDesign:PackIcon Kind="CurrentDc" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                <TextBlock FontWeight="Normal" FontSize="20" Text="텐션 On" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="btnTensionOff" Click="btnTensionOff_Click" Grid.Column="2" Grid.Row="4" Width="170" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="그립퍼 텐션 off" Cursor="Hand">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <materialDesign:PackIcon Kind="CurrentDc" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                <TextBlock FontWeight="Normal" FontSize="20" Text="텐션 Off" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Button x:Name="btnGrip" Click="btnGrip_Click" Grid.Column="0" Grid.Row="6" Width="170" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="그립핑 ">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <materialDesign:PackIcon Kind="NotificationClearAll" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                <TextBlock FontWeight="Normal" FontSize="20" Text="그립핑 On" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="btnRelease" Click="btnRelease_Click" Grid.Column="2" Grid.Row="6" Width="170" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="그립퍼 텐션 off" Cursor="Hand">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <materialDesign:PackIcon Kind="NotificationClearAll" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                <TextBlock FontWeight="Normal" FontSize="20" Text="그립핑 Off" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Button x:Name="btnSuctionOn" Click="btnSuctionOn_Click" Grid.Column="0" Grid.Row="8" Width="170" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="집진기 on ">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <materialDesign:PackIcon Kind="WeatherWindy" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                <TextBlock FontWeight="Normal" FontSize="20" Text="집진기 On" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <Button x:Name="btnSuctionOff" Click="btnSuctionOff_Click" Grid.Column="2" Grid.Row="8" Width="170" Height="50" FontSize="20"
+                                                    Background="#16365d" ToolTip="집진기 off" Cursor="Hand">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <materialDesign:PackIcon Kind="WeatherWindy" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                                                <TextBlock FontWeight="Normal" FontSize="20" Text="집진기 Off" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                    </Grid>
+                                </Expander>
+                            </Grid>
+                            <Grid Margin="15">
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+                                       ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="AOI 마크 확인" Background="#0C1E34">
+                                    <Grid Margin="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="200"/>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="2*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Border Background="#1e252e" Grid.Row="0" BorderThickness="2" BorderBrush="#b2b2b2" Margin="50 0 50 0">
+                                            <Grid>
+                                                <!--<dcs:KeyenceIDReader x:Name="idReaderControl" Background="Red"></dcs:KeyenceIDReader>-->
+                                                <Image x:Name="imgAOIMark" Stretch="Uniform" Margin="50 0 50 0"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <Border Grid.Row="1" Grid.Column="1" Margin="1,20,0,20" CornerRadius="3 3 3 3" Background="White">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="2*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Image Source="../images/ID_Matrix.png" Width="40"/>
+                                                        <Label Content="인식결과" VerticalAlignment="Center" FontWeight="Bold"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <Grid Grid.Column="1">
+                                                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                        <TextBox
+                                        x:Name="tbAOIMarkResult"
+                                         Style="{StaticResource SimpleTextBox}"
+                                         VerticalContentAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="3"
+                                         materialDesign:HintAssist.Hint="Result of AOI Recognition"
+                                         BorderThickness="1"
+                                         Height="30"
+                                         VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </Grid>
+
+
+                                            </Grid>
+                                        </Border>
+
+                                        <Grid Grid.Row="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+
+                                            <Button x:Name="btnAOIMarkRead" Height="50" Width="110"  FontSize="20"  
+                                                    Background="#16365d" ToolTip="AOI 마크 인식" Cursor="Hand" HorizontalAlignment="Left" Click="btnAOIMarkRead_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Kind="Read" Height="30" Width="30" Foreground="white"/>
+                                                    <TextBlock FontWeight="Normal" FontSize="20" Text="인식" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                                                </StackPanel>
+                                            </Button>
+
+                                        </Grid>
+                                    </Grid>
+                                </Expander>
+                            </Grid>
+                            <Grid Margin="15">
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+                                       ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="Mark Position" Background="#0C1E34">
+                                    <Grid Margin="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="1*"/>
+                                            <RowDefinition Height="1*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Border Grid.Column="1" Grid.ColumnSpan="2" Background="#195aa2" CornerRadius="2,2,2,2" Margin="2"></Border>
+                                        <Border Grid.Row="1" Grid.RowSpan="4" Background="#195aa2" CornerRadius="2,2,2,2" Margin="2"></Border>
+                                        <Label Grid.Column="1" Grid.Row="0" Content="X" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                                        <Label Grid.Column="2" Grid.Row="0" Content="Y" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                                        <Label Grid.Column="0" Grid.Row="1" Content="Align" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                                        <Label Grid.Column="0" Grid.Row="2" Content="Top" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                                        <Label Grid.Column="0" Grid.Row="3" Content="Bot" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                                        <Label x:Name="lblAlignMotionPosX" Grid.Column="1" Grid.Row="1" Content="0" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="white"/>
+                                        <Label x:Name="lblAlignMotionPosY" Grid.Column="2" Grid.Row="1" Content="0" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                                        <Label x:Name="lblTopMotionPosY" Grid.Column="2" Grid.Row="2" Content="0" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                                        <Label x:Name="lblBotMotionPosY" Grid.Column="2" Grid.Row="3" Content="0" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White"/>
+                                    </Grid>
+                                </Expander>
+                            </Grid>                            
+                        </StackPanel>
+                    </materialDesign:ColorZone>
+                </Grid>
+            </ScrollViewer>
+
+            <Grid Grid.Row="1" Background="#0C1E34">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="btnSave" Click="btnSave_Click" Grid.Row="2" Width="150" Height="50" Margin="15, 0" FontSize="20"
+                            Background="#16365d" Cursor="Hand">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <materialDesign:PackIcon Kind="ContentSave" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                            <TextBlock FontWeight="Normal" FontSize="30" Text="저 장" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                        </StackPanel>
+                    </Button>
+                    <Separator Width="10" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                    <Button x:Name="btnDelete" Click="btnDelete_Click" Grid.Row="2" Width="155" Height="50" Margin="15, 0" FontSize="20"
+                            Background="#16365d" Cursor="Hand">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <materialDesign:PackIcon Kind="ContentCut" Margin="0 0 0 0" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                            <TextBlock FontWeight="Normal" FontSize="30" Text="초기화" VerticalAlignment="Center" Margin="5, 0, 0, 0" Foreground="white"/>
+                        </StackPanel>
+                    </Button>
+                    <Separator Width="10" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                    <Button x:Name="btnCancel" Click="btnCancel_Click" Grid.Row="2" Width="150" Height="50" Margin="15, 0" FontSize="20"
+                            Background="#16365d" Cursor="Hand">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <materialDesign:PackIcon Kind="CancelBoxOutline" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                            <TextBlock FontWeight="Normal" FontSize="30" Text="닫 기" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Window>

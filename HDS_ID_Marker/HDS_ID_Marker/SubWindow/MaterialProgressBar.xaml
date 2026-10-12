@@ -1,0 +1,27 @@
+﻿<Window x:Class="HDS_ID_Marker.SubWindow.MaterialProgressBar"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HDS_ID_Marker.SubWindow"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        mc:Ignorable="d" FontFamily="Roboto"
+        Title="MaterialProgressBar" Height="100" Width="250" WindowStartupLocation="CenterScreen">
+    <Border BorderThickness="3" CornerRadius="15" Background="White">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="5" Direction="-90" RenderingBias="Quality" ShadowDepth="1"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Please Wait.." Margin="10 0 0 0" VerticalAlignment="Center" FontWeight="Bold" FontSize="20"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <ProgressBar x:Name="pb" Margin="10 0 0 0" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" />
+                <TextBlock Name="tb" Margin="10 0 0 0" Text="Content to loading ..." VerticalAlignment="Center" Opacity="0.6"  FontSize="15"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

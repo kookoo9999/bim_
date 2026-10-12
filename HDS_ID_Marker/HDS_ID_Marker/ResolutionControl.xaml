@@ -1,0 +1,314 @@
+﻿<mah:MetroWindow x:Class="HDS_ID_Marker.ResolutionControl"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Icon="./images/settings.ico" WindowStartupLocation="CenterScreen"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:common="clr-namespace:Common;assembly=Common"
+        mc:Ignorable="d" FontFamily="Roboto" BorderThickness="1" BorderBrush="Gray" AllowsTransparency="True" WindowTitleBrush="White" Topmost="True"
+        Title="해상도 설정" Height="500" Width="1250">
+    <Grid x:Name="gridResolutionInfo">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="15*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" CornerRadius="0,0,0,0" Margin="1">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#8b6e60"
+                                CornerRadius="3" 
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2" Height="23">
+                        <TextBlock Text="Laser" Margin="0" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="14"/>
+                    </materialDesign:ColorZone>
+                </Border>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Top Offset X" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopOffsetX}" x:Name="tbTopOffsetX" Grid.Column="1" Grid.Row="0" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="0" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Top Offset Y" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopOffsetY}" x:Name="tbTopOffsetY" Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="1" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Top Angle" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopAngle}" x:Name="tbTopAngle" Grid.Column="1" Grid.Row="2" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="2" Grid.Column="2" Content="º" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Top Focus Limit" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopFocusLimit}" x:Name="tbTopFocusLimit" Grid.Column="1" Grid.Row="3" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="3" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="Bot Offset X" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotOffsetX}" x:Name="tbBotOffsetX" Grid.Column="1" Grid.Row="4" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="4" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="5" Grid.Column="0" Content="Bot Offset Y" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotOffsetY}" x:Name="tbBotOffsetY" Grid.Column="1" Grid.Row="5" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="5" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="6" Grid.Column="0" Content="Bot Angle" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotAngle}" x:Name="tbBotAngle" Grid.Column="1" Grid.Row="6" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="6" Grid.Column="2" Content="º" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="7" Grid.Column="0" Content="Bot Focus Limit" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotFocusLimit}" x:Name="tbBotFocusLimit" Grid.Column="1" Grid.Row="7" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="7" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="15*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" CornerRadius="0,0,0,0" Margin="1">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#8b6e60"
+                                CornerRadius="3" 
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2" Height="23"/>
+                </Border>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="15*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" CornerRadius="0,0,0,0" Margin="1">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#8b6e60"
+                                CornerRadius="3" 
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2" Height="23">
+                        <TextBlock Text="Camera" Margin="0" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="14"/>
+                    </materialDesign:ColorZone>
+                </Border>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Top Resolution" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopCamResolution}" x:Name="tbTopCamResolution" Grid.Column="1" Grid.Row="0" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="0" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Bottom Resolution" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotCamResolution}" x:Name="tbBotCamResolution" Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="1" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Align Resolution" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding AlignCamResolution}" x:Name="tbAlignCamResolution" Grid.Column="1" Grid.Row="2" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="2" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="15*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" CornerRadius="0,0,0,0" Margin="1">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#8b6e60"
+                                CornerRadius="3" 
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2" Height="23">
+                        <TextBlock Text="Motion" Margin="0" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="14"/>
+                    </materialDesign:ColorZone>
+                </Border>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Top Origin Y" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopOriginY}" x:Name="tbTopOriginY" Grid.Column="1" Grid.Row="0" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="0" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Bot Origin Y" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotOriginY}" x:Name="tbBotOriginY" Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="1" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="AOI Origin X" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding AOIOriginX}" x:Name="tbAOIOriginX" Grid.Column="1" Grid.Row="2" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="2" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Uncoiler Tension" VerticalAlignment="Center"/>
+                    <common:NumberTextBox  x:Name="tbUncoilerTension" Grid.Column="1" Grid.Row="3" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="10" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="3" Grid.Column="2" Content="m/s" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="Recoiler Tension" VerticalAlignment="Center"/>
+                    <common:NumberTextBox  x:Name="tbRecoilerTension" Grid.Column="1" Grid.Row="4" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="10" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="4" Grid.Column="2" Content="m/s" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="5" Grid.Column="0" Content="Gripper Speed" VerticalAlignment="Center"/>
+                    <common:NumberTextBox  x:Name="tbGripperSpeed" Grid.Column="1" Grid.Row="5" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="200" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="5" Grid.Column="2" Content="m/s" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="6" Grid.Column="0" Content="Uncoiler Speed" VerticalAlignment="Center"/>
+                    <common:NumberTextBox  x:Name="tbUncoilerSpeed" Grid.Column="1" Grid.Row="6" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="200" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="6" Grid.Column="2" Content="m/s" VerticalAlignment="Center"/>
+
+                    <Label Grid.Row="7" Grid.Column="0" Content="Recoiler Speed" VerticalAlignment="Center"/>
+                    <common:NumberTextBox  x:Name="tbRecoilerSpeed" Grid.Column="1" Grid.Row="7" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="0.000" MaxValue="200" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="7" Grid.Column="2" Content="m/s" VerticalAlignment="Center"/>
+
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="15*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" CornerRadius="0,0,0,0" Margin="1">
+                    <materialDesign:ColorZone
+                                Mode="Custom"
+                                Background="#8b6e60"
+                                CornerRadius="3" 
+                                materialDesign:ShadowAssist.ShadowDepth="Depth2" Height="23">
+                        <TextBlock Text="Motion" Margin="0" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Bold" Foreground="White" FontSize="14"/>
+                    </materialDesign:ColorZone>
+                </Border>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Top Offset X1" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopOffsetX1}" x:Name="tbTopOffsetX1" Grid.Column="1" Grid.Row="0" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="0" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="1" Grid.Column="0" Content="Top Offset Y1" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopOffsetY1}" x:Name="tbTopOffsetY1" Grid.Column="1" Grid.Row="1" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="1" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="2" Grid.Column="0" Content="Top Offset X2" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopOffsetX2}" x:Name="tbTopOffsetX2" Grid.Column="1" Grid.Row="2" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="2" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="3" Grid.Column="0" Content="Top Offset Y2" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopOffsetY2}" x:Name="tbTopOffsetY2" Grid.Column="1" Grid.Row="3" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="3" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="4" Grid.Column="0" Content="Top Offset X3" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopOffsetX3}" x:Name="tbTopOffsetX3" Grid.Column="1" Grid.Row="4" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="4" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="5" Grid.Column="0" Content="Top Offset Y3" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopOffsetY3}" x:Name="tbTopOffsetY3" Grid.Column="1" Grid.Row="5" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="5" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="6" Grid.Column="0" Content="Top Offset X4" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopOffsetX4}" x:Name="tbTopOffsetX4" Grid.Column="1" Grid.Row="6" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="6" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="7" Grid.Column="0" Content="Top Offset Y4" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding TopOffsetY4}" x:Name="tbTopOffsetY4" Grid.Column="1" Grid.Row="7" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="7" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    
+                    <Label Grid.Row="8" Grid.Column="0" Content="Bot Offset X1" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotOffsetX1}" x:Name="tbBotOffsetX1" Grid.Column="1" Grid.Row="8" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="8" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="9" Grid.Column="0" Content="Bot Offset Y1" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotOffsetY1}" x:Name="tbBotOffsetY1" Grid.Column="1" Grid.Row="9" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="9" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="10" Grid.Column="0" Content="Bot Offset X2" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotOffsetX2}" x:Name="tbBotOffsetX2" Grid.Column="1" Grid.Row="10" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="10" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="11" Grid.Column="0" Content="Bot Offset Y2" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotOffsetY2}" x:Name="tbBotOffsetY2" Grid.Column="1" Grid.Row="11" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="11" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="12" Grid.Column="0" Content="Bot Offset X3" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotOffsetX3}" x:Name="tbBotOffsetX3" Grid.Column="1" Grid.Row="12" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="12" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="13" Grid.Column="0" Content="Bot Offset Y3" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotOffsetY3}" x:Name="tbBotOffsetY3" Grid.Column="1" Grid.Row="13" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="13" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="14" Grid.Column="0" Content="Bot Offset X4" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotOffsetX4}" x:Name="tbBotOffsetX4" Grid.Column="1" Grid.Row="14" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="14" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+                    <Label Grid.Row="15" Grid.Column="0" Content="Bot Offset Y4" VerticalAlignment="Center"/>
+                    <common:NumberTextBox Text="{Binding BotOffsetY4}" x:Name="tbBotOffsetY4" Grid.Column="1" Grid.Row="15" Style="{StaticResource MaterialDesignTextBox}" FontSize="14"  HorizontalAlignment="Center" MinValue="-100.000" MaxValue="100.000" HorizontalContentAlignment="Right" Height="25" Width="90"/>
+                    <Label Grid.Row="15" Grid.Column="2" Content="mm" VerticalAlignment="Center"/>
+
+
+
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Name="btnSave" Height="35" Width="95" Margin="5,0,5,0" Click="btnSaveClick">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <materialDesign:PackIcon Kind="ContentSave" Width="20" Height="20" Foreground="white" Margin="0, 0, 0, 0"/>
+                        <TextBlock FontWeight="Normal" FontSize="15" Text="확 인" VerticalAlignment="Center" Foreground="White"  Margin="10, 0, 10, 0"/>
+                    </StackPanel>
+                </Button>
+                <Button Name="btnClose" Height="35" Width="95" Margin="5,0,5,0" Foreground="White" FontSize="15" Click="btnClose_Click" >취 소</Button>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</mah:MetroWindow>

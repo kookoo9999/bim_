@@ -1,0 +1,15 @@
+D:\BGA_ID_MARKING\bin\DCS.dll.config
+D:\BGA_ID_MARKING\bin\DCS.dll
+D:\BGA_ID_MARKING\bin\DCS.pdb
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\DCS.csproj.AssemblyReference.cache
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\IDReader\KeyenceIDReader.g.cs
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\DCS_MarkupCompile.cache
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\DCS_MarkupCompile.lref
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\IDReader\KeyenceIDReader.baml
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\DCS.g.resources
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\DCS.Properties.Resources.resources
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\DCS.csproj.GenerateResource.cache
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\DCS.csproj.CoreCompileInputs.cache
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\DCS.csproj.Up2Date
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\DCS.dll
+D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\Debug\DCS.pdb

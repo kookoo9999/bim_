@@ -1,0 +1,139 @@
+﻿<Window x:Class="HDS_ID_Marker.SubWindow.WorkMarkInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d" WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ShowInTaskbar="False" FontFamily="Roboto"
+        WindowStartupLocation="CenterScreen" Topmost="True"
+        Title="2D 마크 각인 정보" Height="600" Width="600">
+
+    <Grid Background="White" x:Name="gridMain">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Column="0" Grid.ColumnSpan="3" Background="#4c7eb6">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                <Label FontSize="29" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Roboto" FontWeight="Bold" Foreground="White">2D 마크 각인 정보
+                </Label>
+            </StackPanel>
+        </Border>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Row="0" Grid.Column="0" BorderThickness="1 1 1 1" BorderBrush="#4c7eb6" Background="AliceBlue">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center">고객마킹</TextBlock>
+                    <TextBlock x:Name="tbRowA" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">(A열)</TextBlock>
+                    <TextBlock FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center">사내마킹</TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="0" Grid.Column="1" BorderThickness="0 1 0 1" BorderBrush="#4c7eb6">
+                <StackPanel>
+                    <TextBlock Margin="5 20 0 0" FontSize="20">예시) 고객마킹 : </TextBlock>
+                    <TextBlock Margin="5 20 0 0" FontSize="20">예시) 사내마킹 : </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="0" Grid.Column="2" BorderThickness="0 1 0 1" BorderBrush="#4c7eb6">
+                <StackPanel>
+                    <TextBlock x:Name="tbCustInfoA" Margin="0 20 0 0" FontSize="20">W980685377426A001</TextBlock>
+                    <TextBlock x:Name="tbInterInfoA" Margin="0 20 0 0" FontSize="20">5377426</TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="1" BorderThickness="1" BorderBrush="#4c7eb6" Background="AliceBlue">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center">고객마킹</TextBlock>
+                    <TextBlock x:Name="tbRowB" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">(B열)</TextBlock>
+                    <TextBlock FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center">사내마킹</TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="1" Grid.Column="1" BorderThickness="0 1 0 1" BorderBrush="#4c7eb6">
+                <StackPanel>
+                    <TextBlock Margin="5 20 0 0" FontSize="20">예시) 고객마킹 :</TextBlock>
+                    <TextBlock Margin="5 20 0 0" FontSize="20">예시) 사내마킹 :</TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="1" Grid.Column="2" BorderThickness="0 1 0 1" BorderBrush="#4c7eb6">
+                <StackPanel>
+                    <TextBlock x:Name="tbCustInfoB" Margin="0 20 0 0" FontSize="20">W980685377426B001</TextBlock>
+                    <TextBlock x:Name="tbInterInfoB" Margin="0 20 0 0" FontSize="20">5377427</TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="2" BorderThickness="1" BorderBrush="#4c7eb6" Background="AliceBlue">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center">고객마킹</TextBlock>
+                    <TextBlock x:Name="tbRowC" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">(C열)</TextBlock>
+                    <TextBlock FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center">사내마킹</TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="2" Grid.Column="1" BorderThickness="0 1 0 1" BorderBrush="#4c7eb6">
+                <StackPanel>
+                    <TextBlock Margin="5 20 0 0" FontSize="20">예시) 고객마킹 :</TextBlock>
+                    <TextBlock Margin="5 20 0 0" FontSize="20">예시) 사내마킹 :</TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="2" Grid.Column="2" BorderThickness="0 1 0 1" BorderBrush="#4c7eb6">
+                <StackPanel>
+                    <TextBlock x:Name="tbCustInfoC" Margin="0 20 0 0" FontSize="20">W980685377426C001</TextBlock>
+                    <TextBlock x:Name="tbInterInfoC" Margin="0 20 0 0" FontSize="20">5377428</TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="0" Grid.Row="3" BorderThickness="1" BorderBrush="#4c7eb6" Background="AliceBlue">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center">고객마킹</TextBlock>
+                    <TextBlock x:Name="tbRowD" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">(D열)</TextBlock>
+                    <TextBlock FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center">사내마킹</TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="3" Grid.Column="1" BorderThickness="0 1 0 1" BorderBrush="#4c7eb6">
+                <StackPanel>
+                    <TextBlock Margin="5 20 0 0" FontSize="20">예시) 고객마킹 :</TextBlock>
+                    <TextBlock Margin="5 20 0 0" FontSize="20">예시) 사내마킹 :</TextBlock>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="3" Grid.Column="2" BorderThickness="0 1 0 1" BorderBrush="#4c7eb6">
+                <StackPanel>
+                    <TextBlock x:Name="tbCustInfoD" Margin="0 20 0 0" FontSize="20">W980685377426D001</TextBlock>
+                    <TextBlock x:Name="tbInterInfoD" Margin="0 20 0 0" FontSize="20">5377429</TextBlock>
+                </StackPanel>
+            </Border>
+
+        </Grid>
+        <Grid Grid.Row="2">
+            <StackPanel Grid.Row="2" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button x:Name="btnContinue" Click="btnContinue_Click" Grid.Row="2" Width="160" Height="50" Margin="15, 0" FontSize="20">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <materialDesign:PackIcon Kind="PlayCircle" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white"/>
+                        <TextBlock FontWeight="Normal" FontSize="24" Text="계속진행" VerticalAlignment="Center" Margin="5, 0, 5, 0" Foreground="white"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="btnCancel" Click="btnClose_Click" Grid.Row="3" Width="150" Height="50" Margin="15, 0" FontSize="24" Content="취  소" Foreground="White"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

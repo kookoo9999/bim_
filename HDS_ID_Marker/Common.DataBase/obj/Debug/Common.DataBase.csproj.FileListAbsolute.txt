@@ -1,0 +1,7 @@
+D:\BGA_ID_MARKING\bin\Common.DataBase.dll
+D:\BGA_ID_MARKING\bin\Common.DataBase.pdb
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common.DataBase\obj\Debug\Common.DataBase.csproj.AssemblyReference.cache
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common.DataBase\obj\Debug\Common.DataBase.csproj.CoreCompileInputs.cache
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common.DataBase\obj\Debug\Common.D.9C7769C1.Up2Date
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common.DataBase\obj\Debug\Common.DataBase.dll
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common.DataBase\obj\Debug\Common.DataBase.pdb

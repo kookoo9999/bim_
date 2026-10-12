@@ -1,0 +1,77 @@
+﻿<Window x:Class="HDS_ID_Marker.SubWindow.LightControl"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HDS_ID_Marker"
+        xmlns:toolkit="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit.Extended"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        mc:Ignorable="d"
+        Title="조명 설정" Height="450" Width="500">
+    <Grid>
+        <Grid Background="Transparent" Height="400" Width="400" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="100*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Name="lblLight1" Content="반사 1" Grid.Column="0" Grid.Row="0" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10, 0, 0, 0"/>
+            <Slider x:Name="sldrLight1" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Margin="10,0,10,0" VerticalAlignment="Center" IsSnapToTickEnabled="True" Interval="1" Maximum="255" Minimum="0" Orientation="Horizontal" TickFrequency="10" TickPlacement="Both" Value="0" Delay="100" SmallChange="1" LargeChange="5" Tag="1" ValueChanged="sldLight_ValueChanged"/>
+            <toolkit:IntegerUpDown Grid.Column="2" Grid.Row="0" Minimum="0" Maximum="255" 
+                              HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                              Name="txtLight1" Text="{Binding ElementName=sldrLight1, Path=Value, Mode=TwoWay}" Margin="0,0,5,0" Tag="1" FontSize="12"/>
+            <Label  Name="lblLight2" Content="반사 2" Grid.Column="0" Grid.Row="1" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10, 0, 0, 0"/>
+            <Slider x:Name="sldrLight2" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Margin="10,0,10,0"  VerticalAlignment="Center" IsSnapToTickEnabled="True" Interval="1" Maximum="255" Minimum="0" Orientation="Horizontal" TickFrequency="10" TickPlacement="Both" Value="0" Delay="100" SmallChange="1" LargeChange="5" Tag="2" ValueChanged="sldLight_ValueChanged"/>
+            <toolkit:IntegerUpDown Grid.Column="2" Grid.Row="1" Minimum="0" Maximum="255" 
+                              HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                              Name="txtLight2" Text="{Binding ElementName=sldrLight2, Path=Value, Mode=TwoWay}" Margin="0,0,5,0" Tag="2" FontSize="12"/>
+
+            <Label  Name="lblLight3" Content="반사 3" Grid.Column="0" Grid.Row="2" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10, 0, 0, 0"/>
+            <Slider x:Name="sldrLight3" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" Margin="10,0,10,0"  VerticalAlignment="Center" IsSnapToTickEnabled="True" Interval="1" Maximum="255" Minimum="0" Orientation="Horizontal" TickFrequency="10" TickPlacement="Both" Value="0" Delay="100" SmallChange="1" LargeChange="5" Tag="2" ValueChanged="sldLight_ValueChanged"/>
+            <toolkit:IntegerUpDown Grid.Column="2" Grid.Row="2" Minimum="0" Maximum="255" 
+                              HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                              Name="txtLight3" Text="{Binding ElementName=sldrLight3, Path=Value, Mode=TwoWay}" Margin="0,0,5,0" Tag="2" FontSize="12"/>
+
+            <Label Name="lblLight4" Content="투과 1" Grid.Column="0" Grid.Row="3" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10, 0, 0, 0"/>
+            <Slider x:Name="sldrLight4" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" Margin="10,0,10,0"  VerticalAlignment="Center" IsSnapToTickEnabled="True" Interval="1" Maximum="255" Minimum="0" Orientation="Horizontal" TickFrequency="10" TickPlacement="Both" Value="0" Delay="100" SmallChange="1" LargeChange="5" Tag="2" ValueChanged="sldLight_ValueChanged"/>
+            <toolkit:IntegerUpDown Grid.Column="2" Grid.Row="3" Minimum="0" Maximum="255" 
+                              HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                              Name="txtLight4" Text="{Binding ElementName=sldrLight4, Path=Value, Mode=TwoWay}" Margin="0,0,5,0" Tag="2" FontSize="12"/>
+            <!--<Label Name="lblLight4" Content="투과 2" Grid.Column="0" Grid.Row="3" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10, 0, 0, 0"/>
+            <Slider x:Name="sldrLight4" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" Margin="10,0,10,0"  VerticalAlignment="Center" IsSnapToTickEnabled="True" Interval="1" Maximum="255" Minimum="0" Orientation="Horizontal" TickFrequency="10" TickPlacement="Both" Value="0" Delay="100" SmallChange="1" LargeChange="5" Tag="4" ValueChanged="sldLight_ValueChanged"/>
+            <toolkit:IntegerUpDown Grid.Column="2" Grid.Row="3" Minimum="0" Maximum="255" 
+                              HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                              Name="txtLight4" Text="{Binding ElementName=sldrLight4, Path=Value, Mode=TwoWay}" Margin="0,0,5,0" Tag="4" FontSize="12"/>-->
+
+            <StackPanel Grid.Row="5" Grid.ColumnSpan="3" Orientation="Horizontal">
+                <Label Content="TOP Offset X" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="10"/>
+                <TextBox Name="txtOffsetX_top" FontSize="20" Width="80" Height="30" TextAlignment="Left" Text="100.00"/>
+                <Label Content="Offset Y" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="10"/>
+                <TextBox Name="txtOffsetY_top" FontSize="20" Width="80" Height="30" TextAlignment="Left" Text="100.00"/>
+            </StackPanel>
+            <StackPanel Grid.Row="6" Grid.ColumnSpan="4" Orientation="Horizontal">
+                <Label Content="BOT Offset X" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="10"/>
+                <TextBox Name="txtOffsetX_bot" FontSize="20" Width="80" Height="30" TextAlignment="Left" Text="100.00"/>
+                <Label Content="Offset Y" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="10"/>
+                <TextBox Name="txtOffsetY_bot" FontSize="20" Width="80" Height="30" TextAlignment="Left" Text="100.00"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button x:Name="btnOn" Grid.Row="3" Width="100" Height="35" Margin="15, 0" Content="ON"/>
+                <Button x:Name="btnOK"     Grid.Row="3" Width="100" Height="35" Margin="15, 0" Content="확 인"/>
+                <Button x:Name="btnCancel" Grid.Row="3" Width="100" Height="35" Margin="15, 0" Content="취 소"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

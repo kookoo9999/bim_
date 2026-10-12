@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="HDS_ID_Marker.SubControl.ControlPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HDS_ID_Marker"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="470">
+    <Grid Name="Control_Panel">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="1" BorderBrush="#FF5C5C5C" BorderThickness="0,1,0,0">
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF5C5C5C" Offset="1"/>
+                    <GradientStop Color="#EDEDED"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Border Grid.Column="3" BorderBrush="#FF5C5C5C" BorderThickness="0,1,0,0">
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF5C5C5C" Offset="1"/>
+                    <GradientStop Color="#EDEDED"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Grid Grid.Column="0">
+            <Button Template="{DynamicResource MenuButtonStyle2}" Tag="Move_Left" Name="ButtonMoveLeft">
+                <Image Width="100" Source="../Images/blackDoublePrev.png"/>
+            </Button>
+        </Grid>
+
+        <Grid Grid.Column="2">
+            <Label Name="label_camera" Content="카메라 ON" FontSize="25" Foreground="Black" FontFamily="HY부활L" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
+            <Button Template="{DynamicResource MenuButtonStyle2}" Tag="Camera_On" Name="ButtonCameraOn">
+                <Image Width="50" Source="../Images/livecam.png"/>
+            </Button>
+        </Grid>
+
+        <Grid Grid.Column="5">
+            <Button Template="{DynamicResource MenuButtonStyle2}" Tag="Move_Right" Name="ButtonMoveRight">
+                <Image Width="100" Source="../Images/blackDoubleNext.png"/>
+            </Button>
+        </Grid>
+
+    </Grid>
+</UserControl>

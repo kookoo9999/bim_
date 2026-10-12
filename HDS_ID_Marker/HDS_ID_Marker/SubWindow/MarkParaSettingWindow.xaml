@@ -1,0 +1,137 @@
+﻿<Window x:Class="HDS_ID_Marker.SubWindow.MarkParaSettingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HDS_ID_Marker.SubWindow"
+        mc:Ignorable="d"
+                xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        FontFamily="Roboto" Topmost="True"
+        Title="MaterialAlertDlg" Height="500" Width="300" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Grid>
+        <Border BorderThickness="3" CornerRadius="15" Background="White">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="5" Direction="-90" RenderingBias="Quality" ShadowDepth="1"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Column="0" Grid.ColumnSpan="3" Background="#4c7eb6" CornerRadius="13 13 0 0">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <Label x:Name="title" FontSize="29" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White">고객 마크
+                        </Label>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Label Margin="30 0 10 0" Grid.Row="1" Content="위치 : " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Height="Auto" Width="Auto"/>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="rbLeft">좌</RadioButton>
+                        <Separator Width="35" Style="{StaticResource MaterialDesignLightSeparator}" ></Separator>
+                        <RadioButton x:Name="rbRight">우</RadioButton>
+                    </StackPanel>
+                </StackPanel>
+                
+                <StackPanel Grid.Row="2" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Label Margin="30 0 10 0" Grid.Row="1" Content="모양 : " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Height="Auto" Width="Auto"/>
+                    <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="rbCircle">원형</RadioButton>
+                            <Separator Width="35" Style="{StaticResource MaterialDesignLightSeparator}" ></Separator>
+                            <RadioButton x:Name="rbRect">사각형</RadioButton>
+                        </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Label Margin="30 0 10 0" Grid.Row="1" Content="미러 반전 인쇄 : " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Height="Auto" Width="Auto"/>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="cbFlip"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Left"  VerticalAlignment="Center">
+                    <Label Margin="30 0 10 0" Grid.Row="1" Content="크기 : " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Height="Auto" Width="Auto"/>
+                    <Label Content="H : " VerticalContentAlignment="Bottom" Foreground="DarkSlateGray"></Label>
+                    <TextBox x:Name="tbHeight" Padding="0 0 0 0" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="30" HorizontalContentAlignment="Center">1.5</TextBox>
+                    <Label VerticalAlignment="Bottom" Foreground="Gray">mm</Label>
+                    <Separator Width="10" Style="{StaticResource MaterialDesignLightSeparator}"/>
+                    <Label Content="W : " VerticalContentAlignment="Bottom" Foreground="DarkSlateGray"></Label>
+                    <TextBox x:Name="tbWidth" Padding="0 0 0 0" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="30" HorizontalContentAlignment="Center">1.5</TextBox>
+                    <Label VerticalAlignment="Bottom" Foreground="Gray">mm</Label>
+                </StackPanel>
+
+                <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Left"  VerticalAlignment="Center">
+                    <Label Margin="30 0 10 0" Grid.Row="1" Content="셀 수 : " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Height="Auto" Width="Auto"/>
+                    <ComboBox x:Name="cbFormat" Width="100" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                        <ComboBoxItem Content="14x14"/>
+                        <ComboBoxItem Content="16x16"/>
+                        <ComboBoxItem Content="18x18"/>
+                        <ComboBoxItem Content="12x26"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Left"  VerticalAlignment="Center">
+                    <Label Margin="30 0 10 0" Grid.Row="1" Content="셀 간격 : " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Height="Auto" Width="Auto"/>
+                    <TextBox HorizontalContentAlignment="Center" x:Name="tbGap" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80"></TextBox>
+                    <Label VerticalAlignment="Bottom" Foreground="Gray">mm</Label>
+                </StackPanel>
+
+                <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Left"  VerticalAlignment="Center">
+                    <Label Margin="30 0 10 0" Grid.Row="1" Content="회전 : " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Height="Auto" Width="Auto"/>
+                    <ComboBox x:Name="cbDegree" Width="100" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                        <ComboBoxItem Content="-180"/>
+                        <ComboBoxItem Content="-90"/>
+                        <ComboBoxItem Content="0"/>
+                        <ComboBoxItem Content="90"/>
+                        <ComboBoxItem Content="180"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Left"  VerticalAlignment="Center">
+                    <Label Margin="30 0 10 0" Grid.Row="1" Content="정보 : " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Height="Auto" Width="Auto"/>
+                    <ComboBox x:Name="cbReference" Width="100" SelectionChanged="cbReference_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                        <ComboBoxItem Content="고객1"/>
+                        <ComboBoxItem Content="고객2"/>
+                        <ComboBoxItem Content="사내1"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Left"  VerticalAlignment="Center">
+                    <Label Margin="30 0 10 0" Grid.Row="1" Content="레이저 파워 : " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Height="Auto" Width="Auto"/>
+                    <TextBox HorizontalContentAlignment="Center" x:Name="tbPower" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" ToolTip="0.0 ~ 100.0"></TextBox>
+                    <Label VerticalAlignment="Bottom" Foreground="Gray">%</Label>
+                </StackPanel>
+                
+                <StackPanel Grid.Row="10" Orientation="Horizontal" HorizontalAlignment="Left"  VerticalAlignment="Center">
+                    <Label Margin="30 0 10 0" Grid.Row="1" Content="스캔 속도 : " HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Height="Auto" Width="Auto"/>
+                    <TextBox HorizontalContentAlignment="Center" x:Name="tbSpeed" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" ToolTip="1 ~ 12000"></TextBox>
+                    <Label VerticalAlignment="Bottom" Foreground="Gray">mm/s</Label>
+                </StackPanel>
+
+                <StackPanel Grid.Row="11" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Name="btnSave" Width="100" Height="30" Click="btnSave_Click" Cursor="Hand">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <!--<materialDesign:PackIcon Kind="Check" Width="18" Height="18" HorizontalAlignment="Center" Foreground="white"/>-->
+                            <TextBlock FontWeight="Normal" FontSize="16" Text="확 인" VerticalAlignment="Center" Margin="10, 0, 10, 0" Foreground="white"/>
+                        </StackPanel>
+                    </Button>
+                    <Separator Width="15" Style="{StaticResource MaterialDesignLightSeparator}"/>
+                    <Button Name="btnCancel" Width="100" Height="30" FontSize="16" Foreground="white" Click="btnCancel_Click">취 소</Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

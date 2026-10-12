@@ -1,0 +1,15 @@
+D:\BGA_ID_MARKING\bin\Common.dll.config
+D:\BGA_ID_MARKING\bin\Common.dll
+D:\BGA_ID_MARKING\bin\Common.pdb
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common\obj\Debug\Common.csproj.AssemblyReference.cache
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common\obj\Debug\Common.Resource.ErrorMessageList.resources
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common\obj\Debug\Common.Resource.InformationMessageList.resources
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common\obj\Debug\Common.csproj.GenerateResource.cache
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common\obj\Debug\Common.csproj.CoreCompileInputs.cache
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common\obj\Debug\Common.csproj.Up2Date
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common\obj\Debug\Common.dll
+D:\BGA_ID_MARKING\HDS_ID_Marker\Common\obj\Debug\Common.pdb
+D:\BGA_ID_MARKING\bin\dll\x86\OpenCvSharpExtern.dll
+D:\BGA_ID_MARKING\bin\dll\x86\opencv_videoio_ffmpeg451.dll
+D:\BGA_ID_MARKING\bin\dll\x64\OpenCvSharpExtern.dll
+D:\BGA_ID_MARKING\bin\dll\x64\opencv_videoio_ffmpeg451_64.dll

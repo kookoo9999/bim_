@@ -1,0 +1,8 @@
+D:\BGA_ID_MARKING\bin\PCS.dll.config
+D:\BGA_ID_MARKING\bin\PCS.dll
+D:\BGA_ID_MARKING\bin\PCS.pdb
+D:\BGA_ID_MARKING\HDS_ID_Marker\PCS\obj\Debug\PCS.csproj.AssemblyReference.cache
+D:\BGA_ID_MARKING\HDS_ID_Marker\PCS\obj\Debug\PCS.csproj.CoreCompileInputs.cache
+D:\BGA_ID_MARKING\HDS_ID_Marker\PCS\obj\Debug\PCS.csproj.Up2Date
+D:\BGA_ID_MARKING\HDS_ID_Marker\PCS\obj\Debug\PCS.dll
+D:\BGA_ID_MARKING\HDS_ID_Marker\PCS\obj\Debug\PCS.pdb

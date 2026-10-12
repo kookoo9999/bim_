@@ -1,0 +1,22 @@
+// MiME Parameter File Ver0.2
+DrawStep=10
+JumpStep=50
+StepPeriod=50
+CornerDelay=10
+LaserOnDelay=150
+LaserOffDelay=250
+FPSDelay=185
+JumpDelay=400
+LineDelay=350
+Frequency=19000
+PulseDuty=6
+LampCurrent=47.000000
+AACValue=0
+SettingPower=Not Defined
+ModeLampCurrent=1
+NumMark=1
+FirstLaserOnDelay=0
+Custom1=0
+Custom2=0
+Custom3=0
+Custom4=0
