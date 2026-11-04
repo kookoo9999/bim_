@@ -2649,11 +2649,11 @@ namespace HDS_ID_Marker
         }
 
         /// <summary>
-        /// CheckMarks2 와 판정 결과 동일. 차이점:
-        ///  - 각 열 위치에서는 이동 + 촬상만 하고 바로 다음 열로 이동
-        ///  - 디코딩 / 마크쉬프트 검사 / UI 표시는 디코딩 전용 스레드 1개가 촬상 순서대로 처리
-        ///    (DataMatrix 의 디코더 인스턴스가 공유되므로 동시 호출하지 않음)
-        ///  - 모든 열 촬상 후 디코딩 완료까지 대기한 뒤 판정 → 피딩 전에 판정하는 시점은 기존과 동일
+        /// CheckMarks2 와 판정 결과 동일. 차이점:<br/>
+        ///  - 각 열 위치에서는 이동 + 촬상만 하고 바로 다음 열로 이동<br/>
+        ///  - 디코딩 / 마크쉬프트 검사 / UI 표시는 디코딩 전용 스레드 1개가 촬상 순서대로 처리<br/>
+        ///    (DataMatrix 의 디코더 인스턴스가 공유되므로 동시 호출하지 않음)<br/>
+        ///  - 모든 열 촬상 후 디코딩 완료까지 대기한 뒤 판정 → 피딩 전에 판정하는 시점은 기존과 동일<br/>
         /// </summary>
         internal eErrorCode CheckMarksParallel(string[] cust_id1, string[] cust_id2, int type, System.Windows.Point alignPos)
         {
@@ -2813,8 +2813,8 @@ namespace HDS_ID_Marker
         }
 
         /// <summary>
-        /// 디코딩 스레드에서 실행. 열 1개(상부 또는 하부) 디코딩 + 판정 + UI 표시.
-        /// 반환값 : 레이저 마킹 실패(Rect) 감지 시 해당 에러코드, 그 외 DEFUALT
+        /// 디코딩 스레드에서 실행. 열 1개(상부 또는 하부) 디코딩 + 판정 + UI 표시.<br/>
+        /// 반환값 : 레이저 마킹 실패(Rect) 감지 시 해당 에러코드, 그 외 DEFUALT<br/>
         /// </summary>
         private eErrorCode DecodeMarkJob(MarkDecodeJob job, System.Windows.Point alignPos, bool[] isFailReading1, bool[] isFailReading2)
         {

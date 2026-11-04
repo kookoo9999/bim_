@@ -1,93 +1,97 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\",
+  "WorkspaceRootPath": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|d:\\bga_id_marking\\hds_id_marker\\hds_id_marker\\managementclass\\workmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\managementclass\\workmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|d:\\bga_id_marking\\hds_id_marker\\hds_id_marker\\subwindow\\itshistorywindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|d:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\bim_\\hds_id_marker\\hds_id_marker\\subwindow\\itshistorywindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\itshistorywindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\itshistorywindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\itshistorywindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|d:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\bim_\\hds_id_marker\\hds_id_marker\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|d:\\bga_id_marking\\hds_id_marker\\hds_id_marker\\mainhrcontrol.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\mainhrcontrol.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\recognition\\datamatrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\recognition\\datamatrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\managementclass\\lasermarkingmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\managementclass\\lasermarkingmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\worksettingwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\worksettingwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\dcs\\camera\\milcl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\camera\\milcl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\dcs\\camera\\vision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\camera\\vision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\dcs\\camera\\pylongige.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\camera\\pylongige.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D3E958B4-3136-4EF1-A6D8-8FF2050E5F74}|Common\\Common.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\common\\algo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D3E958B4-3136-4EF1-A6D8-8FF2050E5F74}|Common\\Common.csproj|solutionrelative:common\\algo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\managementclass\\teachingmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\managementclass\\teachingmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\dcs\\idreader\\keyenceidreader.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\idreader\\keyenceidreader.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\worksettingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\worksettingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D3E958B4-3136-4EF1-A6D8-8FF2050E5F74}|Common\\Common.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\common\\setting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{D3E958B4-3136-4EF1-A6D8-8FF2050E5F74}|Common\\Common.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\common\\setting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3E958B4-3136-4EF1-A6D8-8FF2050E5F74}|Common\\Common.csproj|solutionrelative:common\\setting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subcontrol\\simplemovemotion.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|d:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\bim_\\hds_id_marker\\hds_id_marker\\managementclass\\workmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\managementclass\\workmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\managementclass\\lasermarkingmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\managementclass\\lasermarkingmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\itshistorywindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\itshistorywindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\mainhrcontrol.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\mainhrcontrol.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\recognition\\datamatrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\recognition\\datamatrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\worksettingwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\worksettingwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\dcs\\camera\\milcl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\camera\\milcl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\dcs\\camera\\vision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\camera\\vision.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\dcs\\camera\\pylongige.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\camera\\pylongige.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D3E958B4-3136-4EF1-A6D8-8FF2050E5F74}|Common\\Common.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\common\\algo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D3E958B4-3136-4EF1-A6D8-8FF2050E5F74}|Common\\Common.csproj|solutionrelative:common\\algo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\managementclass\\teachingmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\managementclass\\teachingmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\dcs\\idreader\\keyenceidreader.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\idreader\\keyenceidreader.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\worksettingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\worksettingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subcontrol\\simplemovemotion.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subcontrol\\simplemovemotion.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\custominfowindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\custominfowindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\custominfowindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\modelmanager.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\modelmanager.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\modelmanager.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\obj\\x64\\Debug\\SubWindow\\MarkParaSettingWindow.g.i.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\obj\\x64\\Debug\\SubWindow\\MarkParaSettingWindow.g.i.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:HDS_ID_Marker\\obj\\x64\\Debug\\SubWindow\\MarkParaSettingWindow.g.i.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\data\\markinginformation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\data\\markinginformation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\data\\markinginformation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\custominfowindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\custominfowindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\custominfowindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
@@ -97,143 +101,143 @@
       "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|DCS||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\workendwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\workendwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\workendwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\workhistorywindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\workhistorywindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\workhistorywindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\markparasettingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\markparasettingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\markparasettingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\markparasettingwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\markparasettingwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\markparasettingwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\maincontrolviewer.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\maincontrolviewer.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\maincontrolviewer.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\dcs\\laser\\keyencetcp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\dcs\\laser\\keyencetcp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\laser\\keyencetcp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\modelmanager.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\modelmanager.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\modelmanager.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9C873C33-BB63-4B38-B277-F4331CD23703}|Common.Control\\Common.Control.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\common.control\\controlstyles\\simplestyle.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{9C873C33-BB63-4B38-B277-F4331CD23703}|Common.Control\\Common.Control.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\common.control\\controlstyles\\simplestyle.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{9C873C33-BB63-4B38-B277-F4331CD23703}|Common.Control\\Common.Control.csproj|solutionrelative:common.control\\controlstyles\\simplestyle.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\data\\modelinformation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\data\\modelinformation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\data\\modelinformation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\lotwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\lotwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\lotwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\ocrparasettingwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\ocrparasettingwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\ocrparasettingwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\ocrparasettingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\ocrparasettingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\ocrparasettingwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\data\\markinformation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\data\\markinformation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\data\\markinformation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialwarningdlg.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialwarningdlg.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\materialwarningdlg.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\lotwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\lotwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\lotwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\tensionwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\tensionwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\tensionwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\dcs\\laser\\laser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\dcs\\laser\\laser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\laser\\laser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\dcs\\laser\\eotcp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\dcs\\laser\\eotcp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\laser\\eotcp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\dcs\\laser\\keyenceserial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\dcs\\laser\\keyenceserial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\laser\\keyenceserial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialpwdlg.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialpwdlg.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\materialpwdlg.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\maintoolbar.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\maintoolbar.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\maintoolbar.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subcontrol\\worksettingcontrol.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subcontrol\\worksettingcontrol.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subcontrol\\worksettingcontrol.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialalertdlg.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialalertdlg.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\materialalertdlg.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FAB0895D-A908-4F4C-990F-D46E2177EA35}|PCS\\PCS.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\pcs\\devicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{FAB0895D-A908-4F4C-990F-D46E2177EA35}|PCS\\PCS.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\pcs\\devicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FAB0895D-A908-4F4C-990F-D46E2177EA35}|PCS\\PCS.csproj|solutionrelative:pcs\\devicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialpwdlg.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialpwdlg.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\materialpwdlg.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9C873C33-BB63-4B38-B277-F4331CD23703}|Common.Control\\Common.Control.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\common.control\\inputnumberbox.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{9C873C33-BB63-4B38-B277-F4331CD23703}|Common.Control\\Common.Control.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\common.control\\inputnumberbox.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9C873C33-BB63-4B38-B277-F4331CD23703}|Common.Control\\Common.Control.csproj|solutionrelative:common.control\\inputnumberbox.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9C873C33-BB63-4B38-B277-F4331CD23703}|Common.Control\\Common.Control.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\common.control\\inputnumberbox.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{9C873C33-BB63-4B38-B277-F4331CD23703}|Common.Control\\Common.Control.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\common.control\\inputnumberbox.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{9C873C33-BB63-4B38-B277-F4331CD23703}|Common.Control\\Common.Control.csproj|solutionrelative:common.control\\inputnumberbox.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialwarningdlg.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialwarningdlg.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\materialwarningdlg.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\maintoolbar.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\maintoolbar.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\maintoolbar.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subcontrol\\workinfoviewer.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subcontrol\\workinfoviewer.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subcontrol\\workinfoviewer.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\dcs\\idreader\\keyenceidreader.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\dcs\\idreader\\keyenceidreader.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\idreader\\keyenceidreader.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialalertdlg.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\hds_id_marker\\subwindow\\materialalertdlg.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{E212AD46-CCF5-47A9-AD6B-D074EDE351F5}|HDS_ID_Marker\\HDS_ID_Marker.csproj|solutionrelative:hds_id_marker\\subwindow\\materialalertdlg.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D3E958B4-3136-4EF1-A6D8-8FF2050E5F74}|Common\\Common.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\common\\settinggeneral.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{D3E958B4-3136-4EF1-A6D8-8FF2050E5F74}|Common\\Common.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\common\\settinggeneral.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D3E958B4-3136-4EF1-A6D8-8FF2050E5F74}|Common\\Common.csproj|solutionrelative:common\\settinggeneral.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\BGA_ID_MARKING\\HDS_ID_Marker\\dcs\\plc\\mitsubiplcdevice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\dcs\\plc\\mitsubiplcdevice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{270BE9B0-E06B-4F82-BA67-4349A8D4A71F}|DCS\\DCS.csproj|solutionrelative:dcs\\plc\\mitsubiplcdevice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -260,24 +264,24 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "ITSHistoryWindow.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml.cs",
-              "ViewState": "AgIAADUAAAAAAAAAAAAAAD4AAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAADgAAAAAAAAAAAAAAEMAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-02T04:24:18.946Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "TeachingManagement.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\TeachingManagement.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\TeachingManagement.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\ManagementClass\\TeachingManagement.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\TeachingManagement.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\TeachingManagement.cs",
               "RelativeToolTip": "HDS_ID_Marker\\ManagementClass\\TeachingManagement.cs",
               "ViewState": "AgIAABQBAAAAAAAAAADwvyQBAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -285,11 +289,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "KeyenceIDReader.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\IDReader\\KeyenceIDReader.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\IDReader\\KeyenceIDReader.xaml.cs",
               "RelativeDocumentMoniker": "DCS\\IDReader\\KeyenceIDReader.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\IDReader\\KeyenceIDReader.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\IDReader\\KeyenceIDReader.xaml.cs",
               "RelativeToolTip": "DCS\\IDReader\\KeyenceIDReader.xaml.cs",
               "ViewState": "AgIAAE8AAAAAAAAAAAAMwEsAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -297,22 +301,22 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "WorkSettingWindow.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-10-17T04:23:12.804Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "Vision.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Camera\\Vision.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Camera\\Vision.cs",
               "RelativeDocumentMoniker": "DCS\\Camera\\Vision.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Camera\\Vision.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Camera\\Vision.cs",
               "RelativeToolTip": "DCS\\Camera\\Vision.cs",
               "ViewState": "AgIAACoAAAAAAAAAAAAnwDIAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -320,11 +324,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "MILCL.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Camera\\MILCL.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Camera\\MILCL.cs",
               "RelativeDocumentMoniker": "DCS\\Camera\\MILCL.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Camera\\MILCL.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Camera\\MILCL.cs",
               "RelativeToolTip": "DCS\\Camera\\MILCL.cs",
               "ViewState": "AgIAAFABAAAAAAAAAAAAAEsBAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -332,11 +336,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "PylonGigE.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Camera\\PylonGigE.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Camera\\PylonGigE.cs",
               "RelativeDocumentMoniker": "DCS\\Camera\\PylonGigE.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Camera\\PylonGigE.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Camera\\PylonGigE.cs",
               "RelativeToolTip": "DCS\\Camera\\PylonGigE.cs",
               "ViewState": "AgIAAGsBAAAAAAAAAAAAAHYBAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -344,11 +348,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "Algo.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common\\Algo.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common\\Algo.cs",
               "RelativeDocumentMoniker": "Common\\Algo.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common\\Algo.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common\\Algo.cs",
               "RelativeToolTip": "Common\\Algo.cs",
               "ViewState": "AgIAAFYAAAAAAAAAAADwv1YAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -356,37 +360,35 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\MainWindow.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\MainWindow.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\MainWindow.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainWindow.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\MainWindow.xaml.cs",
               "ViewState": "AgIAALMAAAAAAAAAAAAqwNMAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-21T05:06:34.977Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-21T05:06:34.977Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "MainHRControl.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\MainHRControl.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainHRControl.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\MainHRControl.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\MainHRControl.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainHRControl.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\MainHRControl.xaml.cs",
               "ViewState": "AgIAANAAAAAAAAAAAAAiwNwAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-17T05:12:29.472Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-17T05:12:29.472Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "CustomInfoWindow.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml.cs",
               "ViewState": "AgIAAH8BAAAAAAAAAAAuwIcBAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -394,11 +396,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "MarkParaSettingWindow.g.i.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\obj\\x64\\Debug\\SubWindow\\MarkParaSettingWindow.g.i.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\obj\\x64\\Debug\\SubWindow\\MarkParaSettingWindow.g.i.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\obj\\x64\\Debug\\SubWindow\\MarkParaSettingWindow.g.i.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\obj\\x64\\Debug\\SubWindow\\MarkParaSettingWindow.g.i.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\obj\\x64\\Debug\\SubWindow\\MarkParaSettingWindow.g.i.cs",
               "RelativeToolTip": "HDS_ID_Marker\\obj\\x64\\Debug\\SubWindow\\MarkParaSettingWindow.g.i.cs",
               "ViewState": "AgIAANIAAAAAAAAAAAAhwNAAAAB7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -406,22 +408,22 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "SimpleMoveMotion.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\SimpleMoveMotion.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\SimpleMoveMotion.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubControl\\SimpleMoveMotion.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\SimpleMoveMotion.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\SimpleMoveMotion.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubControl\\SimpleMoveMotion.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-01-13T00:19:41.799Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "ModelManager.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\ModelManager.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\ModelManager.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\ModelManager.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\ModelManager.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\ModelManager.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\ModelManager.xaml.cs",
               "ViewState": "AgIAAJMBAAAAAAAAAAAkwKQBAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -429,11 +431,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "MarkingInformation.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\MarkingInformation.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\MarkingInformation.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\Data\\MarkingInformation.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\MarkingInformation.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\MarkingInformation.cs",
               "RelativeToolTip": "HDS_ID_Marker\\Data\\MarkingInformation.cs",
               "ViewState": "AgIAAC4AAAAAAAAAAAAIwB4AAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -441,11 +443,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 28,
               "Title": "MarkParaSettingWindow.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml.cs",
               "ViewState": "AgIAABEAAAAAAAAAAAAYwB0AAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -453,77 +455,77 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 53,
               "Title": "MaterialWarningDlg.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-01-08T00:21:25.456Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "DCS",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\DCS.csproj",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\DCS.csproj",
               "RelativeDocumentMoniker": "DCS\\DCS.csproj",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\DCS.csproj",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\DCS.csproj",
               "RelativeToolTip": "DCS\\DCS.csproj",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2026-05-19T06:04:15.109Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "CustomInfoWindow.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\CustomInfoWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-04-01T23:21:36.502Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "HDS_ID_Marker",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\HDS_ID_Marker.csproj",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\HDS_ID_Marker.csproj",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\HDS_ID_Marker.csproj",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\HDS_ID_Marker.csproj",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\HDS_ID_Marker.csproj",
               "RelativeToolTip": "HDS_ID_Marker\\HDS_ID_Marker.csproj",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2026-05-22T00:17:45.534Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 27,
               "Title": "MarkParaSettingWindow.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\MarkParaSettingWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-04-12T23:26:36.703Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 36,
               "Title": "OCRParaSettingWindow.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-04-12T23:40:41.369Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 37,
               "Title": "MarkInformation.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\MarkInformation.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\MarkInformation.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\Data\\MarkInformation.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\MarkInformation.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\MarkInformation.cs",
               "RelativeToolTip": "HDS_ID_Marker\\Data\\MarkInformation.cs",
               "ViewState": "AgIAAB4AAAAAAAAAAAApwCoAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -531,11 +533,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 43,
               "Title": "EOTCP.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Laser\\EOTCP.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Laser\\EOTCP.cs",
               "RelativeDocumentMoniker": "DCS\\Laser\\EOTCP.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Laser\\EOTCP.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Laser\\EOTCP.cs",
               "RelativeToolTip": "DCS\\Laser\\EOTCP.cs",
               "ViewState": "AgIAAK4AAAAAAAAAAIAwwLkAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -543,11 +545,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 45,
               "Title": "MaterialPWDlg.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAAuwBcAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -555,22 +557,22 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 39,
               "Title": "LotWindow.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\LotWindow.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\LotWindow.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\LotWindow.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\LotWindow.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\LotWindow.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\LotWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-04-10T05:33:23.807Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 32,
               "Title": "SimpleStyle.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common.Control\\ControlStyles\\SimpleStyle.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common.Control\\ControlStyles\\SimpleStyle.xaml",
               "RelativeDocumentMoniker": "Common.Control\\ControlStyles\\SimpleStyle.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common.Control\\ControlStyles\\SimpleStyle.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common.Control\\ControlStyles\\SimpleStyle.xaml",
               "RelativeToolTip": "Common.Control\\ControlStyles\\SimpleStyle.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-04-27T04:21:01.29Z",
@@ -578,11 +580,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 29,
               "Title": "MainControlViewer.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\MainControlViewer.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainControlViewer.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\MainControlViewer.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\MainControlViewer.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainControlViewer.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\MainControlViewer.xaml.cs",
               "ViewState": "AgIAABkBAAAAAAAAAAAnwCcBAABOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -590,11 +592,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 35,
               "Title": "OCRParaSettingWindow.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\OCRParaSettingWindow.xaml.cs",
               "ViewState": "AgIAACoAAAAAAAAAAAAAADIAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -602,11 +604,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 42,
               "Title": "Laser.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Laser\\Laser.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Laser\\Laser.cs",
               "RelativeDocumentMoniker": "DCS\\Laser\\Laser.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Laser\\Laser.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Laser\\Laser.cs",
               "RelativeToolTip": "DCS\\Laser\\Laser.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAIA2wBwAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -614,11 +616,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 30,
               "Title": "KeyenceTCP.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Laser\\KeyenceTCP.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Laser\\KeyenceTCP.cs",
               "RelativeDocumentMoniker": "DCS\\Laser\\KeyenceTCP.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Laser\\KeyenceTCP.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Laser\\KeyenceTCP.cs",
               "RelativeToolTip": "DCS\\Laser\\KeyenceTCP.cs",
               "ViewState": "AgIAAGwAAAAAAAAAAAAswH4AAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -626,33 +628,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 31,
               "Title": "ModelManager.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\ModelManager.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\ModelManager.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\ModelManager.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\ModelManager.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\ModelManager.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\ModelManager.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-12-14T23:42:13.395Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 50,
               "Title": "MaterialPWDlg.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\MaterialPWDlg.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-01-14T02:00:25.525Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 54,
+              "DocumentIndex": 55,
               "Title": "WorkInfoViewer.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\WorkInfoViewer.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\WorkInfoViewer.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubControl\\WorkInfoViewer.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\WorkInfoViewer.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\WorkInfoViewer.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\SubControl\\WorkInfoViewer.xaml.cs",
               "ViewState": "AgIAACEAAAAAAAAAAAAcwC0AAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -660,22 +662,22 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 53,
+              "DocumentIndex": 54,
               "Title": "MainToolBar.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\MainToolBar.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainToolBar.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\MainToolBar.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\MainToolBar.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainToolBar.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\MainToolBar.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-12-03T23:27:25.114Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 33,
               "Title": "ModelInformation.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\ModelInformation.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\ModelInformation.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\Data\\ModelInformation.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\ModelInformation.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\Data\\ModelInformation.cs",
               "RelativeToolTip": "HDS_ID_Marker\\Data\\ModelInformation.cs",
               "ViewState": "AgIAADMAAAAAAAAAAAAQwEAAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -683,11 +685,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 44,
               "Title": "KeyenceSerial.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Laser\\KeyenceSerial.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Laser\\KeyenceSerial.cs",
               "RelativeDocumentMoniker": "DCS\\Laser\\KeyenceSerial.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\Laser\\KeyenceSerial.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\Laser\\KeyenceSerial.cs",
               "RelativeToolTip": "DCS\\Laser\\KeyenceSerial.cs",
               "ViewState": "AgIAABwAAAAAAAAAAAAtwCcAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -695,11 +697,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 40,
               "Title": "AssemblyInfo.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\Properties\\AssemblyInfo.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\Properties\\AssemblyInfo.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\Properties\\AssemblyInfo.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\Properties\\AssemblyInfo.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\Properties\\AssemblyInfo.cs",
               "RelativeToolTip": "HDS_ID_Marker\\Properties\\AssemblyInfo.cs",
               "ViewState": "AgIAACcAAAAAAAAAAAAAADQAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -707,22 +709,22 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 41,
               "Title": "TensionWindow.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\TensionWindow.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\TensionWindow.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\TensionWindow.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\TensionWindow.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\TensionWindow.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\TensionWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-04-07T05:08:01.486Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 46,
               "Title": "MainToolBar.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\MainToolBar.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainToolBar.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\MainToolBar.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\MainToolBar.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainToolBar.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\MainToolBar.xaml.cs",
               "ViewState": "AgIAACsAAAAAAAAAAAAAADQAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -730,11 +732,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 49,
               "Title": "DeviceController.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\PCS\\DeviceController.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\PCS\\DeviceController.cs",
               "RelativeDocumentMoniker": "PCS\\DeviceController.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\PCS\\DeviceController.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\PCS\\DeviceController.cs",
               "RelativeToolTip": "PCS\\DeviceController.cs",
               "ViewState": "AgIAAE8AAAAAAAAAAAAAAGAAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -742,11 +744,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 48,
               "Title": "MaterialAlertDlg.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml.cs",
               "ViewState": "AgIAABkAAAAAAAAAAAAewCMAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -754,67 +756,66 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 47,
               "Title": "WorkSettingControl.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\WorkSettingControl.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\WorkSettingControl.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubControl\\WorkSettingControl.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\WorkSettingControl.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubControl\\WorkSettingControl.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubControl\\WorkSettingControl.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-10-21T07:16:40.078Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 56,
+              "DocumentIndex": 57,
               "Title": "MaterialAlertDlg.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\MaterialAlertDlg.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-10-21T08:20:22.348Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "ITSHistoryWindow.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\ITSHistoryWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-01-08T00:13:39.251Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-08T00:13:39.251Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 52,
               "Title": "InputNumberBox.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common.Control\\InputNumberBox.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common.Control\\InputNumberBox.xaml",
               "RelativeDocumentMoniker": "Common.Control\\InputNumberBox.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common.Control\\InputNumberBox.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common.Control\\InputNumberBox.xaml",
               "RelativeToolTip": "Common.Control\\InputNumberBox.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-09-17T05:44:45.967Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 55,
+              "DocumentIndex": 56,
               "Title": "KeyenceIDReader.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\IDReader\\KeyenceIDReader.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\IDReader\\KeyenceIDReader.xaml",
               "RelativeDocumentMoniker": "DCS\\IDReader\\KeyenceIDReader.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\IDReader\\KeyenceIDReader.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\IDReader\\KeyenceIDReader.xaml",
               "RelativeToolTip": "DCS\\IDReader\\KeyenceIDReader.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-12-15T07:26:58.154Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 57,
+              "DocumentIndex": 58,
               "Title": "SettingGeneral.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common\\SettingGeneral.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common\\SettingGeneral.cs",
               "RelativeDocumentMoniker": "Common\\SettingGeneral.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common\\SettingGeneral.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common\\SettingGeneral.cs",
               "RelativeToolTip": "Common\\SettingGeneral.cs",
               "ViewState": "AgIAAC8AAAAAAAAAAAAcwE0AAABnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -822,11 +823,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 58,
+              "DocumentIndex": 59,
               "Title": "MitsubiPlcDevice.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\PLC\\MitsubiPlcDevice.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\PLC\\MitsubiPlcDevice.cs",
               "RelativeDocumentMoniker": "DCS\\PLC\\MitsubiPlcDevice.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\DCS\\PLC\\MitsubiPlcDevice.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\DCS\\PLC\\MitsubiPlcDevice.cs",
               "RelativeToolTip": "DCS\\PLC\\MitsubiPlcDevice.cs",
               "ViewState": "AgIAAFkBAAAAAAAAAAAAAFgBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -855,24 +856,36 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "HDS_ID_Marker\\MainWindow.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\MainWindow.xaml",
+              "RelativeToolTip": "HDS_ID_Marker\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-10-12T02:30:05.656Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "WorkManagement.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\WorkManagement.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\WorkManagement.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\ManagementClass\\WorkManagement.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\WorkManagement.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\WorkManagement.cs",
               "RelativeToolTip": "HDS_ID_Marker\\ManagementClass\\WorkManagement.cs",
-              "ViewState": "AgIAAPADAAAAAAAAAAAwwA0EAAA5AAAAAAAAAA==",
+              "ViewState": "AgIAADEKAAAAAAAAAAAWwEcKAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-21T04:27:45.408Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "WorkSettingWindow.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\WorkSettingWindow.xaml.cs",
               "ViewState": "AgIAANIGAAAAAAAAAAAAAOIGAABqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -880,11 +893,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 34,
               "Title": "LotWindow.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\LotWindow.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\LotWindow.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\LotWindow.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\LotWindow.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\LotWindow.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\LotWindow.xaml.cs",
               "ViewState": "AgIAAHQAAAAAAAAAAIAwwIgAAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -892,11 +905,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 51,
               "Title": "InputNumberBox.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common.Control\\InputNumberBox.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common.Control\\InputNumberBox.xaml.cs",
               "RelativeDocumentMoniker": "Common.Control\\InputNumberBox.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common.Control\\InputNumberBox.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common.Control\\InputNumberBox.xaml.cs",
               "RelativeToolTip": "Common.Control\\InputNumberBox.xaml.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEgAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -904,23 +917,24 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "LaserMarkingManagement.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\LaserMarkingManagement.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\LaserMarkingManagement.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\ManagementClass\\LaserMarkingManagement.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\LaserMarkingManagement.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\ManagementClass\\LaserMarkingManagement.cs",
               "RelativeToolTip": "HDS_ID_Marker\\ManagementClass\\LaserMarkingManagement.cs",
-              "ViewState": "AgIAALsFAAAAAAAAAAAvwM8FAAA9AAAAAAAAAA==",
+              "ViewState": "AgIAAMgFAAAAAAAAAAAAAM8FAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-17T04:46:03.182Z"
+              "WhenOpened": "2025-10-17T04:46:03.182Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 38,
               "Title": "MaterialWarningDlg.xaml.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml.cs",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\MaterialWarningDlg.xaml.cs",
               "ViewState": "AgIAAB8AAAAAAAAAAAAuwDMAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -928,22 +942,22 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "WorkEndWindow.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkEndWindow.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkEndWindow.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\WorkEndWindow.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkEndWindow.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkEndWindow.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\WorkEndWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-01-08T00:32:10.496Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "DataMatrix.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\Recognition\\DataMatrix.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\Recognition\\DataMatrix.cs",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\Recognition\\DataMatrix.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\Recognition\\DataMatrix.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\Recognition\\DataMatrix.cs",
               "RelativeToolTip": "HDS_ID_Marker\\Recognition\\DataMatrix.cs",
               "ViewState": "AgIAAJ4JAAAAAAAAAADwv6YJAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -951,26 +965,27 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 26,
               "Title": "WorkHistoryWindow.xaml",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkHistoryWindow.xaml",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkHistoryWindow.xaml",
               "RelativeDocumentMoniker": "HDS_ID_Marker\\SubWindow\\WorkHistoryWindow.xaml",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkHistoryWindow.xaml",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\HDS_ID_Marker\\SubWindow\\WorkHistoryWindow.xaml",
               "RelativeToolTip": "HDS_ID_Marker\\SubWindow\\WorkHistoryWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-10-24T05:47:33.724Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 2,
               "Title": "Setting.cs",
-              "DocumentMoniker": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common\\Setting.cs",
+              "DocumentMoniker": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common\\Setting.cs",
               "RelativeDocumentMoniker": "Common\\Setting.cs",
-              "ToolTip": "D:\\BGA_ID_MARKING\\HDS_ID_Marker\\Common\\Setting.cs",
+              "ToolTip": "D:\\\uAE30\uD0C0\uD14C\uC2A4\uD2B8\uCF54\uB4DC\uB4F1\uB4F1\uB4F1\\BIM_\\HDS_ID_Marker\\Common\\Setting.cs",
               "RelativeToolTip": "Common\\Setting.cs",
-              "ViewState": "AgIAAOEAAAAAAAAAAAAowPYAAABPAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-17T05:38:07.242Z"
+              "WhenOpened": "2025-10-17T05:38:07.242Z",
+              "EditorCaption": ""
             }
           ]
         }
