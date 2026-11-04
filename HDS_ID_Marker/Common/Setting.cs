@@ -72,6 +72,8 @@ namespace Common
             public static double AlignAlarmThreshold = 0.2;
             // 자동 마킹 인식(마킹 확인) 시 디코딩을 백그라운드로 병렬 처리 (false : 기존 순차 처리)
             public static bool ParallelMarkCheck = true;
+            // 자동 마킹 택트 로그에 진단(DIAG) 상세 기록 (모션/레이저 통신/카메라/피딩/얼라인/인식 결과)
+            public static bool DiagLog = true;
         }
         public static class SubSystem
         {
@@ -130,6 +132,7 @@ namespace Common
                 General.TestMode = ini.ReadValue(SECTION_GENERAL, "TestMode", General.TestMode);
                 General.AlignAlarmThreshold = ini.ReadValue(SECTION_GENERAL, "AlignAlarmThreshold", General.AlignAlarmThreshold);
                 General.ParallelMarkCheck = ini.ReadValue(SECTION_GENERAL, "ParallelMarkCheck", General.ParallelMarkCheck);
+                General.DiagLog = ini.ReadValue(SECTION_GENERAL, "DiagLog", General.DiagLog);
 
                 SubSystem.Database.Use = ini.ReadValue(SECTION_SUBSYSTEM, "Database/Use", SubSystem.Database.Use);
                 SubSystem.Database.Type = ini.ReadValue(SECTION_SUBSYSTEM, "Database/Type", SubSystem.Database.Type);
@@ -249,6 +252,7 @@ namespace Common
                 ini.WriteValue(SECTION_GENERAL, "TestMode", General.TestMode);
                 ini.WriteValue(SECTION_GENERAL, "AlignAlarmThreshold", General.AlignAlarmThreshold);
                 ini.WriteValue(SECTION_GENERAL, "ParallelMarkCheck", General.ParallelMarkCheck);
+                ini.WriteValue(SECTION_GENERAL, "DiagLog", General.DiagLog);
 
                 ini.DeleteSection(SECTION_SUBSYSTEM);
                 ini.WriteValue(SECTION_SUBSYSTEM, "Database/Use", SubSystem.Database.Use);

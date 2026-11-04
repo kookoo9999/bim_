@@ -143,6 +143,7 @@
     <Compile Include="ImageProcessing.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="TactLog.cs" />
     <Compile Include="MD5Core.cs" />
     <Compile Include="NGInformationHelper.cs" />
     <Compile Include="NotifyCollectionChangedHelper.cs" />

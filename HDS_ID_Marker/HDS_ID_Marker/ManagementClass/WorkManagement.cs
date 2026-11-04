@@ -1114,9 +1114,15 @@ namespace HDS_ID_Marker
                     //오더 완료 판단
                     if (ret < 0)
                     {
+                        // [진단] 얼라인 실패 처리 구간 (작업 종료 확인창 대기 포함)
+                        TactLog.Note($"ALIGN_FAIL ret={ret} stripID={ptrMain.model.stripID} IsCompleteOrder={MainWindow.IsCompleteOrder} CompleteNumber={MainWindow.CompleteNumber}");
+                        long tAlignFail = TactLog.Now;
                         WorkEndWindow workEndWindow = new WorkEndWindow(ptrMain);
                         MainWindow.MCS2.SetLampBuzzer(1);
-                        if (workEndWindow.ShowDialog().Value)
+                        bool workEndResult = workEndWindow.ShowDialog().Value;
+                        TactLog.Add("ALIGN_FAIL_DIALOG", tAlignFail);
+                        TactLog.Note($"ALIGN_FAIL dialog={(workEndResult ? "END" : "CONTINUE")} → 계속 진행 시 이번 스트립 얼라인 보정값 미갱신 가능");
+                        if (workEndResult)
                         {
                             isEnd = true;
                             nErrorCode = eErrorCode.COMPLETE_ORDER;
@@ -2387,6 +2393,7 @@ namespace HDS_ID_Marker
                 int customType = 0;
                 Action action = null;
                 BitmapSource bms;
+                NoteMarkFormats();
                 //카메라 위치로 이동
                 for (int i = ptrMain.model.modelInformation.StripIter.Count - 1; i >= 0; i--)
                 {
@@ -2442,6 +2449,8 @@ namespace HDS_ID_Marker
                         tTact = TactLog.Now;
                         var result = ptrMain.dataMatrix.Decode(bms, "TOP", 0, MainWindow.ri.TopCamResolution, out dummyDataMatrixCenter);
                         TactLog.Add($"C{i + 1}_TOP_DECODE1", tTact);
+                        string diagDec1 = (result != null && result.Count > 0) ? result[0] : (result == null ? "(null)" : "(empty)");
+                        string diagDec2 = "-";
 
                         if (Setting.General.TestMode == "1")
                         {
@@ -2487,6 +2496,7 @@ namespace HDS_ID_Marker
                                     tTact = TactLog.Now;
                                     result = ptrMain.dataMatrix.Get_Algo_Conv_Square_DataMatrixHJ(bms, "TOP", i, KeyenceProtocol.GetSimbolSize(markFormat));
                                     TactLog.Add($"C{i + 1}_TOP_DECODE2", tTact);
+                                    diagDec2 = (result != null && result.Count > 0) ? (result[0] ?? "(null)") : "(empty)";
                                 }
 
                                 if (result[0] == null) MainWindow.logger.WriteLog(LogType.Exception, "TOP result[0] is null ! Count = " + result.Count);
@@ -2517,6 +2527,7 @@ namespace HDS_ID_Marker
                                 isFailReading1[i] = true;
                             }
                         }
+                        TactLog.Note($"MARK_RESULT TOP C{i + 1} dec1={diagDec1} dec2={diagDec2} expect={CheckID[i]} fail={(isFailReading1[i] ? "Y" : "N")} err={errCode} format={markFormat} center={dummyDataMatrixCenter.X},{dummyDataMatrixCenter.Y}");
                         tTact = TactLog.Now;
                         action = delegate { viewer.imgTopMark.Source = bms.Clone(); }; ptrMain.Dispatcher.Invoke(action);
                         TactLog.Add($"C{i + 1}_TOP_UI_IMG", tTact);
@@ -2547,6 +2558,8 @@ namespace HDS_ID_Marker
                         tTact = TactLog.Now;
                         var result = ptrMain.dataMatrix.Decode(bms, "BOT", 0, MainWindow.ri.BotCamResolution, out dummyDataMatrixCenter);
                         TactLog.Add($"C{i + 1}_BOT_DECODE1", tTact);
+                        string diagDec1 = (result != null && result.Count > 0) ? result[0] : (result == null ? "(null)" : "(empty)");
+                        string diagDec2 = "-";
                         // Save Mark image
                         //try
                         //{
@@ -2587,6 +2600,7 @@ namespace HDS_ID_Marker
                                     tTact = TactLog.Now;
                                     result = ptrMain.dataMatrix.Get_Algo_Conv_Square_DataMatrixHJ(bms, "BOT", i, KeyenceProtocol.GetSimbolSize(markFormat));
                                     TactLog.Add($"C{i + 1}_BOT_DECODE2", tTact);
+                                    diagDec2 = (result != null && result.Count > 0) ? (result[0] ?? "(null)") : "(empty)";
                                 }
                                 if (result[0] == null) MainWindow.logger.WriteLog(LogType.Exception, "BOT result[0] is null ! Count = " + result.Count);
                                 tTact = TactLog.Now;
@@ -2605,6 +2619,7 @@ namespace HDS_ID_Marker
 
                             
                         }
+                        TactLog.Note($"MARK_RESULT BOT C{i + 1} dec1={diagDec1} dec2={diagDec2} expect={CheckID[i]} fail={(isFailReading2[i] ? "Y" : "N")} err={errCode} format={markFormat} center={dummyDataMatrixCenter.X},{dummyDataMatrixCenter.Y}");
                         tTact = TactLog.Now;
                         action = delegate { viewer.imgBotMark.Source = bms; }; ptrMain.Dispatcher.Invoke(action);
                         TactLog.Add($"C{i + 1}_BOT_UI_IMG", tTact);
@@ -2621,6 +2636,24 @@ namespace HDS_ID_Marker
                 logger.WriteLog(LogType.Exception, $"CheckMarks2 Exception!! - {ex.Message}");
                 errCode = eErrorCode.TOP_MARK_COGNITION_FAIL;
                 return errCode;
+            }
+        }
+
+        // [진단] 상부/하부 마크 포맷(심볼 크기)과 기준 데이터 종류. 하부 2차 디코딩은 상부 포맷을 사용하므로 둘이 다르면 하부 2차 디코딩 실패 가능
+        private void NoteMarkFormats()
+        {
+            if (!TactLog.DiagActive) return;
+            try
+            {
+                var top = ptrMain.workSettingWindow.topHRControl.customMarks;
+                var bot = ptrMain.workSettingWindow.botHRControl.customMarks;
+                string topInfo = top.Count > 0 ? $"{top[0].format}/{top[0].reference}" : "(none)";
+                string botInfo = bot.Count > 0 ? $"{bot[0].format}/{bot[0].reference}" : "(none)";
+                TactLog.Note($"MARK_FORMAT top={topInfo} bot={botInfo} (하부 2차 디코딩 사용 포맷 = top)");
+            }
+            catch (Exception ex)
+            {
+                TactLog.Note($"MARK_FORMAT read fail: {ex.Message}");
             }
         }
 
@@ -2685,6 +2718,8 @@ namespace HDS_ID_Marker
             decodeThread.SetApartmentState(ApartmentState.STA);
             decodeThread.IsBackground = true;
             decodeThread.Start();
+
+            NoteMarkFormats();
 
             try
             {
@@ -2828,6 +2863,9 @@ namespace HDS_ID_Marker
             long tTact = TactLog.Now;
             var result = ptrMain.dataMatrix.Decode(job.Bmp, side, 0, resolution, out dummyDataMatrixCenter);
             TactLog.Add($"C{i + 1}_{side}_DECODE1", tTact);
+            // [진단] 1차 / 2차 디코딩 결과와 기대값
+            string diagDec1 = (result != null && result.Count > 0) ? result[0] : (result == null ? "(null)" : "(empty)");
+            string diagDec2 = "-";
 
             if (result != null)
             {
@@ -2838,6 +2876,7 @@ namespace HDS_ID_Marker
                         tTact = TactLog.Now;
                         result = ptrMain.dataMatrix.Get_Algo_Conv_Square_DataMatrixHJ(job.Bmp, side, i, KeyenceProtocol.GetSimbolSize(job.MarkFormat));
                         TactLog.Add($"C{i + 1}_{side}_DECODE2", tTact);
+                        diagDec2 = (result != null && result.Count > 0) ? (result[0] ?? "(null)") : "(empty)";
                     }
 
                     if (result[0] == null) MainWindow.logger.WriteLog(LogType.Exception, side + " result[0] is null ! Count = " + result.Count);
@@ -2868,6 +2907,8 @@ namespace HDS_ID_Marker
                     isFailReading[i] = true;
                 }
             }
+
+            TactLog.Note($"MARK_RESULT {side} C{i + 1} dec1={diagDec1} dec2={diagDec2} expect={job.CheckID} fail={(isFailReading[i] ? "Y" : "N")} err={errCode} format={job.MarkFormat} center={dummyDataMatrixCenter.X},{dummyDataMatrixCenter.Y}");
 
             BitmapSource bmp = job.Bmp;
             if (job.IsTop)

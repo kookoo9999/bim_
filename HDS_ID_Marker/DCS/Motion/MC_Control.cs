@@ -442,24 +442,40 @@ namespace MCS.Motion
 
             if (dPitch <= 50) feedVelocity = 50;
 
+            // [진단] 피딩 내부 단계별 시간 (단계 사이 빈 구간 = 고정 Sleep)
+            TactLog.Note(string.Format("FEED pitch={0:F3} vel={1} acc={2}", dPitch, feedVelocity, feedAccerate));
+            long t = TactLog.Now;
             TensionStopCoiler();
+            TactLog.Add("FEED_TENSION_STOP", t);
             Thread.Sleep(100);
 
+            t = TactLog.Now;
             if (!ReleaseGrip()) return false;
+            TactLog.Add("FEED_RELEASE_GRIP", t);
             Thread.Sleep(100);
 
+            t = TactLog.Now;
             m_Motion.GripMove(dPitch, feedVelocity, feedAccerate);
+            TactLog.Add("FEED_GRIP_MOVE_FWD", t);
             Thread.Sleep(100);
 
+            t = TactLog.Now;
             if (!Gripping()) return false;
+            TactLog.Add("FEED_GRIPPING", t);
             Thread.Sleep(100);
 
+            t = TactLog.Now;
             TensionCoiler();
+            TactLog.Add("FEED_TENSION", t);
 
+            t = TactLog.Now;
             m_Motion.GripMove(0, feedVelocity, feedAccerate);
+            TactLog.Add("FEED_GRIP_MOVE_BACK", t);
             Thread.Sleep(100);
 
+            t = TactLog.Now;
             if (dPitch > 50) PusherStep();
+            TactLog.Add("FEED_PUSHER_STEP", t);
 
             return true;
         }
@@ -508,17 +524,37 @@ namespace MCS.Motion
         #region LaserMove
         public bool MoveTopLaser(double dPos)
         {
+            bool diag = TactLog.DiagActive;
+            double from = diag ? m_Motion.GetActualPos(AX_ID.AX_TOPL) : 0;
+            long t0 = TactLog.Now;
             m_Motion.TopMove(dPos, m_Para.Values[AX_ID.AX_TOPL].Velocity, m_Para.Values[AX_ID.AX_TOPL].Accelerate);
+            if (diag) NoteSingleMove("TOP", AX_ID.AX_TOPL, from, dPos, t0);
             return true;
         }
         public bool MoveBotLaser(double dPos)
         {
+            bool diag = TactLog.DiagActive;
+            double from = diag ? m_Motion.GetActualPos(AX_ID.AX_BOTL) : 0;
+            long t0 = TactLog.Now;
             m_Motion.BotMove(dPos, m_Para.Values[AX_ID.AX_BOTL].Velocity, m_Para.Values[AX_ID.AX_BOTL].Accelerate);
+            if (diag) NoteSingleMove("BOT", AX_ID.AX_BOTL, from, dPos, t0);
             return true;
+        }
+
+        // [진단] 단축 이동(AxmMovePos) 반환 시점에 아직 이동 중인지 / 위치 오차가 남았는지 기록 → 이동 직후 촬상 시 안정화 여부 판단용
+        private void NoteSingleMove(string name, int axis, double from, double to, long t0)
+        {
+            long cmdMs = TactLog.Now - t0;
+            bool busy = m_Motion.Busy(axis);
+            double act = m_Motion.GetActualPos(axis);
+            TactLog.Note(string.Format("MOVE_{0} ax{1} from={2:F3} to={3:F3} cmd={4}ms busyAfterCmd={5} actAfterCmd={6:F3} err={7:F3}",
+                name, axis, from, to, cmdMs, busy ? "Y" : "N", act, act - to));
         }
         public bool PushAll(bool bPush)
         {
             if (!m_Option.RC_Push || !m_Option.UC_Push) return true;
+            // [진단] 명령 전 푸셔 상태 (이미 목표 상태였는지 확인용, I_*_PUSHER = 하강)
+            TactLog.Note(string.Format("PUSH_ALL cmd={0} before RC={1} UC={2}", bPush ? "DOWN" : "UP", m_DIO.I_RC_PUSHER ? "DOWN" : "UP", m_DIO.I_UC_PUSHER ? "DOWN" : "UP"));
             m_DIO.All_Push(bPush);
             Thread.Sleep(50);
             int cnt = 0;
@@ -549,15 +585,45 @@ namespace MCS.Motion
             double[] pos = new double[2] { pos1, pos2 };
             double[] Velocity = new double[2] { m_Para.Values[axis1].Velocity, m_Para.Values[axis2].Velocity };
             double[] Accelerate = new double[2] { m_Para.Values[axis1].Accelerate, m_Para.Values[axis2].Accelerate };
+
+            // [진단] AxmMoveMultiPos 가 이동 완료까지 블로킹인지, 고정 대기(50ms / 100ms) 전후 상태 확인용
+            bool diag = TactLog.DiagActive;
+            double from1 = 0, from2 = 0;
+            bool busyAfterCmd = false, busyAfter50 = false;
+            long t0 = TactLog.Now, tCmd = 0, tWait = 0, tWaitEnd = 0;
+            if (diag)
+            {
+                from1 = m_Motion.GetActualPos(axis1);
+                from2 = m_Motion.GetActualPos(axis2);
+            }
+
             m_Motion.MoveMultiPos(axis, pos, Velocity, Accelerate, Accelerate);
+            if (diag)
+            {
+                tCmd = TactLog.Now;
+                busyAfterCmd = m_Motion.Busy(axis1) || m_Motion.Busy(axis2);
+            }
             Thread.Sleep(50);
+            if (diag)
+            {
+                busyAfter50 = m_Motion.Busy(axis1) || m_Motion.Busy(axis2);
+                tWait = TactLog.Now;
+            }
             while (m_Motion.Busy(axis1) || m_Motion.Busy(axis2))
             {
                 Thread.Sleep(10);
                 System.Windows.Threading.Dispatcher.CurrentDispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Background,
                                        new System.Threading.ThreadStart(delegate { }));
             }
+            if (diag) tWaitEnd = TactLog.Now;
             Thread.Sleep(100);
+            if (diag)
+            {
+                double act1 = m_Motion.GetActualPos(axis1);
+                double act2 = m_Motion.GetActualPos(axis2);
+                TactLog.Note(string.Format("MMP ax{0},{1} from={2:F3},{3:F3} to={4:F3},{5:F3} cmd={6}ms busyAfterCmd={7} busyAfter50={8} waitLoop={9}ms err={10:F3},{11:F3}",
+                    axis1, axis2, from1, from2, pos1, pos2, tCmd - t0, busyAfterCmd ? "Y" : "N", busyAfter50 ? "Y" : "N", tWaitEnd - tWait, act1 - pos1, act2 - pos2));
+            }
         }
         public void MoveMultiPos(double pos1, double pos2, double pos3)
         {
@@ -754,6 +820,8 @@ namespace MCS.Motion
 
         public void PusherStep()
         {
+            // [진단] 진입 시 푸셔가 이미 상승 상태면 상승 + 300ms 대기는 중복
+            TactLog.Note(string.Format("PUSHER_STEP before RC={0} UC={1}", m_DIO.I_RC_PUSHER ? "DOWN" : "UP", m_DIO.I_UC_PUSHER ? "DOWN" : "UP"));
             m_DIO.All_Push(false);
             Thread.Sleep(300);
             m_DIO.All_Push(true);

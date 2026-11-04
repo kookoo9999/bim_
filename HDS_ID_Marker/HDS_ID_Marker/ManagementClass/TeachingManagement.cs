@@ -188,14 +188,21 @@ namespace HDS_ID_Marker
             AlignROI align = ptrMain.workSettingWindow.topHRControl.alignROIs.Find(s => s.number == 1);
             AlignROI align2 = ptrMain.workSettingWindow.topHRControl.alignROIs.Find(s => s.number == 2);
 
+            long tTact = TactLog.Now;
             ret = ptrMain.PCSInstance.Visions[0].SearchPointAlignToROI(out x11, out y11, out match1, MainWindow.ri.TopCamResolution, log, path, align.roi);
+            TactLog.Add("ALIGN_P1_SEARCH1", tTact);
+            tTact = TactLog.Now;
             ret2 = ptrMain.PCSInstance.Visions[0].SearchPointAlign2ToROI(out x21, out y21, out match2, MainWindow.ri.TopCamResolution, log, path, align2.roi);
+            TactLog.Add("ALIGN_P1_SEARCH2", tTact);
+            TactLog.Note($"ALIGN_P1 ret={ret},{ret2} match={match1},{match2} xy1={x11:F4},{y11:F4} xy2={x21:F4},{y21:F4}");
 
             // 찾은 Align 좌표를 멤버 변수에 저장 (첫 번째 Align 마크를 기준으로 함)
             // lastFoundAlignPos 에는 절대 중심 좌표를 저장
             float centerX, centerY;
             int match;
+            tTact = TactLog.Now;
             ptrMain.PCSInstance.Visions[0].SearchPointAlignToROI_GetCenter(out centerX, out centerY, out match, MainWindow.ri.TopCamResolution, log, path, align2.roi);
+            TactLog.Add("ALIGN_P1_CENTER", tTact);
             this.lastFoundAlignPos = new Point((double)centerX, (double)centerY);
             MainWindow.logger.WriteLog(LogType.Info,$"align x : {lastFoundAlignPos.X} , y : {lastFoundAlignPos.Y}");
 
@@ -211,17 +218,30 @@ namespace HDS_ID_Marker
             //    else x11 = x21; y11 = y21;
             //}
             if (!CheckAlign11(y11))
+            {
+                TactLog.Note("ALIGN_P1 CheckAlign11 fail → -4");
                 return -4;
+            }
             if (!CheckAlign21(y21))
+            {
+                TactLog.Note("ALIGN_P1 CheckAlign21 fail → -4");
                 return -4;
+            }
 
             motionDistanceY = ptrMain.model.modelInformation.StripIter[ptrMain.model.modelInformation.StripIter.Count - 1] + ptrMain.model.markingInformation.TopAlignY;
             alignDistanceY = ptrMain.model.modelInformation.StripIter[ptrMain.model.modelInformation.StripIter.Count - 1];
 
+            tTact = TactLog.Now;
             MainWindow.MCS2.TopMoveToPos(motionDistanceY);
+            TactLog.Add("ALIGN_P2_MOVE", tTact);
 
+            tTact = TactLog.Now;
             ret = ptrMain.PCSInstance.Visions[0].SearchPointAlignToROI(out x12, out y12, out match1, MainWindow.ri.TopCamResolution, log, path, align.roi);
+            TactLog.Add("ALIGN_P2_SEARCH1", tTact);
+            tTact = TactLog.Now;
             ret2 = ptrMain.PCSInstance.Visions[0].SearchPointAlign2ToROI(out x22, out y22, out match2, MainWindow.ri.TopCamResolution, log, path, align2.roi);
+            TactLog.Add("ALIGN_P2_SEARCH2", tTact);
+            TactLog.Note($"ALIGN_P2 ret={ret},{ret2} match={match1},{match2} xy1={x12:F4},{y12:F4} xy2={x22:F4},{y22:F4}");
 
             if (ret < 0 || ret2 < 0)
             {
@@ -235,9 +255,15 @@ namespace HDS_ID_Marker
             //    else x12 = x22; y12 = y22;
             //}
             if (!CheckAlign12(y12))
+            {
+                TactLog.Note("ALIGN_P2 CheckAlign12 fail → -4");
                 return -4;
+            }
             if (!CheckAlign22(y22))
+            {
+                TactLog.Note("ALIGN_P2 CheckAlign22 fail → -4");
                 return -4;
+            }
 
             alignDistanceY -= y12;
             alignDistanceX = x12 - x11;

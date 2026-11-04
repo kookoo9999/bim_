@@ -166,12 +166,16 @@ namespace DCS.Laser
         StreamWriter writer;
         NetworkStream stream;
         private string etx = "\n\r";
+        // [진단] 로그 구분용 (IP), 마지막 Ack 응답 원문
+        private string diagName = "";
+        private string lastAckText = "";
 
         public override bool Connect(string ip, int tcpPort, string serialPort)
         {
             try
             {
                 client = new TcpClient(AddressFamily.InterNetwork);
+                diagName = ip;
                 client.Connect(ip, tcpPort);
                 stream = client.GetStream();
                 writer = new StreamWriter(stream, Encoding.ASCII, 8192);
@@ -200,8 +204,9 @@ namespace DCS.Laser
                     if (stream.DataAvailable)
                     {
                         byte[] bytes = new byte[client.ReceiveBufferSize];
-                        stream.Read(bytes, 0, (int)client.ReceiveBufferSize);
+                        int nRead = stream.Read(bytes, 0, (int)client.ReceiveBufferSize);
                         string returndata = Encoding.UTF8.GetString(bytes);
+                        lastAckText = Encoding.ASCII.GetString(bytes, 0, nRead);
                         if (returndata.Length > 0)
                         {
                             string data = returndata.Substring(0, returndata.LastIndexOf('\r'));
@@ -232,19 +237,32 @@ namespace DCS.Laser
             int cnt = 0;
             string cmd = "RX,Ready";
             cmd += KeyenceProtocol.ETX;
+
+            // [진단] 폴링 회차별 송신/수신 원문 → 마킹 중 응답이 보류되는지, 쌓였다 몰려오는지 확인용
+            bool diag = Common.TactLog.DiagActive;
+            StringBuilder trace = diag ? new StringBuilder() : null;
+            var sw = diag ? System.Diagnostics.Stopwatch.StartNew() : null;
+            if (diag) trace.AppendFormat("availBefore={0}", client.Available);
+
             while (!bDone)
             {
                 Thread.Sleep(100);
                 writer.Write(cmd);
+                if (diag) trace.AppendFormat(" | W@{0}", sw.ElapsedMilliseconds);
 
                 if (CheckClient())
                 {
                     if (stream.DataAvailable)
                     {
                         byte[] bytes = new byte[client.ReceiveBufferSize];
-                        stream.Read(bytes, 0, (int)client.ReceiveBufferSize);
+                        int nRead = stream.Read(bytes, 0, (int)client.ReceiveBufferSize);
                         string returndata = Encoding.UTF8.GetString(bytes);
-                        if (returndata.Contains("RX,OK")) return true;
+                        if (diag) trace.AppendFormat(" R@{0}[{1}]{2}", sw.ElapsedMilliseconds, nRead, Encoding.ASCII.GetString(bytes, 0, nRead));
+                        if (returndata.Contains("RX,OK"))
+                        {
+                            if (diag) Common.TactLog.Note(string.Format("KEY[{0}] MARKDONE ok {1}ms polls={2} availAfter={3} {4}", diagName, sw.ElapsedMilliseconds, cnt + 1, client.Available, trace));
+                            return true;
+                        }
                         //if (Convert.ToInt32(returndata.Split(',')[2]) == 0)
                         //{
                         //    return true;
@@ -255,6 +273,7 @@ namespace DCS.Laser
                 cnt++;
                 if (cnt > 100)
                 {
+                    if (diag) Common.TactLog.Note(string.Format("KEY[{0}] MARKDONE timeout {1}ms {2}", diagName, sw.ElapsedMilliseconds, trace));
                     return false;
                 }
             }
@@ -268,8 +287,18 @@ namespace DCS.Laser
 
         public override int LoadLaser(string programCmd)
         {
+            // [진단] 명령 전 수신 버퍼에 남은 바이트(이전 명령의 응답 잔류 여부) / Ack 응답 원문
+            bool diag = Common.TactLog.DiagActive;
+            int availBefore = diag ? client.Available : 0;
+            var sw = diag ? System.Diagnostics.Stopwatch.StartNew() : null;
+            lastAckText = "";
+
             writer.Write(programCmd);
-            return AckClient();
+            int ret = AckClient();
+
+            if (diag)
+                Common.TactLog.Note(string.Format("KEY[{0}] LOAD ret={1} {2}ms availBefore={3} ack={4}", diagName, ret, sw.ElapsedMilliseconds, availBefore, lastAckText));
+            return ret;
         }
 
         public override int MarkReady()
@@ -323,6 +352,12 @@ namespace DCS.Laser
             string cmd = "WX,FocusCheck=" + Focusindex;
             cmd += KeyenceProtocol.ETX;
 
+            // [진단] 응답 도착 시점(폴링 100ms 대비 실제 측정 시간), 수신 원문, 명령 전 잔류 바이트
+            bool diag = Common.TactLog.DiagActive;
+            StringBuilder trace = diag ? new StringBuilder() : null;
+            var sw = diag ? System.Diagnostics.Stopwatch.StartNew() : null;
+            if (diag) trace.AppendFormat("availBefore={0}", client.Available);
+
             writer.Write(cmd);
 
             while (!bDone)
@@ -334,8 +369,9 @@ namespace DCS.Laser
                     if (stream.DataAvailable)
                     {
                         byte[] bytes = new byte[client.ReceiveBufferSize];
-                        stream.Read(bytes, 0, (int)client.ReceiveBufferSize);
+                        int nRead = stream.Read(bytes, 0, (int)client.ReceiveBufferSize);
                         string returndata = Encoding.UTF8.GetString(bytes);
+                        if (diag) trace.AppendFormat(" | R@{0}[{1}]{2}", sw.ElapsedMilliseconds, nRead, Encoding.ASCII.GetString(bytes, 0, nRead));
 
                         string data = returndata.Substring(0, returndata.IndexOf('\r'));
                         string[] subData = data.Split(',');
@@ -346,6 +382,7 @@ namespace DCS.Laser
                             string ret2 = returndata.Substring(pos, returndata.Length - pos);
                             string data2 = returndata.Substring(pos, ret2.IndexOf('\r'));
                             string[] subData2 = data2.Split(',');
+                            if (diag) Common.TactLog.Note(string.Format("KEY[{0}] FOCUS ok {1}ms polls={2} {3}", diagName, sw.ElapsedMilliseconds, cnt + 1, trace));
                             return Convert.ToDouble(subData2[2]);
                         }
                     }
@@ -354,6 +391,7 @@ namespace DCS.Laser
                 cnt++;
                 if (cnt > 50)
                 {
+                    if (diag) Common.TactLog.Note(string.Format("KEY[{0}] FOCUS timeout {1}ms {2}", diagName, sw.ElapsedMilliseconds, trace));
                     return 100;
                 }
             }

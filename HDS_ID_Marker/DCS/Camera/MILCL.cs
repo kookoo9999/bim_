@@ -158,7 +158,10 @@ namespace DCS.Camera
                 //timer.Start();
                 if (isRequireGrabbing[idx])
                 {
+                    // [진단] 연속 촬상 정지 / 1프레임 촬상 / 재시작 시간 분리
+                    long tHalt = Common.TactLog.Now;
                     MIL.MdigHalt(MilDigitizer[idx]);
+                    Common.TactLog.Add($"CAM{idx}_HALT", tHalt);
                     rawDataList[idx] = DeepCopy(idx);
                     isGrabbed[idx] = true;
                 }
@@ -174,9 +177,15 @@ namespace DCS.Camera
         private byte[] DeepCopy(int idx)
         {
             byte[] tempBuffer = new byte[sizeX[idx] * sizeY[idx]];
+            long t = Common.TactLog.Now;
             MIL.MdigGrab(MilDigitizer[idx], MilImagebuffer[idx]);
+            Common.TactLog.Add($"CAM{idx}_GRAB_1FRAME", t);
+            t = Common.TactLog.Now;
             MIL.MbufGet(MilImagebuffer[idx], tempBuffer);
+            Common.TactLog.Add($"CAM{idx}_BUF_COPY", t);
+            t = Common.TactLog.Now;
             MIL.MdigGrabContinuous(MilDigitizer[idx], MilImagebuffer[idx]);
+            Common.TactLog.Add($"CAM{idx}_RESTART", t);
 
             return (byte[])tempBuffer.Clone();
         }
