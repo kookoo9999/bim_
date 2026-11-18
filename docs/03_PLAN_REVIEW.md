@@ -297,3 +297,13 @@ ROI는 FOV 좌표이고 런타임은 `기준점 + StripIter[i]`로 이동하므�
 ### 8.6 참고 — 기존 버그 (이번 범위 밖)
 
 `ModelManager.RestoreSelectedModel`(`ModelManager.xaml.cs:114-115`)이 `MarkingDirection`에 `MarkingLeft` 값을 덮어쓰고 `MarkingLeft`는 읽지 않는다(`LoadModel` `:188-189`는 정상). 모델관리에서 수정을 **취소**한 뒤 프로그램을 재시작하지 않고 작업하면, lot 입력칸과 열 매핑(A→D/D→A)이 뒤집힐 수 있다.
+
+---
+
+## 9. 5차 — 답변 반영
+
+| # | 답변 | 결정 |
+|---|---|---|
+| 1 | lot 입력창에 정/역 토글 | `LotWindow`에 열별 정/역 토글 추가 (8.2 매핑 규칙 적용) |
+| 2 | ITS/작업이력에는 남기지 않음 | lot별 배열은 **로그 파일에만** 기록 (작업 시작 로그 `LogMarkData` 위치). 따라서 8.2의 "work_history 저장/복원"은 철회. 같은 lot 재시작 시에는 작업자가 다시 선택 |
+| 3 | 그림 v1의 S / S−1 이해 어려움 (시작 2 → 좌 1, 우 2로 알고 있음) | 현재 코드 규칙은 **화면 '우' 마크 = 입력 stripID − 1**(좌 2, 우 1). 확인용 그림 v2: [`images/stripid_rule_v2.png`](images/stripid_rule_v2.png). 화면이 실물 대비 좌우 반전인지(가), 실물에서도 우측이 1번인지(나)만 확인하면 됨. **어느 쪽이든 역방향 설계(B열 = 위치 문자열 좌/우 스왑)는 변하지 않음** |
