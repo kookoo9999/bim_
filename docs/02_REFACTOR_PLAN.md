@@ -48,10 +48,10 @@
 
 | 대상 | 변경 | 기존 데이터 |
 |---|---|---|
-| `para_custommark`, `para_intermark`, `para_ocrmark`, `para_alignroi` | `orient TINYINT NOT NULL DEFAULT 0` (0=정, 1=역) | 모두 정방향(0) |
-| `marking_info` | `RevBaseTopY`, `RevBaseBotY` (역방향을 저장한 시점의 기준점 스냅샷, NULL이면 역방향 미티칭) | NULL |
+| `para_custommark`, `para_intermark`, `para_ocrmark`, `para_alignroi` | **스키마 변경 없음.** 기존 `orientation` 컬럼 값으로 구분: 정 `top`/`bot`, 역 `top_r`/`bot_r` (컬럼 길이 5자 이상 필요). 구버전으로 롤백해도 `top`/`bot`만 읽으므로 안전 | 그대로 정방향 |
+| 모델 폴더 `Reverse.ini` | `RevBaseTopY`, `RevBaseBotY` (역방향을 저장한 시점의 기준점 스냅샷, 없으면 역방향 미티칭). DB 스키마 변경 없음 | 파일 없음 |
 | 모델 폴더 | 정: `Align.bmp`, `Align2.bmp`(기존) / 역: `Align_R.bmp`, `Align2_R.bmp` | 그대로 |
-| `CustomMark`/`InterMark`/`OCRMark`/`AlignROI` (`Data/MarkInformation.cs`) | `public int orient;` | 0 |
+| `Data/MarkInformation.cs` | `MarkSet`(정/역 한 벌의 마크·얼라인 묶음), `ReverseLayout`(블록 오프셋 20, 허용오차 0.05mm, 좌/우 스왑 등 공통 규칙) | - |
 | 런타임 lot 정보 | `MainWindow.orients = new bool[4]` (물리 열 인덱스 기준, true=역). `lots[]`와 같은 위치에서 설정 | 전부 false |
 
 - 블록 번호: 정방향은 `index`, 역방향은 `20 + index`. `index`는 Variant마다 0부터 매긴다(`AllObjectCount()`, 얼라인 ROI 포함). 상한 20이면 충분한 것으로 확인했다.
@@ -161,16 +161,17 @@ string GetRowMarkingLocation(int row) =>
 - "…고객1 우"(역방향이면 이 경우가 됨): 사이클 S에 strip S−1을 기록한다(완성 상태). 기록 범위는 1 ~ N−1이고, 1은 폐기품이다.
 - 그 결과 같은 제품이라도 AAAA와 BBBB의 ITS가 달라지고, AABB는 열마다 기록 시점이 달라진다.
 
-**결정 (단일 규칙)**: 모든 lot에서 모든 열이 매 사이클 **이번 사이클에 완성된 strip = S−1**을 기록한다. lot의 첫 strip(폐기)은 기록하지 않는다.
+**결정 (단일 규칙)**: 모든 lot에서 모든 열이 매 사이클 **이번 사이클에 완성된 strip = S−1**을 기록한다. lot의 첫 strip(폐기)은 일단 기록하고 **lot 종료(EOL) 시 삭제**한다.
 - 스트립은 화면 우측(S)에서 첫 마크를, 다음 사이클 화면 좌측(S−1)에서 둘째 마크를 받고 완성된다. 정/역, 고객사 설정과 무관하다.
 - 기록 내용: 사내 ID = `lots[i] + (S−1)`, 고객 ID = 열 i의 고객 ID를 strip S−1로 생성한 값(위치 보정 없이 strip 번호를 직접 지정). `ConvertInternal1ID`는 ITS 경로에서 더 이상 쓰지 않는다.
-- 첫 strip 스킵 조건: `S − 1 < fisrtID`. 새 lot이면 `fisrtID = 2`이므로 첫 사이클만 스킵된다. 이어하기일 때는 `fisrtID`가 DB 값으로 유지되므로 스킵되지 않는다.
+- 첫 strip(시작번호 − 1 = `fisrtID − 1`) 레코드는 첫 사이클 직후 중단 시 이어하기 번호 계산(ITS 마지막 레코드 기준)을 위해 기록해 두고, EOL을 쓸 때 ITS 파일(정식/temp)에서 지운다. 앞/뒤 strip에 마크가 나눠 찍히는 경우에만 적용한다.
+- 실제 구현은 고객사 설정에 따라 일반화되어 있다: 이전 strip('우')에 찍히는 마크가 있으면 완성 strip = S−1, 없으면 S. 같은 쪽 설정 고객("사내1 좌, 고객1 좌" 등)은 기존 결과와 동일하다.
 
 **사이클별 결과 (시작번호 2, 이 제품 기준)**
 
 | 사이클 | 기준 S | 화면 좌측 (−1) | 화면 우측 | 기존 ITS | 새 ITS |
 |---|---|---|---|---|---|
-| 1 | 2 | 1번째 strip: 0001 → **폐기** | 2번째 strip: 0002 (첫 마크) | strip 2 | 없음 |
+| 1 | 2 | 1번째 strip: 0001 → **폐기** | 2번째 strip: 0002 (첫 마크) | strip 2 | strip 1 (EOL 시 삭제) |
 | 2 | 3 | 2번째 strip: 0002 → **완성** | 3번째 strip: 0003 | strip 3 | **strip 2** |
 | 3 | 4 | 3번째 strip 완성 | 4번째 strip | strip 4 | strip 3 |
 | 마지막 | N | N−1번째 strip 완성 | N번째 strip: 첫 마크만 → **폐기** | strip N | strip N−1 |
@@ -250,6 +251,7 @@ string GetRowMarkingLocation(int row) =>
 
 | 구분 | 항목 |
 |---|---|
-| 확인 | ITS/MES 측 공유: 기록 시점이 한 사이클 늦어지고, 마지막 미완성 strip N이 빠짐(6.1). 변동 시 재검토 |
+| 확인 | ITS/MES 측 공유: 기록 시점이 한 사이클 늦어지고, 마지막 미완성 strip N이 빠지며, 첫 strip은 EOL 시 삭제됨(6.1). 변동 시 재검토 |
+| 확인 | DB `orientation` 컬럼 길이 5자 이상(`top_r`). 부족하면 역방향 저장 시 경고가 뜬다 |
 | 범위 밖 | `MarkingPLC`/`WorkSettingControl`(PLC), AOI ID 리더, 마킹 시프트 검사, 티칭창 단발 마킹/리딩 테스트 버튼 |
 | 별도 버그 | `ModelManager.RestoreSelectedModel` `:115`에서 `MarkingDirection`이 `MarkingLeft`로 덮어써짐(별도 작업) |

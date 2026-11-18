@@ -138,6 +138,11 @@ namespace HDS_ID_Marker.SubWindow
                         MainWindow.lots[1] = tbLotC.Text;
                         MainWindow.lots[0] = tbLotD.Text;
                     }
+                    // 열별 정/역 : lot 입력칸과 같은 열 순서(MarkingDirection) 매핑으로 물리 열 인덱스에 저장
+                    SetOrient(GetPhysicalRow(0), tsRevA.IsChecked);
+                    SetOrient(GetPhysicalRow(1), tsRevB.IsChecked);
+                    SetOrient(GetPhysicalRow(2), tsRevC.IsChecked);
+                    SetOrient(GetPhysicalRow(3), tsRevD.IsChecked);
                     ptrMain.model.SetResultPath();
 
                     this.DialogResult = true;
@@ -251,7 +256,37 @@ namespace HDS_ID_Marker.SubWindow
         {
             FocusManager.SetFocusedElement(this, tbModelName);
             Keyboard.Focus(tbModelName);
+            InitOrientToggles();
         }
+
+        #region 열별 정/역
+        /// <summary>입력칸 순서(A~D = 0~3) → 물리 열 인덱스 (lot 입력과 같은 MarkingDirection 매핑)</summary>
+        private int GetPhysicalRow(int inputIndex)
+        {
+            return ptrMain.model.modelInformation.MarkingDirection ? inputIndex : 3 - inputIndex;
+        }
+
+        private void SetOrient(int row, bool reverse)
+        {
+            if (MainWindow.orients == null || MainWindow.orients.Length < 4) MainWindow.orients = new bool[4];
+            if (row >= 0 && row < MainWindow.orients.Length) MainWindow.orients[row] = reverse;
+        }
+
+        /// <summary>직전 lot 의 방향으로 초기화. 역방향 티칭이 없는 모델은 역방향 선택 불가</summary>
+        private void InitOrientToggles()
+        {
+            var toggles = new[] { tsRevA, tsRevB, tsRevC, tsRevD };
+            bool revAvailable = ptrMain.workSettingWindow.topHRControl.GetMarkSet(true).BlockCount > 0
+                             || ptrMain.workSettingWindow.botHRControl.GetMarkSet(true).BlockCount > 0;
+
+            for (int i = 0; i < toggles.Length; i++)
+            {
+                toggles[i].IsChecked = revAvailable && MainWindow.IsReverseRow(GetPhysicalRow(i));
+                toggles[i].IsEnabled = revAvailable;
+                toggles[i].ToolTip = revAvailable ? "열 제품 방향 (정방향 / 역방향 180°)" : "역방향 티칭 데이터가 없는 모델입니다.";
+            }
+        }
+        #endregion
 
         private void tsOrderBindCheck_Click(object sender, MouseButtonEventArgs e)
         {

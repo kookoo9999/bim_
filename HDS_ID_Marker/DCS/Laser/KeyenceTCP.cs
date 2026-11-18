@@ -120,6 +120,12 @@ namespace DCS.Laser
             return cmd;
         }
 
+        /// <summary>블록 인쇄 비활성화 (정/역 혼합 배열에서 다른 방향 블록군을 끌 때 사용)</summary>
+        public static string DISABLE(int index)
+        {
+            return String.Format("WX,BLK={0},MarkingEnable=2,0", index);
+        }
+
         public static int GetSimbolSize(string format)
         {
             int para = 0;

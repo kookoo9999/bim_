@@ -28,6 +28,8 @@ namespace HDS_ID_Marker.SubWindow
         public double m_speed = 250;
         public bool m_flip = false;
         public int m_spotvalue = -15;
+        /// <summary>역방향 티칭 중이면 true (좌/우 기본값을 고객사 2D 위치의 반대로 계산)</summary>
+        public bool IsReverse = false;
         MaterialWarningDlg dlg;
 
         public int m_idx = 0;        
@@ -120,6 +122,7 @@ namespace HDS_ID_Marker.SubWindow
             
             MainWindow ptrmainwin = Application.Current.MainWindow as MainWindow;
             string location = ptrmainwin.model.markingInformation.customerInformation.MarkingLocation;
+            if (IsReverse) location = ReverseLayout.SwapLR(location); // 역방향 티칭은 좌/우 반전
 
             string[] sss = location.Split(',');
             string dir = "";
@@ -298,6 +301,7 @@ namespace HDS_ID_Marker.SubWindow
             string selected = ((ComboBoxItem)cmb.SelectedItem).Content.ToString();
             MainWindow ptrmainwin = Application.Current.MainWindow as MainWindow;
             string location = ptrmainwin.model.markingInformation.customerInformation.MarkingLocation;
+            if (IsReverse) location = ReverseLayout.SwapLR(location); // 역방향 티칭은 좌/우 반전
 
             string[] sss = location.Split(',');
             string dir = "";

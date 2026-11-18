@@ -549,60 +549,94 @@ namespace HDS_ID_Marker
             resTop = MainWindow.ri.TopCamResolution;
         }
 
+        /// <summary>
+        /// 상부 레이저 프로그램 등록. 정방향 블록(index)과 역방향 블록(20 + index)을 한 프로그램에 함께 등록한다.
+        /// 역방향 티칭이 없으면 기존과 동일한 명령이 전송된다.
+        /// </summary>
         public int LoadProjectTop(int BarcodeSpotValue, int OCRSpotvale)
         {
-            if (ptrMain.workSettingWindow.topHRControl.AllBlockCount() > 0)
+            MarkSet fwd = ptrMain.workSettingWindow.topHRControl.GetMarkSet(false);
+            MarkSet rev = ptrMain.workSettingWindow.topHRControl.GetMarkSet(true);
+            if (fwd.BlockCount + rev.BlockCount > 0)
             {
-                string cmd = "";
-                bool flip = false;
-                if (ptrMain.workSettingWindow.topHRControl.customMarks.Count > 0)
-                {
-                    if (ptrMain.workSettingWindow.topHRControl.customMarks[0].flip)
-                    {
-                        cmd = KeyenceProtocol.CSTX + KeyenceProtocol.INIT(4) + KeyenceProtocol.AND;
-                        flip = true;
-                    }
-                    else cmd = KeyenceProtocol.CSTX + KeyenceProtocol.INIT(6) + KeyenceProtocol.AND;
-                }
-                else  cmd = KeyenceProtocol.CSTX + KeyenceProtocol.INIT(6) + KeyenceProtocol.AND;
-                
-                foreach (var block in ptrMain.workSettingWindow.topHRControl.customMarks)
-                {
-                    cmd += KeyenceProtocol.BARCODE_BLK(block.index, block.shape, block.format, block.sizeX, block.sizeY, block.gap, block.degree, block.power, block.speed, BarcodeSpotValue);
-                    cmd += KeyenceProtocol.AND;
-                }
-                foreach (var block in ptrMain.workSettingWindow.topHRControl.interMarks)
-                {
-                    cmd += KeyenceProtocol.BARCODE_BLK(block.index, block.shape, block.format, block.sizeX, block.sizeY, block.gap, block.degree, block.power, block.speed, BarcodeSpotValue);
-                    cmd += KeyenceProtocol.AND;
-                }
-                foreach (var block in ptrMain.workSettingWindow.topHRControl.ocrMarks)
-                {
-                    int font = 0;
-
-                    if (ptrMain.model.markingInformation.customerInformation.Name == "Micron" ||
-                       ptrMain.model.markingInformation.customerInformation.Name == "WAE" ||
-                       ptrMain.model.markingInformation.customerInformation.Name == "PTI-TW")
-                    {
-                        // OCR-A Font 
-                        font = 3;
-                    }
-                    else
-                    {
-                        //font  0 : Standard 2:Flip Standard
-                        font = (flip == true) ? 2 : 0;
-                    }
-                    cmd += KeyenceProtocol.TEXT_BLK(block.index, block.alignment, block.sizeX, block.sizeY, block.gap, block.degree, GetOCRLength(block.reference), block.power, block.speed, flip, OCRSpotvale, font);
-                    cmd += KeyenceProtocol.AND;
-                }
-                cmd += KeyenceProtocol.END();
-                cmd += KeyenceProtocol.ETX;
-
+                string cmd = BuildProjectCommand(fwd, rev, BarcodeSpotValue, OCRSpotvale);
                 return ptrMain.PCSInstance.Lasers[0].LoadLaser(cmd);
             }
             else
                 return 0;
         }
+
+        /// <summary>
+        /// 레이저 프로그램 명령 생성 (헤드 방향 + 정방향 블록군 + 역방향 블록군)
+        /// </summary>
+        private string BuildProjectCommand(MarkSet fwd, MarkSet rev, int BarcodeSpotValue, int OCRSpotvale)
+        {
+            string cmd = "";
+            bool flip = GetHeadFlip(fwd, rev);
+            if (flip) cmd = KeyenceProtocol.CSTX + KeyenceProtocol.INIT(4) + KeyenceProtocol.AND;
+            else cmd = KeyenceProtocol.CSTX + KeyenceProtocol.INIT(6) + KeyenceProtocol.AND;
+
+            cmd += BuildBlocks(fwd, 0, flip, BarcodeSpotValue, OCRSpotvale);
+            cmd += BuildBlocks(rev, ReverseLayout.RevBlockBase, flip, BarcodeSpotValue, OCRSpotvale);
+
+            cmd += KeyenceProtocol.END();
+            cmd += KeyenceProtocol.ETX;
+            return cmd;
+        }
+
+        /// <summary>헤드 반전(flip) 여부 : 정방향 첫 고객 마크 기준 (정방향이 없으면 역방향)</summary>
+        private bool GetHeadFlip(MarkSet fwd, MarkSet rev)
+        {
+            if (fwd.customMarks.Count > 0) return fwd.customMarks[0].flip;
+            if (rev.customMarks.Count > 0) return rev.customMarks[0].flip;
+            return false;
+        }
+
+        private string BuildBlocks(MarkSet set, int blockBase, bool flip, int BarcodeSpotValue, int OCRSpotvale)
+        {
+            string cmd = "";
+            foreach (var block in set.customMarks)
+            {
+                cmd += KeyenceProtocol.BARCODE_BLK(blockBase + block.index, block.shape, block.format, block.sizeX, block.sizeY, block.gap, block.degree, block.power, block.speed, BarcodeSpotValue);
+                cmd += KeyenceProtocol.AND;
+            }
+            foreach (var block in set.interMarks)
+            {
+                cmd += KeyenceProtocol.BARCODE_BLK(blockBase + block.index, block.shape, block.format, block.sizeX, block.sizeY, block.gap, block.degree, block.power, block.speed, BarcodeSpotValue);
+                cmd += KeyenceProtocol.AND;
+            }
+            foreach (var block in set.ocrMarks)
+            {
+                int font = 0;
+
+                if (ptrMain.model.markingInformation.customerInformation.Name == "Micron" ||
+                   ptrMain.model.markingInformation.customerInformation.Name == "WAE" ||
+                   ptrMain.model.markingInformation.customerInformation.Name == "PTI-TW")
+                {
+                    // OCR-A Font 
+                    font = 3;
+                }
+                else
+                {
+                    //font  0 : Standard 2:Flip Standard
+                    font = (flip == true) ? 2 : 0;
+                }
+                cmd += KeyenceProtocol.TEXT_BLK(blockBase + block.index, block.alignment, block.sizeX, block.sizeY, block.gap, block.degree, GetOCRLength(block.reference), block.power, block.speed, flip, OCRSpotvale, font);
+                cmd += KeyenceProtocol.AND;
+            }
+            return cmd;
+        }
+
+        /// <summary>다른 방향 블록군 인쇄 비활성화 명령 (해당 방향 티칭이 없으면 빈 문자열)</summary>
+        private string BuildDisableBlocks(MarkSet set, int blockBase)
+        {
+            string cmd = "";
+            foreach (var block in set.customMarks) { cmd += KeyenceProtocol.DISABLE(blockBase + block.index); cmd += KeyenceProtocol.AND; }
+            foreach (var block in set.interMarks) { cmd += KeyenceProtocol.DISABLE(blockBase + block.index); cmd += KeyenceProtocol.AND; }
+            foreach (var block in set.ocrMarks) { cmd += KeyenceProtocol.DISABLE(blockBase + block.index); cmd += KeyenceProtocol.AND; }
+            return cmd;
+        }
+
         public void RecoveryLaser(int type)
         {
             string cmd = KeyenceProtocol.CSTX + KeyenceProtocol.RECOVERY() + KeyenceProtocol.ETX;
@@ -613,55 +647,16 @@ namespace HDS_ID_Marker
         {
             return ptrMain.PCSInstance.Lasers[type].MarkReady();
         }
+        /// <summary>
+        /// 하부 레이저 프로그램 등록. 정방향 블록(index)과 역방향 블록(20 + index)을 한 프로그램에 함께 등록한다.
+        /// </summary>
         public int LoadProjectBot(int BarcodeSpotValue, int OCRSpotvale)
         {
-            if (ptrMain.workSettingWindow.botHRControl.AllBlockCount() > 0)
+            MarkSet fwd = ptrMain.workSettingWindow.botHRControl.GetMarkSet(false);
+            MarkSet rev = ptrMain.workSettingWindow.botHRControl.GetMarkSet(true);
+            if (fwd.BlockCount + rev.BlockCount > 0)
             {
-                string cmd = "";
-                bool flip = false;
-                if (ptrMain.workSettingWindow.botHRControl.customMarks.Count > 0)
-                {
-                    if (ptrMain.workSettingWindow.botHRControl.customMarks[0].flip)
-                    {
-                        cmd = KeyenceProtocol.CSTX + KeyenceProtocol.INIT(4) + KeyenceProtocol.AND;
-                        flip = true;
-                    }
-                    else cmd = KeyenceProtocol.CSTX + KeyenceProtocol.INIT(6) + KeyenceProtocol.AND;
-                }
-                else cmd = KeyenceProtocol.CSTX + KeyenceProtocol.INIT(6) + KeyenceProtocol.AND;
-
-                foreach (var block in ptrMain.workSettingWindow.botHRControl.customMarks)
-                {
-                    cmd += KeyenceProtocol.BARCODE_BLK(block.index, block.shape, block.format, block.sizeX, block.sizeY, block.gap, block.degree, block.power, block.speed, BarcodeSpotValue);
-                    cmd += KeyenceProtocol.AND;
-                }
-                foreach (var block in ptrMain.workSettingWindow.botHRControl.interMarks)
-                {
-                    cmd += KeyenceProtocol.BARCODE_BLK(block.index, block.shape, block.format, block.sizeX, block.sizeY, block.gap, block.degree, block.power, block.speed, BarcodeSpotValue);
-                    cmd += KeyenceProtocol.AND;
-                }
-                foreach (var block in ptrMain.workSettingWindow.botHRControl.ocrMarks)
-                {
-                    int font = 0;
-
-                    if (ptrMain.model.markingInformation.customerInformation.Name == "Micron" ||
-                        ptrMain.model.markingInformation.customerInformation.Name == "WAE" ||
-                        ptrMain.model.markingInformation.customerInformation.Name == "PTI-TW")
-                    {
-                        // OCR-A Font 
-                        font = 3;
-                    }
-                    else
-                    {
-                        //font  0 : Standard 2:Flip Standard
-                        font = (flip == true) ? 2 : 0;
-                    }
-                    cmd += KeyenceProtocol.TEXT_BLK(block.index, block.alignment, block.sizeX, block.sizeY, block.gap, block.degree, GetOCRLength(block.reference), block.power, block.speed, flip, OCRSpotvale, font);
-                    cmd += KeyenceProtocol.AND;
-                }
-                cmd += KeyenceProtocol.END();
-                cmd += KeyenceProtocol.ETX;
-
+                string cmd = BuildProjectCommand(fwd, rev, BarcodeSpotValue, OCRSpotvale);
                 return ptrMain.PCSInstance.Lasers[1].LoadLaser(cmd);
             }
             else
@@ -749,32 +744,35 @@ namespace HDS_ID_Marker
 
         private void UpdateTopMarkInfo()
         {
+            // 마킹 시프트 검사 기준값은 정방향 티칭 기준 (역방향 포함 lot 은 시프트 검사 미지원 → 시작 차단)
+            MarkSet fwdSet = ptrMain.workSettingWindow.topHRControl.GetMarkSet(false);
+            ptrMain.PCSInstance.Visions[0].SelectAlignBank(0);
             double TopOffsetX = Setting.Device.laserConfigs[0].CamToX;
             double TopOffsetY = 0;
             double TopOffsetZ = 0.0;  /*ptrMain.PCSInstance.Lasers[0].FocusCheck(Setting.Device.laserConfigs[0].FocusIndex);*/
             bool flip = false;
-            if (ptrMain.workSettingWindow.topHRControl.customMarks.Count > 0) flip = ptrMain.workSettingWindow.topHRControl.customMarks[0].flip ? true : false;
+            if (fwdSet.customMarks.Count > 0) flip = fwdSet.customMarks[0].flip ? true : false;
 
             TopOffsetX = Math.Round(TopOffsetX, 3);
             TopOffsetY = Math.Round(TopOffsetY, 3);
             TopOffsetZ = Math.Round(TopOffsetZ, 3);
 
-            for (int i = 0; i < ptrMain.workSettingWindow.topHRControl.alignROIs.Count; i++)
+            for (int i = 0; i < fwdSet.alignROIs.Count; i++)
             {
-                if (ptrMain.workSettingWindow.topHRControl.alignROIs[i].number == 1) continue;
-                var ty      = Convert.ToDouble(ptrMain.workSettingWindow.topHRControl.alignROIs[i].roi.Split(',')[0]);
-                var tx      = Convert.ToDouble(ptrMain.workSettingWindow.topHRControl.alignROIs[i].roi.Split(',')[1]);
-                var twidth  = Convert.ToDouble(ptrMain.workSettingWindow.topHRControl.alignROIs[i].roi.Split(',')[2]);
-                var theight = Convert.ToDouble(ptrMain.workSettingWindow.topHRControl.alignROIs[i].roi.Split(',')[3]);
+                if (fwdSet.alignROIs[i].number == 1) continue;
+                var ty      = Convert.ToDouble(fwdSet.alignROIs[i].roi.Split(',')[0]);
+                var tx      = Convert.ToDouble(fwdSet.alignROIs[i].roi.Split(',')[1]);
+                var twidth  = Convert.ToDouble(fwdSet.alignROIs[i].roi.Split(',')[2]);
+                var theight = Convert.ToDouble(fwdSet.alignROIs[i].roi.Split(',')[3]);
 
                 tx = tx + (twidth / 2);
                 ty = ty + (theight / 2);
 
                 float centerX, centerY;
                 int match;
-                ptrMain.PCSInstance.Visions[0].SearchPointAlignToROI_GetCenter(out centerX, out centerY, out match, MainWindow.ri.TopCamResolution, true, "", ptrMain.workSettingWindow.topHRControl.alignROIs[i].roi);
+                ptrMain.PCSInstance.Visions[0].SearchPointAlignToROI_GetCenter(out centerX, out centerY, out match, MainWindow.ri.TopCamResolution, true, "", fwdSet.alignROIs[i].roi);
 
-                foreach (var block in ptrMain.workSettingWindow.topHRControl.customMarks)
+                foreach (var block in fwdSet.customMarks)
                 {
                     if (block.reference != "고객1") continue;
                     var py      = Convert.ToDouble(block.roi.Split(',')[0]);
@@ -809,7 +807,7 @@ namespace HDS_ID_Marker
 
             //foreach (Point s in chkPos)
             //{
-            //    foreach (var block in ptrMain.workSettingWindow.topHRControl.customMarks)
+            //    foreach (var block in fwdSet.customMarks)
             //    {        
             //        var py = Convert.ToDouble(block.roi.Split(',')[0]);
             //        var px = Convert.ToDouble(block.roi.Split(',')[1]);
@@ -939,7 +937,13 @@ namespace HDS_ID_Marker
         private bool TopMark(string cust1_code, string cust2_code, string int1_code, int colStrip, int markPos = 2)
         {
             double TopOffsetZ = 0;
-            bool flip = ptrMain.workSettingWindow.topHRControl.customMarks[0].flip ? true : false;
+            // 열 방향(정/역)에 맞는 티칭 데이터와 레이저 블록군 선택
+            bool reverse = MainWindow.IsReverseRow(colStrip);
+            MarkSet set = ptrMain.workSettingWindow.topHRControl.GetMarkSet(reverse);
+            MarkSet otherSet = ptrMain.workSettingWindow.topHRControl.GetMarkSet(!reverse);
+            int blockBase = reverse ? ReverseLayout.RevBlockBase : 0;
+            int otherBase = reverse ? 0 : ReverseLayout.RevBlockBase;
+            bool flip = GetHeadFlip(ptrMain.workSettingWindow.topHRControl.GetMarkSet(false), ptrMain.workSettingWindow.topHRControl.GetMarkSet(true));
 
             long tFocus = TactLog.Now;
             for (int i = 0; i < 3; i++)
@@ -976,13 +980,13 @@ namespace HDS_ID_Marker
             TopOffsetY = Math.Round(TopOffsetY, 3);
             TopOffsetZ = Math.Round(TopOffsetZ, 3);
 
-            if (ptrMain.workSettingWindow.topHRControl.ocrMarks.Count    == 0 &&
-                ptrMain.workSettingWindow.topHRControl.interMarks.Count  == 0 &&
-                ptrMain.workSettingWindow.topHRControl.customMarks.Count == 0) return false;
+            if (set.ocrMarks.Count    == 0 &&
+                set.interMarks.Count  == 0 &&
+                set.customMarks.Count == 0) return false;
 
             string cmd = KeyenceProtocol.CSTX;
             int cnt = 0;
-            foreach (var block in ptrMain.workSettingWindow.topHRControl.customMarks)
+            foreach (var block in set.customMarks)
             {                
                 if(markPos<2 && block.markPos != markPos)
                 {
@@ -997,7 +1001,7 @@ namespace HDS_ID_Marker
 
                 MainWindow.logger.WriteLog(LogType.Laser, $"[TopMark] {block.reference} : {content}, X Loc :{dX + TopOffsetX}, Y Loc : {dY + TopOffsetY}");
 
-                cmd += KeyenceProtocol.MARK(block.index, content, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, false);
+                cmd += KeyenceProtocol.MARK(blockBase + block.index, content, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, false);
                 cmd += KeyenceProtocol.AND;
                 
                 double mx = flip ? -(dX + TopOffsetX) : dX + TopOffsetX;
@@ -1007,7 +1011,7 @@ namespace HDS_ID_Marker
              
             }
             cnt = 0;
-            foreach (var block in ptrMain.workSettingWindow.topHRControl.interMarks)
+            foreach (var block in set.interMarks)
             {
                 if (markPos < 2 && block.markPos != markPos)
                 {
@@ -1018,7 +1022,7 @@ namespace HDS_ID_Marker
 
                 MainWindow.logger.WriteLog(LogType.Laser, $"[TopMark] {block.reference}, X Loc :{dX + TopOffsetX}, Y Loc : {dY + TopOffsetY}");
 
-                cmd += KeyenceProtocol.MARK(block.index, int1_code, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, false);
+                cmd += KeyenceProtocol.MARK(blockBase + block.index, int1_code, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, false);
                 cmd += KeyenceProtocol.AND;
 
                 double mx = flip ? -(dX + TopOffsetX) : dX + TopOffsetX;
@@ -1028,7 +1032,7 @@ namespace HDS_ID_Marker
                 
             }
             cnt = 0;
-            foreach (var block in ptrMain.workSettingWindow.topHRControl.ocrMarks)
+            foreach (var block in set.ocrMarks)
             {
                 if (markPos < 2 && block.markPos != markPos)
                 {
@@ -1044,7 +1048,7 @@ namespace HDS_ID_Marker
 
                 MainWindow.logger.WriteLog(LogType.Laser, $"[TopMark] {block.reference} : {content}, X Loc :{dX + TopOffsetX}, Y Loc : {dY + TopOffsetY}");
 
-                cmd += KeyenceProtocol.MARK(block.index, content, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, flip);
+                cmd += KeyenceProtocol.MARK(blockBase + block.index, content, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, flip);
                 cmd += KeyenceProtocol.AND;
 
                 double mx = flip ? -(dX + TopOffsetX) : dX + TopOffsetX;
@@ -1052,6 +1056,8 @@ namespace HDS_ID_Marker
                                
                 cnt++;
             }
+            // 다른 방향 블록군은 매 열 명시적으로 인쇄 비활성화 (이전 열의 Enable 상태가 남지 않도록)
+            cmd += BuildDisableBlocks(otherSet, otherBase);
             cmd += KeyenceProtocol.ETX;
             long tLoad = TactLog.Now;
             ptrMain.PCSInstance.Lasers[0].LoadLaser(cmd);
@@ -1094,7 +1100,7 @@ namespace HDS_ID_Marker
                 double dX = Math.Round((GetCenterX(block.roi, block.degree) - viewerCenterX) * resTop * ratioX, 3);
                 double dY = Math.Round((viewerCenterY - GetCenterY(block.roi, block.degree)) * resTop * ratioY, 3);
 
-                cmd += KeyenceProtocol.MARK(block.index, cust_code, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, false);
+                cmd += KeyenceProtocol.MARK(ptrMain.workSettingWindow.topHRControl.ActiveBlockBase + block.index, cust_code, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, false);
                 cmd += KeyenceProtocol.AND;
 
                 double mx = flip ? -(dX + TopOffsetX) : dX + TopOffsetX;
@@ -1139,7 +1145,7 @@ namespace HDS_ID_Marker
                 double dX = Math.Round((GetCenterX(block.roi, block.degree) - viewerCenterX) * resTop * ratioX, 3);
                 double dY = Math.Round((viewerCenterY - GetCenterY(block.roi, block.degree)) * resTop * ratioY, 3);
 
-                cmd += KeyenceProtocol.MARK(block.index, int_code, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, false);
+                cmd += KeyenceProtocol.MARK(ptrMain.workSettingWindow.topHRControl.ActiveBlockBase + block.index, int_code, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, false);
                 cmd += KeyenceProtocol.AND;
 
                 double mx = flip ? -(dX + TopOffsetX) : dX + TopOffsetX;
@@ -1186,7 +1192,7 @@ namespace HDS_ID_Marker
                 double dX = Math.Round((GetCenterX(block.roi, block.degree) - viewerCenterX) * resTop * ratioX, 3);
                 double dY = Math.Round((viewerCenterY - GetCenterY(block.roi, block.degree)) * resTop * ratioY, 3);
 
-                cmd += KeyenceProtocol.MARK(block.index, cust_code, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, flip);
+                cmd += KeyenceProtocol.MARK(ptrMain.workSettingWindow.topHRControl.ActiveBlockBase + block.index, cust_code, flip ? -(dX + TopOffsetX) : dX + TopOffsetX, dY + TopOffsetY, 1, TopOffsetZ, flip);
                 cmd += KeyenceProtocol.AND;
 
                 double mx = flip ? -(dX + TopOffsetX) : dX + TopOffsetX;
@@ -1223,7 +1229,13 @@ namespace HDS_ID_Marker
             //    return false;
             //}
 
-            bool flip = ptrMain.workSettingWindow.botHRControl.customMarks[0].flip ? true : false;
+            // 열 방향(정/역)에 맞는 티칭 데이터와 레이저 블록군 선택
+            bool reverse = MainWindow.IsReverseRow(colStrip);
+            MarkSet set = ptrMain.workSettingWindow.botHRControl.GetMarkSet(reverse);
+            MarkSet otherSet = ptrMain.workSettingWindow.botHRControl.GetMarkSet(!reverse);
+            int blockBase = reverse ? ReverseLayout.RevBlockBase : 0;
+            int otherBase = reverse ? 0 : ReverseLayout.RevBlockBase;
+            bool flip = GetHeadFlip(ptrMain.workSettingWindow.botHRControl.GetMarkSet(false), ptrMain.workSettingWindow.botHRControl.GetMarkSet(true));
 
             long tFocus = TactLog.Now;
             for (int i = 0; i < 3; i++)
@@ -1250,13 +1262,13 @@ namespace HDS_ID_Marker
             BotOffsetY = Math.Round(BotOffsetY, 3);
             BotOffsetZ = Math.Round(BotOffsetZ, 3);
 
-            if (ptrMain.workSettingWindow.botHRControl.ocrMarks.Count    == 0 &&
-                ptrMain.workSettingWindow.botHRControl.interMarks.Count  == 0 &&
-                ptrMain.workSettingWindow.botHRControl.customMarks.Count == 0) return false;
+            if (set.ocrMarks.Count    == 0 &&
+                set.interMarks.Count  == 0 &&
+                set.customMarks.Count == 0) return false;
 
             string cmd = KeyenceProtocol.CSTX;
             int cnt = 0;
-            foreach (var block in ptrMain.workSettingWindow.botHRControl.customMarks)
+            foreach (var block in set.customMarks)
             {
                 if (markPos < 2 && block.markPos != markPos)
                 {
@@ -1271,7 +1283,7 @@ namespace HDS_ID_Marker
 
                 MainWindow.logger.WriteLog(LogType.Laser, $"[BotMark] {block.reference} : {content}, X Loc :{-(dX + BotOffsetX)}, Y Loc : {dY + BotOffsetY}");
 
-                cmd += KeyenceProtocol.MARK(block.index, content, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, false);
+                cmd += KeyenceProtocol.MARK(blockBase + block.index, content, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, false);
                 cmd += KeyenceProtocol.AND;
 
                 double mx = flip ? dX + BotOffsetX : -(dX + BotOffsetX);
@@ -1279,7 +1291,7 @@ namespace HDS_ID_Marker
                 cnt++;
             }
             cnt = 0;
-            foreach (var block in ptrMain.workSettingWindow.botHRControl.interMarks)
+            foreach (var block in set.interMarks)
             {
                 if (markPos < 2 && block.markPos != markPos)
                 {
@@ -1290,7 +1302,7 @@ namespace HDS_ID_Marker
 
                 MainWindow.logger.WriteLog(LogType.Laser, $"[BotMark] {block.reference}, X Loc :{-(dX + BotOffsetX)}, Y Loc : {dY + BotOffsetY}");
 
-                cmd += KeyenceProtocol.MARK(block.index, int1_code, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, false);
+                cmd += KeyenceProtocol.MARK(blockBase + block.index, int1_code, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, false);
                 cmd += KeyenceProtocol.AND;
 
                 double mx = flip ? dX + BotOffsetX : -(dX + BotOffsetX);
@@ -1299,7 +1311,7 @@ namespace HDS_ID_Marker
                 cnt++;
             }
             cnt = 0;
-            foreach (var block in ptrMain.workSettingWindow.botHRControl.ocrMarks)
+            foreach (var block in set.ocrMarks)
             {
                 if (markPos < 2 && block.markPos != markPos)
                 {
@@ -1315,7 +1327,7 @@ namespace HDS_ID_Marker
 
                 MainWindow.logger.WriteLog(LogType.Laser, $"[BotMark] {block.reference} : {content}, X Loc :{-(dX + BotOffsetX)}, Y Loc : {dY + BotOffsetY}");
 
-                cmd += KeyenceProtocol.MARK(block.index, content, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, flip);
+                cmd += KeyenceProtocol.MARK(blockBase + block.index, content, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, flip);
                 cmd += KeyenceProtocol.AND;
 
                 double mx = flip ? dX + BotOffsetX : -(dX + BotOffsetX);
@@ -1323,6 +1335,8 @@ namespace HDS_ID_Marker
                
                 cnt++;
             }
+            // 다른 방향 블록군은 매 열 명시적으로 인쇄 비활성화 (이전 열의 Enable 상태가 남지 않도록)
+            cmd += BuildDisableBlocks(otherSet, otherBase);
             cmd += KeyenceProtocol.ETX;
             long tLoad = TactLog.Now;
             ptrMain.PCSInstance.Lasers[1].LoadLaser(cmd);
@@ -1363,7 +1377,7 @@ namespace HDS_ID_Marker
                 double dX = Math.Round((GetCenterX(block.roi, block.degree) - viewerCenterX) * resTop * ratioX, 3);
                 double dY = Math.Round((viewerCenterY - GetCenterY(block.roi, block.degree)) * resTop * ratioY, 3);
 
-                cmd += KeyenceProtocol.MARK(block.index, cust_code, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, false);
+                cmd += KeyenceProtocol.MARK(ptrMain.workSettingWindow.botHRControl.ActiveBlockBase + block.index, cust_code, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, false);
                 cmd += KeyenceProtocol.AND;
 
                 double mx = flip ? dX + BotOffsetX : -(dX + BotOffsetX);
@@ -1407,7 +1421,7 @@ namespace HDS_ID_Marker
                 double dX = Math.Round((GetCenterX(block.roi, block.degree) - viewerCenterX) * resTop * ratioX, 3);
                 double dY = Math.Round((viewerCenterY - GetCenterY(block.roi, block.degree)) * resTop * ratioY, 3);
 
-                cmd += KeyenceProtocol.MARK(block.index, int_code, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, false);
+                cmd += KeyenceProtocol.MARK(ptrMain.workSettingWindow.botHRControl.ActiveBlockBase + block.index, int_code, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, false);
                 cmd += KeyenceProtocol.AND;
 
                 double mx = flip ? dX + BotOffsetX : -(dX + BotOffsetX);
@@ -1451,7 +1465,7 @@ namespace HDS_ID_Marker
                 double dX = Math.Round((GetCenterX(block.roi, block.degree) - viewerCenterX) * resTop * ratioX, 3);
                 double dY = Math.Round((viewerCenterY - GetCenterY(block.roi, block.degree)) * resTop * ratioY, 3);
 
-                cmd += KeyenceProtocol.MARK(block.index, cust_code, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, flip);
+                cmd += KeyenceProtocol.MARK(ptrMain.workSettingWindow.botHRControl.ActiveBlockBase + block.index, cust_code, flip ? dX + BotOffsetX : -(dX + BotOffsetX), dY + BotOffsetY, 1, BotOffsetZ, flip);
                 cmd += KeyenceProtocol.AND;
 
                 double mx = flip ? dX + BotOffsetX : -(dX + BotOffsetX);

@@ -10,14 +10,15 @@
         WindowStartupLocation="CenterScreen"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:ToggleSwitch="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
-        Title="Lot 입력" Height="700" Width="500" Loaded="Window_Loaded">
+        Title="Lot 입력" Height="700" Width="640" Loaded="Window_Loaded">
     <Border Background="White">
         <Grid>
 
-            <Grid Grid.Column="0" Width="500" >
+            <Grid Grid.Column="0" Width="640" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="130"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1.2*"/>
@@ -46,21 +47,26 @@
                 <ToggleSwitch:HorizontalToggleSwitch Width="95" Height="30" UncheckedContent="연결부 X" CheckedContent="연결부 O" x:Name="tsOrderBindCheck" Grid.Row="7" HorizontalAlignment="Center" IsChecked="false" Style="{StaticResource iOS5ToggleSwitchStyle}" PreviewMouseDown="tsOrderBindCheck_Click"/>
                 <ToggleSwitch:HorizontalToggleSwitch Width="95" Height="30" UncheckedContent="완료부 X" CheckedContent="완료부 O" x:Name="tsOrderComplateCheck" Grid.Row="8" HorizontalAlignment="Center" IsChecked="false" Style="{StaticResource iOS5ToggleSwitchStyle}" PreviewMouseDown="tsOrderCompleteCheck_Click"/>
 
-                <TextBox x:Name="tbModelName" Grid.Row="1" Grid.Column="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
+                <TextBox x:Name="tbModelName" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
                      VerticalContentAlignment="Center" TextAlignment="Left" CharacterCasing="Upper"/>                
-                <TextBox x:Name="tbLot" Grid.Row="2" Grid.Column="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
+                <TextBox x:Name="tbLot" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
                      VerticalContentAlignment="Center" TextAlignment="Left" CharacterCasing="Upper"/>
-                <TextBox x:Name="tbLotA" Grid.Row="3" Grid.Column="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
+                <TextBox x:Name="tbLotA" Grid.Row="3" Grid.Column="1" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
                      VerticalContentAlignment="Center" TextAlignment="Left" CharacterCasing="Upper"/>
-                <TextBox x:Name="tbLotB" Grid.Row="4" Grid.Column="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
+                <TextBox x:Name="tbLotB" Grid.Row="4" Grid.Column="1" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
                      VerticalContentAlignment="Center" TextAlignment="Left" CharacterCasing="Upper"/>
-                <TextBox x:Name="tbLotC" Grid.Row="5" Grid.Column="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
+                <TextBox x:Name="tbLotC" Grid.Row="5" Grid.Column="1" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
                      VerticalContentAlignment="Center" TextAlignment="Left" CharacterCasing="Upper"/>
-                <TextBox x:Name="tbLotD" Grid.Row="6" Grid.Column="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
+                <TextBox x:Name="tbLotD" Grid.Row="6" Grid.Column="1" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" 
                      VerticalContentAlignment="Center" TextAlignment="Left" CharacterCasing="Upper"/>
-                <TextBox x:Name="tbOrderBindNumber" Grid.Row="7" Grid.Column="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" TextChanged="tbOrderBindNumber_TextChanged"
+                <!-- 열별 제품 방향 (정방향 / 역방향 180°) -->
+                <ToggleSwitch:HorizontalToggleSwitch Width="110" Height="30" UncheckedContent="정방향" CheckedContent="역방향" x:Name="tsRevA" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" IsChecked="false" Style="{StaticResource iOS5ToggleSwitchStyle}"/>
+                <ToggleSwitch:HorizontalToggleSwitch Width="110" Height="30" UncheckedContent="정방향" CheckedContent="역방향" x:Name="tsRevB" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" IsChecked="false" Style="{StaticResource iOS5ToggleSwitchStyle}"/>
+                <ToggleSwitch:HorizontalToggleSwitch Width="110" Height="30" UncheckedContent="정방향" CheckedContent="역방향" x:Name="tsRevC" Grid.Row="5" Grid.Column="2" HorizontalAlignment="Center" IsChecked="false" Style="{StaticResource iOS5ToggleSwitchStyle}"/>
+                <ToggleSwitch:HorizontalToggleSwitch Width="110" Height="30" UncheckedContent="정방향" CheckedContent="역방향" x:Name="tsRevD" Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" IsChecked="false" Style="{StaticResource iOS5ToggleSwitchStyle}"/>
+                <TextBox x:Name="tbOrderBindNumber" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" TextChanged="tbOrderBindNumber_TextChanged"
                      VerticalContentAlignment="Center" TextAlignment="Left" IsEnabled="False" materialDesign:HintAssist.Hint="예상되는 연결부의 번호 입력"/>
-                <TextBox x:Name="tbOrderComplateNumber" Grid.Row="8" Grid.Column="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" TextChanged="tbOrderCompleteNumber_TextChanged"
+                <TextBox x:Name="tbOrderComplateNumber" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Margin="15" FontFamily="Arial" FontSize="20" FontWeight="Bold" TextChanged="tbOrderCompleteNumber_TextChanged"
                     VerticalContentAlignment="Center" TextAlignment="Left" IsEnabled="False" materialDesign:HintAssist.Hint="예상되는 완료부의 번호 입력"/>
 
                 <StackPanel Grid.Row="9" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">

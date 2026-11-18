@@ -36,10 +36,51 @@ namespace HDS_ID_Marker
         public MarkParaSettingWindow interMarkSettingWindow = new MarkParaSettingWindow("inter");
         public OCRParaSettingWindow ocrParaSettingWindow = new OCRParaSettingWindow();
 
-        public List<CustomMark> customMarks = new List<CustomMark>();
-        public List<InterMark> interMarks = new List<InterMark>();
-        public List<OCRMark> ocrMarks = new List<OCRMark>();
-        public List<AlignROI> alignROIs = new List<AlignROI>();
+        // 현재 화면(캔버스)에 표시 중인 방향의 리스트. 정/역 전환 시 m_fwdSet / m_revSet 의 리스트를 가리키도록 교체된다.
+        public List<CustomMark> customMarks;
+        public List<InterMark> interMarks;
+        public List<OCRMark> ocrMarks;
+        public List<AlignROI> alignROIs;
+
+        // 정방향 / 역방향 티칭 데이터 (항상 둘 다 메모리에 보관, 런타임은 GetMarkSet 으로 접근)
+        private readonly MarkSet m_fwdSet = new MarkSet();
+        private readonly MarkSet m_revSet = new MarkSet();
+        private bool m_reverse = false;
+
+        /// <summary>현재 화면이 역방향 티칭인지 여부</summary>
+        public bool IsReverse { get { return m_reverse; } }
+
+        /// <summary>DB orientation 값 (정: "top"/"bot", 역: "top_r"/"bot_r")</summary>
+        public string DbOrientation { get { return ReverseLayout.DbOrientation(m_orientation, m_reverse); } }
+
+        /// <summary>캔버스에 그려진 ROI 개수 (저장 후 DB 건수와 비교용)</summary>
+        public int CanvasObjectCount()
+        {
+            return drawingCanvas.Children.OfType<TextRectangle>().Count();
+        }
+
+        /// <summary>현재 화면 방향의 레이저 블록 번호 오프셋</summary>
+        public int ActiveBlockBase { get { return m_reverse ? ReverseLayout.RevBlockBase : 0; } }
+
+        /// <summary>정방향(false) / 역방향(true) 티칭 데이터</summary>
+        public MarkSet GetMarkSet(bool reverse)
+        {
+            return reverse ? m_revSet : m_fwdSet;
+        }
+
+        private void BindActiveSet()
+        {
+            MarkSet set = GetMarkSet(m_reverse);
+            customMarks = set.customMarks;
+            interMarks = set.interMarks;
+            ocrMarks = set.ocrMarks;
+            alignROIs = set.alignROIs;
+
+            // 마크 설정창의 좌/우 기본값(고객사 2D 위치)도 방향에 맞춰 계산되도록 전달
+            if (customMarkSettingWindow != null) customMarkSettingWindow.IsReverse = m_reverse;
+            if (interMarkSettingWindow != null) interMarkSettingWindow.IsReverse = m_reverse;
+            if (ocrParaSettingWindow != null) ocrParaSettingWindow.IsReverse = m_reverse;
+        }
 
         private string m_modelName = "";
         private string m_customName = "";
@@ -68,6 +109,7 @@ namespace HDS_ID_Marker
 
         public MainHRControl()
         {
+            BindActiveSet();
             InitializeComponent();
             InitializeEvent();
             InitUI();
@@ -300,16 +342,37 @@ namespace HDS_ID_Marker
             m_orientation = orientation;
         }
 
+        /// <summary>정방향/역방향 티칭 데이터를 모두 DB에서 다시 읽는다.</summary>
         public void InitializeObjects(string modelName)
         {
-            customMarks.Clear();
-            interMarks.Clear();
-            ocrMarks.Clear();
-            alignROIs.Clear();
-            CreateObjects(m_orientation, "custom", modelName);
-            CreateObjects(m_orientation, "inter", modelName);
-            CreateObjects(m_orientation, "ocr", modelName);
-            CreateObjects(m_orientation, "align", modelName);
+            LoadMarkSet(m_fwdSet, ReverseLayout.DbOrientation(m_orientation, false), modelName);
+            LoadMarkSet(m_revSet, ReverseLayout.DbOrientation(m_orientation, true), modelName);
+        }
+
+        private void LoadMarkSet(MarkSet set, string dbOrientation, string modelName)
+        {
+            set.Clear();
+            CreateObjects(set, dbOrientation, "custom", modelName);
+            CreateObjects(set, dbOrientation, "inter", modelName);
+            CreateObjects(set, dbOrientation, "ocr", modelName);
+            CreateObjects(set, dbOrientation, "align", modelName);
+        }
+
+        /// <summary>
+        /// 티칭 화면을 정방향/역방향으로 전환한다. 저장하지 않은 캔버스 변경은 버리고 DB 기준으로 다시 그린다.
+        /// </summary>
+        public void SetReverse(bool reverse)
+        {
+            m_reverse = reverse;
+            BindActiveSet();
+            textRectangles.Clear();
+
+            drawingCanvas.Children.Clear();
+            DrawGrid();
+            InitializeObjects(m_modelName);
+            DrawObjects();
+            DrawGrid();
+            LogTeachingData("방향전환/" + m_modelName + "/" + DbOrientation);
         }
 
         public void CleaerObjects()
@@ -340,11 +403,22 @@ namespace HDS_ID_Marker
             m_modelName = modelName;
             m_customName = custName;
 
+            m_reverse = false;
+            BindActiveSet();
+            textRectangles.Clear();
+
             drawingCanvas.Children.Clear();
             DrawGrid(); // 격자를 먼저 그림 (배경)
 
             InitializeObjects(modelName);
+            DrawObjects();
+            DrawGrid();
+            LogTeachingData("모델시작/" + modelName + "/" + m_orientation);
+        }
 
+        /// <summary>현재 방향(정/역)의 ROI 를 캔버스에 그린다.</summary>
+        private void DrawObjects()
+        {
             List<TextRectangle> rectList = new List<TextRectangle>(); // 안전한 접근을 위한 리스트
 
             for (int i = 0; i < AllObjectCount(); i++)
@@ -444,8 +518,6 @@ namespace HDS_ID_Marker
 
                 rect.text.Text = "Align" + alignroi.number;
             }
-            DrawGrid();
-            LogTeachingData("모델시작/" + modelName + "/" + m_orientation);
         }
         private Brush DrawMyTextTest(string textString, double degree)
         {
@@ -1348,16 +1420,9 @@ namespace HDS_ID_Marker
                 }
             }
             
-            customMarks.Clear();
-            CreateObjects(m_orientation, "custom", modelName);
-            interMarks.Clear();
-            CreateObjects(m_orientation, "inter", modelName);
-            ocrMarks.Clear();
-            CreateObjects(m_orientation, "ocr", modelName);
-            alignROIs.Clear();
-            CreateObjects(m_orientation, "align", modelName);
+            LoadMarkSet(GetMarkSet(m_reverse), DbOrientation, modelName);
             SaveAlignToMarkROI_Pos();
-            LogTeachingData("티칭저장/" + modelName);
+            LogTeachingData("티칭저장/" + modelName + "/" + DbOrientation);
         }
 
         private void SaveAlignToMarkROI_Pos()
@@ -1449,16 +1514,16 @@ namespace HDS_ID_Marker
                     switch (m_type)
                     {
                         case "custom":
-                            strQuery = String.Format("delete from idmarker.para_custommark where orientation = '{0}' and model='{1}'", m_orientation, modelName);
+                            strQuery = String.Format("delete from idmarker.para_custommark where orientation = '{0}' and model='{1}'", DbOrientation, modelName);
                             break;
                         case "inter":
-                            strQuery = String.Format("delete from idmarker.para_intermark where orientation = '{0}' and model='{1}'", m_orientation, modelName);
+                            strQuery = String.Format("delete from idmarker.para_intermark where orientation = '{0}' and model='{1}'", DbOrientation, modelName);
                             break;
                         case "ocr":
-                            strQuery = String.Format("delete from idmarker.para_ocrmark where orientation = '{0}' and model='{1}'", m_orientation, modelName);
+                            strQuery = String.Format("delete from idmarker.para_ocrmark where orientation = '{0}' and model='{1}'", DbOrientation, modelName);
                             break;
                         case "align":
-                            strQuery = String.Format("delete from idmarker.para_alignroi where orientation = '{0}' and model='{1}'", m_orientation, modelName);
+                            strQuery = String.Format("delete from idmarker.para_alignroi where orientation = '{0}' and model='{1}'", DbOrientation, modelName);
                             break;
                     }
 
@@ -1494,13 +1559,13 @@ namespace HDS_ID_Marker
 
                     string strQuery = string.Empty;
 
-                    strQuery += String.Format("delete from idmarker.para_custommark where orientation = '{0}' and model='{1}' and `index` = '{2}';", m_orientation, modelName, index);
+                    strQuery += String.Format("delete from idmarker.para_custommark where orientation = '{0}' and model='{1}' and `index` = '{2}';", DbOrientation, modelName, index);
 
-                    strQuery += String.Format("delete from idmarker.para_intermark where orientation = '{0}' and model='{1}' and `index` = '{2}';", m_orientation, modelName, index);
+                    strQuery += String.Format("delete from idmarker.para_intermark where orientation = '{0}' and model='{1}' and `index` = '{2}';", DbOrientation, modelName, index);
 
-                    strQuery += String.Format("delete from idmarker.para_ocrmark where orientation = '{0}' and model='{1}' and `index` = '{2}';", m_orientation, modelName, index);
+                    strQuery += String.Format("delete from idmarker.para_ocrmark where orientation = '{0}' and model='{1}' and `index` = '{2}';", DbOrientation, modelName, index);
 
-                    strQuery += String.Format("delete from idmarker.para_alignroi where orientation = '{0}' and model='{1}' and `index` = '{2}';", m_orientation, modelName, index);
+                    strQuery += String.Format("delete from idmarker.para_alignroi where orientation = '{0}' and model='{1}' and `index` = '{2}';", DbOrientation, modelName, index);
 
                     if (ConnectFactory.DBConnector().Execute(strQuery) > 0)
                     {
@@ -1534,13 +1599,13 @@ namespace HDS_ID_Marker
 
                     string strQuery = string.Empty;
 
-                    strQuery += String.Format("update idmarker.para_custommark set `index` = '{0}' where `index` = '{1}' and model='{2}' and orientation='{3}';", idx - 1, idx, modelName, m_orientation);
+                    strQuery += String.Format("update idmarker.para_custommark set `index` = '{0}' where `index` = '{1}' and model='{2}' and orientation='{3}';", idx - 1, idx, modelName, DbOrientation);
                     
-                    strQuery += String.Format("update idmarker.para_intermark set `index` = '{0}' where `index` = '{1}' and model='{2}' and orientation='{3}';", idx - 1, idx, modelName, m_orientation);
+                    strQuery += String.Format("update idmarker.para_intermark set `index` = '{0}' where `index` = '{1}' and model='{2}' and orientation='{3}';", idx - 1, idx, modelName, DbOrientation);
                     
-                    strQuery += String.Format("update idmarker.para_ocrmark set `index` = '{0}' where `index` = '{1}' and model='{2}' and orientation='{3}';", idx - 1, idx, modelName, m_orientation);
+                    strQuery += String.Format("update idmarker.para_ocrmark set `index` = '{0}' where `index` = '{1}' and model='{2}' and orientation='{3}';", idx - 1, idx, modelName, DbOrientation);
                     
-                    strQuery += String.Format("update idmarker.para_alignroi set `index` = '{0}' where `index` = '{1}' and model='{2}' and orientation='{3}';", idx - 1, idx, modelName, m_orientation);
+                    strQuery += String.Format("update idmarker.para_alignroi set `index` = '{0}' where `index` = '{1}' and model='{2}' and orientation='{3}';", idx - 1, idx, modelName, DbOrientation);
 
                     if (ConnectFactory.DBConnector().Execute(strQuery) > 0)
                     {
@@ -1588,7 +1653,7 @@ namespace HDS_ID_Marker
                     }
                     customMark.format = customMarkSettingWindow.m_format;
                     customMark.gap = customMarkSettingWindow.m_gap;
-                    customMark.orientation = m_orientation;
+                    customMark.orientation = DbOrientation;
                     customMark.degree = customMarkSettingWindow.m_degree;
                     customMark.reference = customMarkSettingWindow.m_reference;
                     customMark.power = customMarkSettingWindow.m_power;
@@ -1614,7 +1679,7 @@ namespace HDS_ID_Marker
                     }
                     interMark.format = interMarkSettingWindow.m_format;
                     interMark.gap = interMarkSettingWindow.m_gap;
-                    interMark.orientation = m_orientation;
+                    interMark.orientation = DbOrientation;
                     interMark.degree = interMarkSettingWindow.m_degree;
                     interMark.reference = interMarkSettingWindow.m_reference;
                     interMark.power = interMarkSettingWindow.m_power;
@@ -1638,7 +1703,7 @@ namespace HDS_ID_Marker
                         return;
                     }
                     ocrMark.gap = ocrParaSettingWindow.m_gap;
-                    ocrMark.orientation = m_orientation;
+                    ocrMark.orientation = DbOrientation;
                     ocrMark.alignment = ocrParaSettingWindow.m_alignment;
                     ocrMark.degree = ocrParaSettingWindow.m_degree;
                     ocrMark.reference = ocrParaSettingWindow.m_reference;
@@ -1651,7 +1716,7 @@ namespace HDS_ID_Marker
                     AlignROI alignROI = new AlignROI();
                     alignROI.roi = CreateROI(alignSize, alignSize, 0);
                     alignROI.index = AllObjectCount();
-                    alignROI.orientation = m_orientation;
+                    alignROI.orientation = DbOrientation;
                     alignROI.size = alignSize;
                     alignROI.number = id;
                     alignROI.match = alignMatch;
@@ -1779,6 +1844,11 @@ namespace HDS_ID_Marker
         }
         public void CreateObjects(string orientation, string m_type, string modelName)
         {
+            CreateObjects(GetMarkSet(m_reverse), orientation, m_type, modelName);
+        }
+
+        private void CreateObjects(MarkSet target, string orientation, string m_type, string modelName)
+        {
             IDataReader dataReader = null;
 
             try
@@ -1826,7 +1896,7 @@ namespace HDS_ID_Marker
                                     customMark.speed = dataReader.GetDouble(11);
                                     customMark.flip = dataReader.GetBoolean(12);
                                     customMark.markPos = dataReader.GetInt32(13);
-                                    customMarks.Add(customMark);
+                                    target.customMarks.Add(customMark);
                                     break;
                                 case "inter":
                                     InterMark interMark = new InterMark();
@@ -1843,7 +1913,7 @@ namespace HDS_ID_Marker
                                     interMark.power = dataReader.GetDouble(10);
                                     interMark.speed = dataReader.GetDouble(11);
                                     interMark.markPos = dataReader.GetInt32(12);
-                                    interMarks.Add(interMark);
+                                    target.interMarks.Add(interMark);
                                     break;
                                 case "ocr":
                                     OCRMark ocrMark = new OCRMark();
@@ -1860,7 +1930,7 @@ namespace HDS_ID_Marker
                                     ocrMark.power = dataReader.GetDouble(10);
                                     ocrMark.speed = dataReader.GetDouble(11);
                                     ocrMark.markPos = dataReader.GetInt32(12);
-                                    ocrMarks.Add(ocrMark);
+                                    target.ocrMarks.Add(ocrMark);
                                     break;
                                 case "align":
                                     AlignROI alignROI = new AlignROI();
@@ -1871,7 +1941,7 @@ namespace HDS_ID_Marker
                                     alignROI.number = dataReader.GetInt32(4);
                                     alignROI.match = dataReader.GetInt32(5);
                                     alignROI.type = dataReader.GetInt32(6);
-                                    alignROIs.Add(alignROI);
+                                    target.alignROIs.Add(alignROI);
                                     break;
                             }
                         }
@@ -1910,13 +1980,13 @@ namespace HDS_ID_Marker
                         case "custom":
                             CustomMark customMark = customMarks.Find(x => x.index == index);
                             strQuery = String.Format("INSERT INTO para_custommark(`index`, model, roi, shape, sizeX, sizeY, format, gap, orientation, degree, `reference`, power, speed, flip, markPos)" +
-    " VALUES({0}, '{1}', '{2}', '{3}', {4}, {5}, '{6}', {7}, '{8}', {9}, '{10}', '{11}', '{12}', '{13}' '{14}')", index, modelName, roi, customMark.shape, customMark.sizeX, customMark.sizeY, customMark.format, customMark.gap,
+    " VALUES({0}, '{1}', '{2}', '{3}', {4}, {5}, '{6}', {7}, '{8}', {9}, '{10}', '{11}', '{12}', '{13}', '{14}')", index, modelName, roi, customMark.shape, customMark.sizeX, customMark.sizeY, customMark.format, customMark.gap,
     customMark.orientation, customMark.degree, customMark.reference, customMark.power, customMark.speed, Convert.ToInt32(customMark.flip) , customMark.markPos);
                             break;
                         case "inter":
                             InterMark interMark = interMarks.Find(x => x.index == index);
                             strQuery = String.Format("INSERT INTO para_intermark(`index`, model, roi, shape, sizeX, sizeY, format, gap, orientation, degree, `reference`, power, speed , markPos)" +
-    " VALUES({0}, '{1}', '{2}', '{3}', {4}, {5}, '{6}', {7}, '{8}', {9}, '{10}', '{11}', '{12}' '{13}')", index, modelName, roi, interMark.shape, interMark.sizeX, interMark.sizeY, interMark.format, interMark.gap,
+    " VALUES({0}, '{1}', '{2}', '{3}', {4}, {5}, '{6}', {7}, '{8}', {9}, '{10}', '{11}', '{12}', '{13}')", index, modelName, roi, interMark.shape, interMark.sizeX, interMark.sizeY, interMark.format, interMark.gap,
     interMark.orientation, interMark.degree, interMark.reference, interMark.power, interMark.speed , interMark.markPos);
                             break;
                         case "ocr":
@@ -1972,7 +2042,7 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                                 "degree = '{6}', `reference` = '{7}', power = '{8}', speed = '{9}', flip = '{13}', markPos = '{14}' " +
                                 "where `index` = '{10}' and model='{11}' and orientation='{12}';",
                                 roi, customMark.shape, customMark.sizeX, customMark.sizeY, customMark.format, customMark.gap, customMark.degree, customMark.reference, customMark.power, customMark.speed,
-                                index, modelName, m_orientation, Convert.ToInt32(customMark.flip), customMark.markPos);
+                                index, modelName, DbOrientation, Convert.ToInt32(customMark.flip), customMark.markPos);
                             break;
                         case "inter":
                             InterMark interMark = interMarks.Find(x => x.index == index);
@@ -1980,7 +2050,7 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                                 "degree = '{6}', `reference` = '{7}', power = '{8}', speed = '{9}', markPos='{13}' " +
                                 "where `index` = '{10}' and model='{11}' and orientation='{12}';",
                                 roi, interMark.shape, interMark.sizeX, interMark.sizeY, interMark.format, interMark.gap, interMark.degree, interMark.reference, interMark.power, interMark.speed,
-                                index, modelName, m_orientation,interMark.markPos);
+                                index, modelName, DbOrientation,interMark.markPos);
                             break;
                         case "ocr":
                             OCRMark ocrMark = ocrMarks.Find(x => x.index == index);
@@ -1988,10 +2058,10 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                                 "alignment = '{5}', degree = '{6}', `reference` = '{7}', power = '{8}', speed = '{9}' , markPos = '{13}' " +
                                 "where `index` = '{10}' and model='{11}' and orientation='{12}';",
                                 roi, ocrMark.font, ocrMark.sizeX, ocrMark.sizeY, ocrMark.gap, ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.speed,
-                                index, modelName, m_orientation,ocrMark.markPos);
+                                index, modelName, DbOrientation,ocrMark.markPos);
                             break;
                         case "align":
-                            strQuery = string.Format("update idmarker.para_alignroi set roi = '{2}' where `index` = '{0}' and model='{1}' and orientation='{3}'", index, modelName, roi, m_orientation);
+                            strQuery = string.Format("update idmarker.para_alignroi set roi = '{2}' where `index` = '{0}' and model='{1}' and orientation='{3}'", index, modelName, roi, DbOrientation);
                             break;
                     }
 
@@ -2032,16 +2102,16 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                     switch (m_type)
                     {
                         case "custom":
-                            strQuery = string.Format("SELECT COUNT(*) FROM idmarker.para_custommark where `index` = '{0}' and model='{1}' and orientation='{2}'", index, modelName, m_orientation);
+                            strQuery = string.Format("SELECT COUNT(*) FROM idmarker.para_custommark where `index` = '{0}' and model='{1}' and orientation='{2}'", index, modelName, DbOrientation);
                             break;
                         case "inter":
-                            strQuery = string.Format("SELECT COUNT(*) FROM idmarker.para_intermark where `index` = '{0}' and model='{1}' and orientation='{2}'", index, modelName, m_orientation);
+                            strQuery = string.Format("SELECT COUNT(*) FROM idmarker.para_intermark where `index` = '{0}' and model='{1}' and orientation='{2}'", index, modelName, DbOrientation);
                             break;
                         case "ocr":
-                            strQuery = string.Format("SELECT COUNT(*) FROM idmarker.para_ocrmark where `index` = '{0}' and model='{1}' and orientation='{2}'", index, modelName, m_orientation);
+                            strQuery = string.Format("SELECT COUNT(*) FROM idmarker.para_ocrmark where `index` = '{0}' and model='{1}' and orientation='{2}'", index, modelName, DbOrientation);
                             break;
                         case "align":
-                            strQuery = string.Format("SELECT COUNT(*) FROM idmarker.para_alignroi where `index` = '{0}' and model='{1}' and orientation='{2}'", index, modelName, m_orientation);
+                            strQuery = string.Format("SELECT COUNT(*) FROM idmarker.para_alignroi where `index` = '{0}' and model='{1}' and orientation='{2}'", index, modelName, DbOrientation);
                             break;
                     }
 
@@ -2053,7 +2123,12 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                         {
                             int count = dataReader.GetInt32(0);
 
-                            if (count == 0) return false;
+                            dataReader.Close();
+                            ConnectFactory.DBConnector().CloseCmd();
+                            return count > 0;
+                        }
+                        else
+                        {
                             dataReader.Close();
                             ConnectFactory.DBConnector().CloseCmd();
                             return true;
@@ -2080,10 +2155,10 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
         {
             //string path = ((MainWindow)Application.Current.MainWindow).model.modelInformation.modelPath + m_orientation + "TeachingScreen.bmp";
             string path = ((MainWindow)Application.Current.MainWindow).model.modelInformation.modelPath;
-            string title = m_orientation + " " + "티칭 화면";
+            string title = DbOrientation + " " + "티칭 화면";
 
             DirectoryInfo di = new DirectoryInfo(path);
-            string fileName = m_orientation + "TeachingScreen.bmp";
+            string fileName = DbOrientation + "TeachingScreen.bmp";
             if (!di.Exists)
             {
                 noticeDlg = new MaterialNoticeDlg("경로를 찾을 수 없습니다.");
@@ -2113,33 +2188,130 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
             }
             items.RemoveAll(toRemove.Contains);
         }
-        public void LogTeachingData(string action)
+        /// <summary>
+        /// 역방향 티칭 보조 : 정방향 마크/얼라인을 기준으로 역방향 데이터를 만든다.
+        ///  - 같은 reference(얼라인은 같은 번호)가 역방향에 없으면 새로 추가 (초기 위치 = 정방향 ROI 를 캔버스 중심 기준 180° 회전)
+        ///  - 이미 있으면 ROI 위치는 유지하고 크기·포맷·파워·스피드 등 파라미터만 갱신
+        ///  - 마킹 각도 +180°, 좌/우(markPos) 반전
+        /// 캔버스에만 반영되며, 저장 버튼을 눌러야 DB 에 기록된다.
+        /// </summary>
+        public void CopyMarksFromForward(out int created, out int updated)
         {
+            created = 0;
+            updated = 0;
+            if (!m_reverse) return;
+
+            double w = drawingCanvas.Width;
+            double h = drawingCanvas.Height;
+
+            foreach (var src in m_fwdSet.customMarks.OrderBy(x => x.index).ToList())
+            {
+                int i = customMarks.FindIndex(x => x.reference == src.reference);
+                CustomMark m = (i >= 0) ? customMarks[i] : new CustomMark();
+                m.shape = src.shape; m.sizeX = src.sizeX; m.sizeY = src.sizeY; m.format = src.format; m.gap = src.gap;
+                m.power = src.power; m.speed = src.speed; m.flip = src.flip; m.reference = src.reference;
+                m.degree = ReverseLayout.RotateDegree180(src.degree);
+                m.markPos = 1 - src.markPos;
+                m.orientation = DbOrientation;
+                if (i >= 0) { customMarks[i] = m; updated++; }
+                else
+                {
+                    m.index = AllObjectCount();
+                    m.roi = ReverseLayout.RotateRoi180(src.roi, w, h);
+                    customMarks.Add(m);
+                    refresh("custom", m);
+                    created++;
+                }
+            }
+
+            foreach (var src in m_fwdSet.interMarks.OrderBy(x => x.index).ToList())
+            {
+                int i = interMarks.FindIndex(x => x.reference == src.reference);
+                InterMark m = (i >= 0) ? interMarks[i] : new InterMark();
+                m.shape = src.shape; m.sizeX = src.sizeX; m.sizeY = src.sizeY; m.format = src.format; m.gap = src.gap;
+                m.power = src.power; m.speed = src.speed; m.reference = src.reference;
+                m.degree = ReverseLayout.RotateDegree180(src.degree);
+                m.markPos = 1 - src.markPos;
+                m.orientation = DbOrientation;
+                if (i >= 0) { interMarks[i] = m; updated++; }
+                else
+                {
+                    m.index = AllObjectCount();
+                    m.roi = ReverseLayout.RotateRoi180(src.roi, w, h);
+                    interMarks.Add(m);
+                    refresh("inter", m);
+                    created++;
+                }
+            }
+
+            foreach (var src in m_fwdSet.ocrMarks.OrderBy(x => x.index).ToList())
+            {
+                int i = ocrMarks.FindIndex(x => x.reference == src.reference);
+                OCRMark m = (i >= 0) ? ocrMarks[i] : new OCRMark();
+                m.font = src.font; m.sizeX = src.sizeX; m.sizeY = src.sizeY; m.gap = src.gap; m.alignment = src.alignment;
+                m.txtcount = src.txtcount; m.power = src.power; m.speed = src.speed; m.reference = src.reference;
+                m.degree = ReverseLayout.RotateDegree180(src.degree);
+                m.markPos = 1 - src.markPos;
+                m.orientation = DbOrientation;
+                if (i >= 0) { ocrMarks[i] = m; updated++; }
+                else
+                {
+                    m.index = AllObjectCount();
+                    m.roi = ReverseLayout.RotateRoi180(src.roi, w, h);
+                    ocrMarks.Add(m);
+                    refresh("ocr", m);
+                    created++;
+                }
+            }
+
+            foreach (var src in m_fwdSet.alignROIs.OrderBy(x => x.index).ToList())
+            {
+                int i = alignROIs.FindIndex(x => x.number == src.number);
+                AlignROI m = (i >= 0) ? alignROIs[i] : new AlignROI();
+                m.size = src.size; m.number = src.number; m.match = src.match; m.type = src.type;
+                m.orientation = DbOrientation;
+                if (i >= 0) { alignROIs[i] = m; updated++; }
+                else
+                {
+                    m.index = AllObjectCount();
+                    m.roi = ReverseLayout.RotateRoi180(src.roi, w, h);
+                    alignROIs.Add(m);
+                    refresh("align", m);
+                    created++;
+                }
+            }
+
+            LogTeachingData(string.Format("정방향복사/{0}/{1}/생성 {2}, 갱신 {3}", m_modelName, DbOrientation, created, updated));
+        }
+
+        public void LogTeachingData(string action, MarkSet set = null)
+        {
+            MarkSet logSet = set ?? GetMarkSet(m_reverse);
             string logInfo = "[티칭정보/"+action + "]";
             MainWindow.logger.WriteLog(LogType.Info, logInfo);
 
-            foreach (var align in alignROIs)
+            foreach (var align in logSet.alignROIs)
             {
                 logInfo = string.Format("[Align] index : {0}, roi : {1}, orientation : {2}, size : {3}, number : {4}, match : {5}, type : {6}"
                                                            , align.index, align.roi, align.orientation, align.size, align.number, align.match, align.type);
                 MainWindow.logger.WriteLog(LogType.Info, logInfo);
             }
 
-            foreach (var mark in customMarks)
+            foreach (var mark in logSet.customMarks)
             {
                 logInfo = string.Format("[CustomMark] index : {0}, roi : {1}, shape : {2}, sizeX : {3}, sizeY : {4}, format : {5}, gap : {6}, orientation : {7}, degree : {8}, reference : {9}, power : {10}, speed : {11}"
                                                            , mark.index, mark.roi, mark.shape, mark.sizeX, mark.sizeY, mark.format, mark.gap, mark.orientation, mark.degree, mark.reference, mark.power, mark.speed);
                 MainWindow.logger.WriteLog (LogType.Info, logInfo);
             }
 
-            foreach(var mark in interMarks) 
+            foreach(var mark in logSet.interMarks) 
             {
                 logInfo = string.Format("[InterMark] index : {0}, roi : {1}, shape : {2}, sizeX : {3}, sizeY : {4}, format : {5}, gap : {6}, orientation : {7}, degree : {8}, reference : {9}, power : {10}, speed : {11}"
                                            , mark.index, mark.roi, mark.shape, mark.sizeX, mark.sizeY, mark.format, mark.gap, mark.orientation, mark.degree, mark.reference, mark.power, mark.speed);
                 MainWindow.logger.WriteLog(LogType.Info, logInfo);
             }
 
-            foreach (var ocr in ocrMarks) 
+            foreach (var ocr in logSet.ocrMarks) 
             {
                 logInfo = string.Format("[OcrMark] index : {0}, roi : {1}, font : {2}, sizeX : {3}, sizeY : {4}, gap : {5}, orientation : {6}, alignment : {7}, degree : {8}, txtcount : {9}, reference : {10}, power : {11}, speed : {12}"
                                                            , ocr.index, ocr.roi, ocr.font, ocr.sizeX, ocr.sizeY, ocr.gap, ocr.orientation, ocr.alignment, ocr.degree, ocr.txtcount, ocr.reference, ocr.power, ocr.speed);

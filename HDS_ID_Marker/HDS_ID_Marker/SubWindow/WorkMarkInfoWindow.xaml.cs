@@ -60,6 +60,14 @@ namespace HDS_ID_Marker.SubWindow
                 tbRowC.Text = "(B열)";
                 tbRowD.Text = "(A열)";
             }
+
+            // 정/역 혼합 배열이면 열별 방향 표시 (예: "(A열) 역")
+            if (MainWindow.HasReverseRow(4))
+            {
+                var rows = new[] { tbRowA, tbRowB, tbRowC, tbRowD };
+                for (int i = 0; i < rows.Length; i++)
+                    rows[i].Text += MainWindow.IsReverseRow(i) ? " 역" : " 정";
+            }
         }
     }
 }

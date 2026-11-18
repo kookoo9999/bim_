@@ -43,6 +43,12 @@ namespace DCS.Camera
         /// </summary>
         private Mat align;
         private Mat align2;
+        // 얼라인 템플릿 뱅크 (0: 정방향, 1: 역방향). align/align2 는 현재 선택된 뱅크를 가리킨다.
+        private Mat[] alignBank = new Mat[2];
+        private Mat[] align2Bank = new Mat[2];
+        private BitmapSource[] alignBmpBank = new BitmapSource[2];
+        private BitmapSource[] align2BmpBank = new BitmapSource[2];
+        private int activeAlignBank = 0;
         
         private PixelFormat pf = PixelFormats.Gray8;
         //public int Match = 70;
@@ -295,6 +301,7 @@ namespace DCS.Camera
                 {
                     AlignTemplateBmp = roiMat.Clone().ToBitmapSource();
                     align = roiMat.Clone();
+                    alignBank[activeAlignBank] = align; alignBmpBank[activeAlignBank] = AlignTemplateBmp;
                     roiMat.SaveImage(filename);
                 }
             }
@@ -335,6 +342,7 @@ namespace DCS.Camera
                     //Cv2.WaitKey(0);
                     AlignTemplateBmp = roiMat.Clone().ToBitmapSource();
                     align = roiMat.Clone();
+                    alignBank[activeAlignBank] = align; alignBmpBank[activeAlignBank] = AlignTemplateBmp;
                     roiMat.SaveImage(filename);
                 }
             }
@@ -363,6 +371,7 @@ namespace DCS.Camera
                     //Cv2.Threshold(roiMat, roiMat, thresh, 250, ThresholdTypes.Triangle);
                     AlignTemplateBmp2 = roiMat.Clone().ToBitmapSource();
                     align2 = roiMat.Clone();
+                    align2Bank[activeAlignBank] = align2; align2BmpBank[activeAlignBank] = AlignTemplateBmp2;
                     roiMat.SaveImage(filename);
                 }
             }
@@ -463,6 +472,7 @@ namespace DCS.Camera
             Mat matAlign = new Mat(filename, ImreadModes.Grayscale);
             AlignTemplateBmp = matAlign.ToBitmapSource();
             align = matAlign;
+            alignBank[activeAlignBank] = align; alignBmpBank[activeAlignBank] = AlignTemplateBmp;
             return true;
         }
         public override bool ImageToAlign2(string filename)
@@ -471,11 +481,42 @@ namespace DCS.Camera
             Mat matAlign = new Mat(filename, ImreadModes.Grayscale);
             AlignTemplateBmp2 = matAlign.ToBitmapSource();
             align2 = matAlign;
+            align2Bank[activeAlignBank] = align2; align2BmpBank[activeAlignBank] = AlignTemplateBmp2;
             return true;
         }
         public override void SetAlignMatchRate(int rate)
         {
             AlignMatchRate = rate;
+        }
+
+        public override void SelectAlignBank(int bank)
+        {
+            if (bank < 0 || bank >= alignBank.Length) bank = 0;
+            activeAlignBank = bank;
+            align = alignBank[bank];
+            align2 = align2Bank[bank];
+            AlignTemplateBmp = alignBmpBank[bank];
+            AlignTemplateBmp2 = align2BmpBank[bank];
+        }
+
+        public override void ClearAlignBank(int bank)
+        {
+            if (bank < 0 || bank >= alignBank.Length) return;
+            alignBank[bank] = null;
+            align2Bank[bank] = null;
+            alignBmpBank[bank] = null;
+            align2BmpBank[bank] = null;
+            if (activeAlignBank == bank)
+            {
+                align = null;
+                align2 = null;
+            }
+        }
+
+        public override bool HasAlignBank(int bank)
+        {
+            if (bank < 0 || bank >= alignBank.Length) return false;
+            return alignBank[bank] != null && align2Bank[bank] != null;
         }
         /// <summary>
         /// 전용 알고리즘 함수

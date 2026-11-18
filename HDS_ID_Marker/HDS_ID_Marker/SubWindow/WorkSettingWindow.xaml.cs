@@ -39,6 +39,7 @@ namespace HDS_ID_Marker.SubWindow
         MainWindow ptrMain;
         MaterialNoticeDlg noticeDlg;
         private string[] m_manualSubLots;
+        private int m_teachRow = 0;   // 티칭 열 (0 = 1열). 정방향 기준점 = 현재 Y − StripIter[m_teachRow]
 
         public WorkSettingWindow(MainWindow main)
         {
@@ -125,8 +126,163 @@ namespace HDS_ID_Marker.SubWindow
         {
             topHRControl.ChangeModel(ptrMain.model.modelInformation.Name, ptrMain.model.markingInformation.customerInformation.Name);
             botHRControl.ChangeModel(ptrMain.model.modelInformation.Name, ptrMain.model.markingInformation.customerInformation.Name);
+
+            // 모델 변경/다시 읽기 시 정방향 · 1열 티칭으로 초기화
+            rbOrientFwd.IsChecked = true;
+            btnCopyFwdToRev.IsEnabled = false;
+            m_teachRow = 0;
+            cbTeachRow.SelectedIndex = 0;
+            ptrMain.PCSInstance.Visions[0].SelectAlignBank(0);
+
             SetUI();
+            UpdateReverseStatus();
         }
+
+        #region 정/역 티칭
+        private bool IsReverseTeaching { get { return topHRControl.IsReverse; } }
+
+        /// <summary>선택한 티칭 열의 열 간격 (1열 = 0)</summary>
+        private double TeachRowOffset()
+        {
+            if (ptrMain.model == null || ptrMain.model.modelInformation.StripIter == null) return 0;
+            var iter = ptrMain.model.modelInformation.StripIter;
+            if (m_teachRow < 0 || m_teachRow >= iter.Count) return 0;
+            return iter[m_teachRow];
+        }
+
+        private void OrientRadio_Event(object sender, RoutedEventArgs e)
+        {
+            bool reverse = rbOrientRev.IsChecked == true;
+            if (reverse == IsReverseTeaching) return;
+
+            MaterialAlertDlg alertDlg = new MaterialAlertDlg((reverse ? "역방향" : "정방향") + " 티칭으로 전환합니다.\n저장하지 않은 ROI 변경 내용은 반영되지 않습니다.\n전환하시겠습니까?");
+            alertDlg.ShowDialog();
+            if (alertDlg.DialogResult != true)
+            {
+                if (reverse) rbOrientFwd.IsChecked = true;
+                else rbOrientRev.IsChecked = true;
+                return;
+            }
+
+            ApplyOrientation(reverse);
+        }
+
+        private void ApplyOrientation(bool reverse)
+        {
+            topHRControl.SetReverse(reverse);
+            botHRControl.SetReverse(reverse);
+
+            ptrMain.PCSInstance.Visions[0].SelectAlignBank(reverse ? 1 : 0);
+            imgtemplate.Source = ptrMain.PCSInstance.Visions[0].AlignTemplateBmp;
+            imgAlign.Source = ptrMain.PCSInstance.Visions[0].AlignTemplateBmp2;
+
+            btnCopyFwdToRev.IsEnabled = reverse;
+            MainWindow.logger.WriteLog(LogType.Info, string.Format("[티칭/{0}] {1} 티칭 전환", ptrMain.model.modelInformation.Name, reverse ? "역방향" : "정방향"));
+            UpdateReverseStatus();
+        }
+
+        private void CbTeachRow_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            m_teachRow = cbTeachRow.SelectedIndex < 0 ? 0 : cbTeachRow.SelectedIndex;
+            UpdateReverseStatus();
+        }
+
+        /// <summary>선택한 티칭 열의 카메라 위치(기준점 + 열 간격)로 이동</summary>
+        private void BtnMoveTeachRow_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Setting.Device.MotionUse) return;
+            switch (m_mode)
+            {
+                case "top":
+                    MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopMarkY + TeachRowOffset());
+                    break;
+                case "bot":
+                    MainWindow.MCS2.BotMoveToPos(ptrMain.model.markingInformation.BotMarkY + TeachRowOffset());
+                    break;
+            }
+        }
+
+        /// <summary>정방향 마크/얼라인 파라미터를 역방향으로 복사 (각도 +180°, 좌/우 반전)</summary>
+        private void BtnCopyFwdToRev_Click(object sender, RoutedEventArgs e)
+        {
+            if (!IsReverseTeaching) return;
+
+            int created = 0, updated = 0;
+            switch (m_mode)
+            {
+                case "top":
+                    topHRControl.CopyMarksFromForward(out created, out updated);
+                    break;
+                case "bot":
+                    botHRControl.CopyMarksFromForward(out created, out updated);
+                    break;
+            }
+
+            noticeDlg = new MaterialNoticeDlg(string.Format("정방향 기준으로 {0}개 추가, {1}개 갱신했습니다.\n(각도 +180°, 좌/우 반전)\nROI 위치를 맞춘 뒤 저장하세요.", created, updated));
+            noticeDlg.ShowDialog();
+        }
+
+        /// <summary>역방향 티칭 상태 표시 (미티칭 / 재티칭 필요 / OK)</summary>
+        private void UpdateReverseStatus()
+        {
+            if (ptrMain.model == null) return;
+            var mi = ptrMain.model.markingInformation;
+            string top = topHRControl.GetMarkSet(true).BlockCount == 0 ? "미티칭" : (mi.IsRevTopStale() ? "재티칭 필요" : "OK");
+            string bot = botHRControl.GetMarkSet(true).BlockCount == 0 ? "미티칭" : (mi.IsRevBotStale() ? "재티칭 필요" : "OK");
+            tbReverseStatus.Text = string.Format("현재 : {0} / {1}열\n역방향 상부 : {2}, 하부 : {3}", IsReverseTeaching ? "역방향" : "정방향", m_teachRow + 1, top, bot);
+        }
+
+        /// <summary>역방향 얼라인 템플릿(Align_R.bmp, Align2_R.bmp) 저장 → 비전 뱅크 1. 모션 기준점은 변경하지 않는다.</summary>
+        private bool SaveReverseAlignTemplate()
+        {
+            if (topHRControl.alignROIs.Count == 0)
+            {
+                MaterialWarningDlg warningDlg = new MaterialWarningDlg("역방향 Align을 설정해 주세요! \n정상 동작 하지 않습니다.");
+                warningDlg.ShowDialog();
+                return false;
+            }
+
+            AlignROI align = topHRControl.alignROIs.Find(s => s.number == 1);
+            AlignROI align2 = topHRControl.alignROIs.Find(s => s.number == 2);
+            if (align.roi == null || align2.roi == null)
+            {
+                MaterialWarningDlg warningDlg = new MaterialWarningDlg("역방향 1번, 2번 Align을 모두 설정해 주세요! \n정상 동작 하지 않습니다.");
+                warningDlg.ShowDialog();
+                return false;
+            }
+
+            var vision = ptrMain.PCSInstance.Visions[0];
+            vision.SelectAlignBank(1);
+            vision.resultToAlignToROI(ptrMain.model.modelInformation.modelPath + TeachingManagement.AlignFileName(1, true), align.roi);
+            vision.resultToAlign2ToROI(ptrMain.model.modelInformation.modelPath + TeachingManagement.AlignFileName(2, true), align2.roi);
+
+            imgAlign.Source = vision.AlignTemplateBmp.Clone();
+            imgtemplate.Source = vision.AlignTemplateBmp2.Clone();
+            return true;
+        }
+
+        /// <summary>역방향 최초 저장 전 모델 폴더(템플릿/설정 파일) 백업</summary>
+        private void BackupModelFolderForReverse()
+        {
+            try
+            {
+                string modelPath = ptrMain.model.modelInformation.modelPath;
+                string backupPath = System.IO.Path.Combine(modelPath, "Backup_Reverse_" + DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+                Directory.CreateDirectory(backupPath);
+                foreach (string file in Directory.GetFiles(modelPath))
+                {
+                    File.Copy(file, System.IO.Path.Combine(backupPath, System.IO.Path.GetFileName(file)), true);
+                }
+                topHRControl.LogTeachingData("역방향최초저장전백업/" + ptrMain.model.modelInformation.Name + "/TOP", topHRControl.GetMarkSet(false));
+                botHRControl.LogTeachingData("역방향최초저장전백업/" + ptrMain.model.modelInformation.Name + "/BOT", botHRControl.GetMarkSet(false));
+                MainWindow.logger.WriteLog(LogType.Info, "[티칭] 역방향 최초 저장 전 모델 폴더 백업 : " + backupPath);
+            }
+            catch (Exception ex)
+            {
+                MainWindow.logger.WriteLog(LogType.Exception, "[티칭] 역방향 백업 실패 : " + ex.Message);
+            }
+        }
+        #endregion
 
         public void LogLightData(string action)
         {
@@ -150,6 +306,12 @@ namespace HDS_ID_Marker.SubWindow
             rbModeTop.Click += btnRadio_Event;
             rbGridOn.Click += btnRadio_Event;
             rbGridOff.Click += btnRadio_Event;
+            //정/역 티칭
+            rbOrientFwd.Click += OrientRadio_Event;
+            rbOrientRev.Click += OrientRadio_Event;
+            cbTeachRow.SelectionChanged += CbTeachRow_SelectionChanged;
+            btnMoveTeachRow.Click += BtnMoveTeachRow_Click;
+            btnCopyFwdToRev.Click += BtnCopyFwdToRev_Click;
             //Light
             nudLightTop.ValueChanged += NudLightTop_ValueChanged;
             nudLightBot.ValueChanged += NudLightBot_ValueChanged;
@@ -430,10 +592,10 @@ namespace HDS_ID_Marker.SubWindow
             switch (m_mode)
             {
                 case "top":
-                    MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopMarkY);
+                    MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopMarkY + TeachRowOffset());
                     break;
                 case "bot":
-                    MainWindow.MCS2.BotMoveToPos(ptrMain.model.markingInformation.BotMarkY);
+                    MainWindow.MCS2.BotMoveToPos(ptrMain.model.markingInformation.BotMarkY + TeachRowOffset());
                     break;
             }
         }
@@ -443,10 +605,10 @@ namespace HDS_ID_Marker.SubWindow
             switch (m_mode)
             {
                 case "top":
-                    MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopMarkY + Setting.Device.laserConfigs[0].CamToY);
+                    MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopMarkY + Setting.Device.laserConfigs[0].CamToY + TeachRowOffset());
                     break;
                 case "bot":
-                    MainWindow.MCS2.BotMoveToPos(ptrMain.model.markingInformation.BotMarkY + Setting.Device.laserConfigs[1].CamToY);
+                    MainWindow.MCS2.BotMoveToPos(ptrMain.model.markingInformation.BotMarkY + Setting.Device.laserConfigs[1].CamToY + TeachRowOffset());
                     break;
             }
         }
@@ -537,10 +699,10 @@ namespace HDS_ID_Marker.SubWindow
             switch (m_mode)
             {
                 case "top":
-                    MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopMarkY);
+                    MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopMarkY + TeachRowOffset());
                     break;
                 case "bot":
-                    MainWindow.MCS2.BotMoveToPos(ptrMain.model.markingInformation.BotMarkY);
+                    MainWindow.MCS2.BotMoveToPos(ptrMain.model.markingInformation.BotMarkY + TeachRowOffset());
                     break;
             }
         }
@@ -550,10 +712,10 @@ namespace HDS_ID_Marker.SubWindow
             switch (m_mode)
             {
                 case "top":
-                    MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopMarkY + Setting.Device.laserConfigs[0].CamToY);
+                    MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopMarkY + Setting.Device.laserConfigs[0].CamToY + TeachRowOffset());
                     break;
                 case "bot":
-                    MainWindow.MCS2.BotMoveToPos(ptrMain.model.markingInformation.BotMarkY + Setting.Device.laserConfigs[1].CamToY);
+                    MainWindow.MCS2.BotMoveToPos(ptrMain.model.markingInformation.BotMarkY + Setting.Device.laserConfigs[1].CamToY + TeachRowOffset());
                     break;
             }
         }
@@ -567,6 +729,7 @@ namespace HDS_ID_Marker.SubWindow
             {
                 AlignROI align = topHRControl.alignROIs.Find(s => s.number == 1);
                 string roi = align.roi;
+                ptrMain.PCSInstance.Visions[0].SelectAlignBank(IsReverseTeaching ? 1 : 0);
                 ptrMain.PCSInstance.Visions[0].SearchPointAlignToROI(out x, out y, out match, MainWindow.ri.TopCamResolution, false, "", roi, align.type);
                 lblAlignOffsetX.Content = x.ToString();
                 lblAlignOffsetY.Content = y.ToString();
@@ -584,6 +747,7 @@ namespace HDS_ID_Marker.SubWindow
             {
                 AlignROI align = topHRControl.alignROIs.Find(s => s.number == 2);
                 string roi = align.roi;
+                ptrMain.PCSInstance.Visions[0].SelectAlignBank(IsReverseTeaching ? 1 : 0);
                 ptrMain.PCSInstance.Visions[0].SearchPointAlign2ToROI(out x, out y, out match, MainWindow.ri.TopCamResolution, false, "", roi, align.type);
                 lblAlignOffsetX.Content = x.ToString();
                 lblAlignOffsetY.Content = y.ToString();
@@ -595,7 +759,7 @@ namespace HDS_ID_Marker.SubWindow
 
         private void BtnAlignMove_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopAlignY);
+            MainWindow.MCS2.TopMoveToPos(ptrMain.model.markingInformation.TopAlignY + TeachRowOffset());
         }
 
         private void BtnAlignROI_Click(object sender, RoutedEventArgs e)
@@ -675,6 +839,7 @@ namespace HDS_ID_Marker.SubWindow
             {
                 string path = ptrMain.model.modelInformation.modelPath + "Align.bmp";
                 string path2 = ptrMain.model.modelInformation.modelPath + "Align2.bmp";
+                ptrMain.PCSInstance.Visions[0].SelectAlignBank(0);
 
                 AlignROI align = topHRControl.alignROIs.Find(s => s.number == 1);
                 AlignROI align2 = topHRControl.alignROIs.Find(s => s.number == 2);
@@ -700,7 +865,8 @@ namespace HDS_ID_Marker.SubWindow
                 ptrMain.workSettingWindow.imgtemplate.Source = ptrMain.PCSInstance.Visions[0].AlignTemplateBmp2.Clone();
 
                 double posTopX = MainWindow.MCS2.GetActPos(0);
-                double posTopY = MainWindow.MCS2.GetActPos(1);
+                // 기준점은 1열 기준으로 환산 (정방향을 1열이 아닌 열에서 티칭한 경우 열 간격만큼 빼서 저장)
+                double posTopY = MainWindow.MCS2.GetActPos(1) - TeachRowOffset();
                 ptrMain.model.markingInformation.TopAlignX = posTopX;
                 ptrMain.model.markingInformation.TopAlignY = posTopY;
                 ptrMain.model.markingInformation.TopMarkY = posTopY;
@@ -720,7 +886,8 @@ namespace HDS_ID_Marker.SubWindow
 
         private void SaveBotMotionPos()
         {
-            double posBotY = MainWindow.MCS2.GetActPos(2);
+            // 기준점은 1열 기준으로 환산
+            double posBotY = MainWindow.MCS2.GetActPos(2) - TeachRowOffset();
             ptrMain.model.markingInformation.BotMarkY = posBotY;
 
             ptrMain.modelManager.SaveMarkingInfo();
@@ -859,18 +1026,37 @@ namespace HDS_ID_Marker.SubWindow
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             bool isSaved = true;
+            bool reverse = IsReverseTeaching;
+            var markingInfo = ptrMain.model.markingInformation;
 
             //마킹 시작 위치 예외처리(상,하부 리니어 위치)
             if (Setting.Device.MotionUse)
             {
-                double posY = MainWindow.MCS2.GetActPos(1);
-                if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.LeftAlt))
+                if (reverse)
                 {
-                    if (posY > 90)
+                    // 역방향은 정방향 기준점 + 열 간격 위치에서만 저장 (기준점은 변경하지 않음)
+                    int axis = (m_mode == "top") ? 1 : 2;
+                    double expected = ((m_mode == "top") ? markingInfo.TopMarkY : markingInfo.BotMarkY) + TeachRowOffset();
+                    double actual = MainWindow.MCS2.GetActPos(axis);
+                    if (Math.Abs(actual - expected) > ReverseLayout.BaseTolerance)
                     {
-                        MaterialWarningDlg warningDlg = new MaterialWarningDlg("마킹 시작 위치가 잘못 되었습니다.\n1열 스트립으로 위치 보정 바랍니다.");
+                        MaterialWarningDlg warningDlg = new MaterialWarningDlg(string.Format("역방향 티칭 위치가 아닙니다. (현재 {0:F3}, 기준 {1:F3})\n티칭 열 선택 후 [티칭 열 이동]으로 이동해서 저장하세요.", actual, expected));
                         warningDlg.ShowDialog();
                         return;
+                    }
+                }
+                else
+                {
+                    // 정방향 : 기존 1열 위치 검사를 티칭 열 기준으로 환산해서 적용
+                    double posY = MainWindow.MCS2.GetActPos(1) - TeachRowOffset();
+                    if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.LeftAlt))
+                    {
+                        if (posY > 90)
+                        {
+                            MaterialWarningDlg warningDlg = new MaterialWarningDlg("마킹 시작 위치가 잘못 되었습니다.\n1열 스트립으로 위치 보정 바랍니다.\n(1열이 아닌 열에서 티칭할 때는 티칭 열을 선택하세요.)");
+                            warningDlg.ShowDialog();
+                            return;
+                        }
                     }
                 }
             }
@@ -889,21 +1075,82 @@ namespace HDS_ID_Marker.SubWindow
                 return;
             }
 
-            
+            // 정/역은 한 레이저 프로그램(헤드 방향 1개)을 공유하므로 반전 인쇄 값이 같아야 함
+            if (!IsFlipConsistent(topHRControl) || !IsFlipConsistent(botHRControl))
+            {
+                MaterialWarningDlg warningDlg = new MaterialWarningDlg("정방향과 역방향의 반전 인쇄 값은 서로 다를 수 없습니다.\n미러 반전 인쇄 설정을 확인하세요.");
+                warningDlg.ShowDialog();
+                return;
+            }
+
+            // 역방향 최초 저장 전 모델 폴더 백업
+            if (reverse && double.IsNaN(markingInfo.RevBaseTopY) && double.IsNaN(markingInfo.RevBaseBotY))
+                BackupModelFolderForReverse();
+
+            bool fwdTopStale = !double.IsNaN(markingInfo.RevBaseTopY) && markingInfo.IsRevTopStale();
+            bool fwdBotStale = !double.IsNaN(markingInfo.RevBaseBotY) && markingInfo.IsRevBotStale();
 
             switch (m_mode)
             {
                 case "top":
                     topHRControl.SaveMarkPara(ptrMain.model.modelInformation.Name);
                     topHRControl.InitTextRectangles();
-                    if(Setting.Device.MotionUse) isSaved = SaveAlignTemplateAndTopMotionPos();                  
+                    if (!reverse)
+                    {
+                        if(Setting.Device.MotionUse) isSaved = SaveAlignTemplateAndTopMotionPos();
+                    }
+                    else
+                    {
+                        // 역방향 : 템플릿만 저장, 기준점 스냅샷 기록 (모션 좌표는 변경하지 않음)
+                        if (Setting.Device.MotionUse) isSaved = SaveReverseAlignTemplate();
+                        if (isSaved)
+                        {
+                            markingInfo.RevBaseTopY = markingInfo.TopMarkY;
+                            markingInfo.SaveReverseInfo(ptrMain.model.modelInformation.modelPath);
+                        }
+                    }
                     break;
                 case "bot":
                     botHRControl.SaveMarkPara(ptrMain.model.modelInformation.Name);
                     botHRControl.InitTextRectangles();
-                    if (Setting.Device.MotionUse) SaveBotMotionPos();
+                    if (!reverse)
+                    {
+                        if (Setting.Device.MotionUse) SaveBotMotionPos();
+                    }
+                    else
+                    {
+                        markingInfo.RevBaseBotY = markingInfo.BotMarkY;
+                        markingInfo.SaveReverseInfo(ptrMain.model.modelInformation.modelPath);
+                    }
                     break;
             }
+
+            // 역방향 저장 확인 : DB 에 다시 읽힌 건수가 화면 ROI 수와 다르면 저장 실패
+            // (DB orientation 컬럼에 'top_r' / 'bot_r' (5자)가 들어가지 않는 경우 등)
+            if (reverse)
+            {
+                MainHRControl ctrl = (m_mode == "top") ? topHRControl : botHRControl;
+                if (ctrl.GetMarkSet(true).ObjectCount != ctrl.CanvasObjectCount())
+                {
+                    MainWindow.logger.WriteLog(LogType.Exception, string.Format("[티칭] 역방향 저장 건수 불일치 : DB {0}, 화면 {1}", ctrl.GetMarkSet(true).ObjectCount, ctrl.CanvasObjectCount()));
+                    MaterialWarningDlg warningDlg = new MaterialWarningDlg("역방향 티칭 데이터 일부가 DB에 저장되지 않았습니다.\nDB orientation 컬럼 길이(5자 이상)를 확인하세요.");
+                    warningDlg.ShowDialog();
+                    isSaved = false;
+                }
+            }
+
+            // 정방향 재티칭으로 기준점이 허용오차 이상 바뀌면 역방향 재티칭 안내
+            if (!reverse)
+            {
+                bool topStaleNow = !double.IsNaN(markingInfo.RevBaseTopY) && markingInfo.IsRevTopStale();
+                bool botStaleNow = !double.IsNaN(markingInfo.RevBaseBotY) && markingInfo.IsRevBotStale();
+                if ((topStaleNow && !fwdTopStale) || (botStaleNow && !fwdBotStale))
+                {
+                    MaterialWarningDlg warningDlg = new MaterialWarningDlg("정방향 기준점이 변경되었습니다.\n역방향 티칭을 다시 저장해야 혼합 배열 작업을 시작할 수 있습니다.");
+                    warningDlg.ShowDialog();
+                }
+            }
+            UpdateReverseStatus();
 
             
 
@@ -919,6 +1166,13 @@ namespace HDS_ID_Marker.SubWindow
             }            
 
             CaptureTeachingScreen();
+        }
+
+        /// <summary>정방향/역방향 고객 마크의 반전 인쇄 값이 모두 같은지</summary>
+        private bool IsFlipConsistent(MainHRControl control)
+        {
+            var all = control.GetMarkSet(false).customMarks.Concat(control.GetMarkSet(true).customMarks).ToList();
+            return all.All(x => x.flip == true) || all.All(x => x.flip == false);
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -1087,7 +1341,7 @@ namespace HDS_ID_Marker.SubWindow
 
         private void CaptureTeachingScreen()
         {
-            string path = ptrMain.model.modelInformation.modelPath + m_mode + "TeachingScreen.bmp";
+            string path = ptrMain.model.modelInformation.modelPath + ReverseLayout.DbOrientation(m_mode, IsReverseTeaching) + "TeachingScreen.bmp";
 
             int width = (int)SystemParameters.PrimaryScreenWidth;
             int height = (int)SystemParameters.PrimaryScreenHeight;
@@ -1305,6 +1559,34 @@ namespace HDS_ID_Marker.SubWindow
             //신규모델 시 티칭기능 비활성
             ptrMain.modelManager.cntisNewModel = 0;
 
+            // 현재 티칭 방향(정 또는 역)의 데이터만 초기화
+            bool reverse = IsReverseTeaching;
+            string oriTop = ReverseLayout.DbOrientation("top", reverse);
+            string oriBot = ReverseLayout.DbOrientation("bot", reverse);
+
+            if (reverse)
+            {
+                // 역방향 초기화 : 역방향 템플릿 / 기준점 스냅샷도 함께 제거
+                try
+                {
+                    string modelPath = ptrMain.model.modelInformation.modelPath;
+                    foreach (int number in new[] { 1, 2 })
+                    {
+                        string file = modelPath + TeachingManagement.AlignFileName(number, true);
+                        if (File.Exists(file)) File.Delete(file);
+                    }
+                    ptrMain.PCSInstance.Visions[0].ClearAlignBank(1);
+                    ptrMain.model.markingInformation.RevBaseTopY = double.NaN;
+                    ptrMain.model.markingInformation.RevBaseBotY = double.NaN;
+                    ptrMain.model.markingInformation.SaveReverseInfo(modelPath);
+                }
+                catch (Exception ex)
+                {
+                    MainWindow.logger.WriteLog(LogType.Exception, "[티칭] 역방향 초기화 파일 정리 실패 : " + ex.Message);
+                }
+            }
+            MainWindow.logger.WriteLog(LogType.Info, string.Format("[티칭/{0}] {1} 티칭 데이터 초기화", ptrMain.model.modelInformation.Name, reverse ? "역방향" : "정방향"));
+
             try
             {
                 topHRControl.CleaerObjects();
@@ -1317,7 +1599,7 @@ namespace HDS_ID_Marker.SubWindow
                     string strQuery = string.Empty;
 
                     //strip pitch default 0
-                    strQuery = String.Format("Delete FROM idmarker.para_alignroi where model='{0}'", ptrMain.model.modelInformation.Name);
+                    strQuery = String.Format("Delete FROM idmarker.para_alignroi where model='{0}' and orientation in ('{1}', '{2}')", ptrMain.model.modelInformation.Name, oriTop, oriBot);
                     if (ConnectFactory.DBConnector().Execute(strQuery) > 0)
                     {
                         ConnectFactory.DBConnector().Commit();
@@ -1327,7 +1609,7 @@ namespace HDS_ID_Marker.SubWindow
                         ConnectFactory.DBConnector().Rollback();
                     }
 
-                    strQuery = String.Format("Delete FROM idmarker.para_custommark where model='{0}'", ptrMain.model.modelInformation.Name);
+                    strQuery = String.Format("Delete FROM idmarker.para_custommark where model='{0}' and orientation in ('{1}', '{2}')", ptrMain.model.modelInformation.Name, oriTop, oriBot);
                     if (ConnectFactory.DBConnector().Execute(strQuery) > 0)
                     {
                         ConnectFactory.DBConnector().Commit();
@@ -1337,7 +1619,7 @@ namespace HDS_ID_Marker.SubWindow
                         ConnectFactory.DBConnector().Rollback();
                     }
 
-                    strQuery = String.Format("Delete FROM idmarker.para_intermark where model='{0}'", ptrMain.model.modelInformation.Name);
+                    strQuery = String.Format("Delete FROM idmarker.para_intermark where model='{0}' and orientation in ('{1}', '{2}')", ptrMain.model.modelInformation.Name, oriTop, oriBot);
                     if (ConnectFactory.DBConnector().Execute(strQuery) > 0)
                     {
                         ConnectFactory.DBConnector().Commit();
@@ -1347,7 +1629,7 @@ namespace HDS_ID_Marker.SubWindow
                         ConnectFactory.DBConnector().Rollback();
                     }
 
-                    strQuery = String.Format("Delete FROM idmarker.para_ocrmark where model='{0}'", ptrMain.model.modelInformation.Name);
+                    strQuery = String.Format("Delete FROM idmarker.para_ocrmark where model='{0}' and orientation in ('{1}', '{2}')", ptrMain.model.modelInformation.Name, oriTop, oriBot);
                     if (ConnectFactory.DBConnector().Execute(strQuery) > 0)
                     {
                         ConnectFactory.DBConnector().Commit();
@@ -1648,7 +1930,7 @@ namespace HDS_ID_Marker.SubWindow
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            MaterialAlertDlg alertDlg = new MaterialAlertDlg("모든 티칭 데이터를 초기화 합니다.\n초기화 하시겠습니까?");
+            MaterialAlertDlg alertDlg = new MaterialAlertDlg((IsReverseTeaching ? "역방향" : "정방향") + " 티칭 데이터를 모두 초기화 합니다.\n초기화 하시겠습니까?");
             alertDlg.ShowDialog();
             //if (alertDlg.DialogResult.Value) { DeleteAllClear(); pnl_Functions.IsEnabled = true; }
             if (alertDlg.DialogResult.Value)
@@ -1656,6 +1938,7 @@ namespace HDS_ID_Marker.SubWindow
                 DeleteAllClear();
                 // 신규모델 시 티칭기능 비활성
                 SetInitialize();  
+                UpdateReverseStatus();
                 //pnl_Functions.IsEnabled = true;
             }
         }

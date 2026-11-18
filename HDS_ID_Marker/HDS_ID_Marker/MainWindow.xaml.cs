@@ -59,6 +59,8 @@ namespace HDS_ID_Marker
         public static Motion2 MCS2;
         public static bool IsStopCycle = true;
         public static string[] lots = new string[4];
+        // 열별 제품 방향 (물리 열 인덱스 기준, true = 역방향/180°). lot 입력창에서 lot 마다 지정
+        public static bool[] orients = new bool[4];
         public static int MCStatus = 0;
         public static bool IsBindOrder = false;
         public static int bindNumber = 0;
@@ -639,10 +641,57 @@ namespace HDS_ID_Marker
         {
             for (int i = 0; i < model.modelInformation.StripIter.Count; i++)
             {
-                Cust_id[i] = workManagement.GetCustomIDString(0,model.markingInformation.customerInformation.Name, MainWindow.lots[i], model.stripID, model.markingInformation.customerInformation.MarkingLocation, i, DateTime.Now);
-                Inter_id[i] = workManagement.GetInternal1IDString(MainWindow.lots[i], model.stripID, model.markingInformation.customerInformation.MarkingLocation);
+                string location = GetRowMarkingLocation(i);
+                Cust_id[i] = workManagement.GetCustomIDString(0,model.markingInformation.customerInformation.Name, MainWindow.lots[i], model.stripID, location, i, DateTime.Now);
+                Inter_id[i] = workManagement.GetInternal1IDString(MainWindow.lots[i], model.stripID, location);
             }
         }
+
+        #region 정/역 혼합 배열
+        /// <summary>열(물리 인덱스)이 역방향인지</summary>
+        public static bool IsReverseRow(int row)
+        {
+            return orients != null && row >= 0 && row < orients.Length && orients[row];
+        }
+
+        /// <summary>앞에서부터 count 개 열 중 역방향 열이 있는지</summary>
+        public static bool HasReverseRow(int count)
+        {
+            for (int i = 0; i < count; i++)
+                if (IsReverseRow(i)) return true;
+            return false;
+        }
+
+        /// <summary>열별 방향 문자열 (예: "정정역역")</summary>
+        public static string GetOrientText(int count)
+        {
+            string text = "";
+            for (int i = 0; i < count; i++)
+                text += IsReverseRow(i) ? "역" : "정";
+            return text;
+        }
+
+        /// <summary>열 방향에 맞는 상부 티칭 데이터</summary>
+        public MarkSet GetTopSet(int row)
+        {
+            return workSettingWindow.topHRControl.GetMarkSet(IsReverseRow(row));
+        }
+
+        /// <summary>열 방향에 맞는 하부 티칭 데이터</summary>
+        public MarkSet GetBotSet(int row)
+        {
+            return workSettingWindow.botHRControl.GetMarkSet(IsReverseRow(row));
+        }
+
+        /// <summary>
+        /// 열 방향에 맞는 고객사 2D 위치 문자열. 고객사 설정(Ctrl+I)은 정방향 기준이며 역방향 열은 좌/우를 맞바꾼다.
+        /// </summary>
+        public string GetRowMarkingLocation(int row)
+        {
+            string location = model.markingInformation.customerInformation.MarkingLocation;
+            return IsReverseRow(row) ? ReverseLayout.SwapLR(location) : location;
+        }
+        #endregion
 
         private bool DeviceCheck()
         {

@@ -185,9 +185,21 @@ namespace HDS_ID_Marker
 
             double alignDistanceX = 0, alignDistanceY = 0, motionDistanceY = 0;
             
-            AlignROI align = ptrMain.workSettingWindow.topHRControl.alignROIs.Find(s => s.number == 1);
-            AlignROI align2 = ptrMain.workSettingWindow.topHRControl.alignROIs.Find(s => s.number == 2);
+            // 첫 열 / 마지막 열은 각 열의 방향(정/역) 티칭 데이터와 템플릿으로 검출한다. (정정정정이면 기존과 동일)
+            int lastRow = ptrMain.model.modelInformation.StripIter.Count - 1;
+            bool revFirst = MainWindow.IsReverseRow(0);
+            bool revLast = MainWindow.IsReverseRow(lastRow);
+            MarkSet setFirst = ptrMain.GetTopSet(0);
+            MarkSet setLast = ptrMain.GetTopSet(lastRow);
 
+            AlignROI align = setFirst.alignROIs.Find(s => s.number == 1);
+            AlignROI align2 = setFirst.alignROIs.Find(s => s.number == 2);
+            // 마지막 열은 첫 열 얼라인1 과 화면상 같은 쪽(같은 물리 스트립 위치)의 얼라인으로 짝을 맞춘다.
+            // 정방향끼리면 1번 ↔ 1번 (기존과 동일), 정/역이 다르면 180° 회전으로 번호가 바뀐다.
+            AlignROI alignLast = GetSameSideAlign(setLast, align.roi);
+            AlignROI align2Last = setLast.alignROIs.Find(s => s.number != alignLast.number);
+
+            ptrMain.PCSInstance.Visions[0].SelectAlignBank(revFirst ? 1 : 0);
             ret = ptrMain.PCSInstance.Visions[0].SearchPointAlignToROI(out x11, out y11, out match1, MainWindow.ri.TopCamResolution, log, path, align.roi);
             ret2 = ptrMain.PCSInstance.Visions[0].SearchPointAlign2ToROI(out x21, out y21, out match2, MainWindow.ri.TopCamResolution, log, path, align2.roi);
 
@@ -220,8 +232,9 @@ namespace HDS_ID_Marker
 
             MainWindow.MCS2.TopMoveToPos(motionDistanceY);
 
-            ret = ptrMain.PCSInstance.Visions[0].SearchPointAlignToROI(out x12, out y12, out match1, MainWindow.ri.TopCamResolution, log, path, align.roi);
-            ret2 = ptrMain.PCSInstance.Visions[0].SearchPointAlign2ToROI(out x22, out y22, out match2, MainWindow.ri.TopCamResolution, log, path, align2.roi);
+            ptrMain.PCSInstance.Visions[0].SelectAlignBank(revLast ? 1 : 0);
+            ret = SearchAlignByNumber(alignLast, out x12, out y12, out match1, log, path);
+            ret2 = SearchAlignByNumber(align2Last, out x22, out y22, out match2, log, path);
 
             if (ret < 0 || ret2 < 0)
             {
@@ -240,6 +253,7 @@ namespace HDS_ID_Marker
                 return -4;
 
             alignDistanceY -= y12;
+            alignDistanceY += GetRoiBaselineOffset(align.roi, alignLast.roi, revFirst, revLast);
             alignDistanceX = x12 - x11;
             radian = Math.Atan(alignDistanceX / alignDistanceY);
             for (int i = 0; i < alignOffset.Length; i++)
@@ -286,12 +300,16 @@ namespace HDS_ID_Marker
             double motionDistanceY;                        // 스테이지 이동 명령값
             double lastIter = ptrMain.model.modelInformation.StripIter[ptrMain.model.modelInformation.StripIter.Count - 1];
 
-            // 우측 ROI/템플릿
-            AlignROI alignRight = ptrMain.workSettingWindow.topHRControl.alignROIs.Find(s => s.number == 2);
+            // 우측 ROI/템플릿 : 정방향은 2번(기존과 동일), 역방향은 화면 우측에 오는 얼라인(180° 회전으로 1번)
+            int lastRow = ptrMain.model.modelInformation.StripIter.Count - 1;
+            bool revFirst = MainWindow.IsReverseRow(0);
+            bool revLast = MainWindow.IsReverseRow(lastRow);
+            AlignROI alignRight = GetRightAlign(ptrMain.GetTopSet(0), revFirst);
+            AlignROI alignRightLast = GetRightAlign(ptrMain.GetTopSet(lastRow), revLast);
 
             // 1) 이동 전: 우상단 마크 탐지
-            ret1 = ptrMain.PCSInstance.Visions[0].SearchPointAlign2ToROI(
-                out xR1, out yR1, out matchR1, MainWindow.ri.TopCamResolution, log, path, alignRight.roi);
+            ptrMain.PCSInstance.Visions[0].SelectAlignBank(revFirst ? 1 : 0);
+            ret1 = SearchAlignByNumber(alignRight, out xR1, out yR1, out matchR1, log, path);
 
             // 찾은 Align 좌표를 멤버 변수에 저장 (첫 번째 Align 마크를 기준으로 함)
             // lastFoundAlignPos 에는 절대 중심 좌표를 저장
@@ -309,12 +327,13 @@ namespace HDS_ID_Marker
             MainWindow.MCS2.TopMoveToPos(motionDistanceY);
 
             // 3) 이동 후: 우하단 마크 탐지
-            ret2 = ptrMain.PCSInstance.Visions[0].SearchPointAlign2ToROI(
-                out xR2, out yR2, out matchR2, MainWindow.ri.TopCamResolution, log, path, alignRight.roi);
+            ptrMain.PCSInstance.Visions[0].SelectAlignBank(revLast ? 1 : 0);
+            ret2 = SearchAlignByNumber(alignRightLast, out xR2, out yR2, out matchR2, log, path);
             if (ret2 < 0) { if (ret2 == -2) ret2 = -3; return ret2; }
             if (!CheckAlign22(yR2)) return -4;
 
             alignDistanceY = lastIter - yR2;
+            alignDistanceY += GetRoiBaselineOffset(alignRight.roi, alignRightLast.roi, revFirst, revLast);
             alignDistanceX = xR2 - xR1;
 
             // 분모 0 및 사분면 안정화
@@ -348,6 +367,74 @@ namespace HDS_ID_Marker
             ptrMain.Dispatcher.Invoke(action);
 
             return 0;
+        }
+
+        /// <summary>
+        /// 화면 우측 얼라인 ROI. 정방향은 기존과 동일하게 2번, 역방향은 ROI 중심 X 가 더 큰 쪽(180° 회전으로 보통 1번).
+        /// </summary>
+        private AlignROI GetRightAlign(MarkSet set, bool reverse)
+        {
+            if (!reverse || set.alignROIs.Count < 2) return set.alignROIs.Find(s => s.number == 2);
+
+            AlignROI right = set.alignROIs[0];
+            foreach (var a in set.alignROIs)
+            {
+                if (RoiCenterX(a.roi) > RoiCenterX(right.roi)) right = a;
+            }
+            return right;
+        }
+
+        /// <summary>기준 ROI 와 화면 X 위치가 가장 가까운 얼라인 (같은 쪽 얼라인). 후보가 1개 이하이면 1번.</summary>
+        private AlignROI GetSameSideAlign(MarkSet set, string refRoi)
+        {
+            if (set.alignROIs.Count < 2 || string.IsNullOrEmpty(refRoi)) return set.alignROIs.Find(s => s.number == 1);
+
+            double refX = RoiCenterX(refRoi);
+            AlignROI best = set.alignROIs[0];
+            foreach (var a in set.alignROIs)
+            {
+                if (Math.Abs(RoiCenterX(a.roi) - refX) < Math.Abs(RoiCenterX(best.roi) - refX)) best = a;
+            }
+            return best;
+        }
+
+        /// <summary>얼라인 번호에 맞는 템플릿(1: Align, 2: Align2)으로 ROI 검색</summary>
+        private int SearchAlignByNumber(AlignROI align, out float x, out float y, out int match, bool log, string path)
+        {
+            if (align.number == 1)
+                return ptrMain.PCSInstance.Visions[0].SearchPointAlignToROI(out x, out y, out match, MainWindow.ri.TopCamResolution, log, path, align.roi);
+            else
+                return ptrMain.PCSInstance.Visions[0].SearchPointAlign2ToROI(out x, out y, out match, MainWindow.ri.TopCamResolution, log, path, align.roi);
+        }
+
+        private static double RoiCenterX(string roi)
+        {
+            if (string.IsNullOrEmpty(roi)) return double.MinValue;
+            string[] r = roi.Split(',');
+            return Convert.ToDouble(r[1]) + Convert.ToDouble(r[2]) / 2.0;
+        }
+
+        private static double RoiCenterY(string roi)
+        {
+            string[] r = roi.Split(',');
+            return Convert.ToDouble(r[0]) + Convert.ToDouble(r[3]) / 2.0;
+        }
+
+        /// <summary>
+        /// 첫 열/마지막 열 얼라인 ROI 의 열 내 높이 차이에 따른 기울기 계산 베이스라인 보정(mm).
+        /// 정방향 마크는 열 상단, 역방향 마크는 열 하단에 있어 두 열의 방향이 다르면 실제 마크 간 거리가 열 간격과 달라진다.
+        /// 두 열의 방향이 같으면(정정정정, 역역역역 등) 0 → 기존 계산과 동일.
+        /// 부호는 기존 식(거리 = 열 간격 − 마지막 열 y 오프셋, 화면 아래쪽 +)과 같은 규칙을 따른다.
+        /// </summary>
+        private double GetRoiBaselineOffset(string roiFirst, string roiLast, bool revFirst, bool revLast)
+        {
+            if (revFirst == revLast) return 0;
+            if (string.IsNullOrEmpty(roiFirst) || string.IsNullOrEmpty(roiLast)) return 0;
+
+            double canvasToCam = 1.0 / ptrMain.workSettingWindow.topHRControl.ratioY;
+            double offset = -(RoiCenterY(roiLast) - RoiCenterY(roiFirst)) * canvasToCam * MainWindow.ri.TopCamResolution;
+            MainWindow.logger.WriteLog(LogType.Info, $"[Align] 정/역 혼합 베이스라인 보정 : {offset:F4} mm (첫 열 {(revFirst ? "역" : "정")}, 마지막 열 {(revLast ? "역" : "정")})");
+            return offset;
         }
 
         float bfY11, bfY21, bfY12, bfY22;
@@ -405,6 +492,32 @@ namespace HDS_ID_Marker
                 ptrMain.PCSInstance.Visions[1].ImageToAlign2(path.Replace("Align.bmp", "Align2.bmp"));
             return ptrMain.PCSInstance.Visions[1].AlignTemplateBmp.Clone();
         }
+        /// <summary>
+        /// 역방향 얼라인 템플릿(Align_R.bmp, Align2_R.bmp)을 비전 뱅크 1 에 로드한다. 로드 후 뱅크 0(정방향)을 다시 선택한다.
+        /// </summary>
+        public void LoadReverseAlignData(string modelPath)
+        {
+            var vision = ptrMain.PCSInstance.Visions[0];
+            vision.ClearAlignBank(1);
+            vision.SelectAlignBank(1);
+            string alignPath = modelPath + ReverseAlignFileName(1);
+            string align2Path = modelPath + ReverseAlignFileName(2);
+            if (File.Exists(alignPath)) vision.ImageToAlign(alignPath);
+            if (File.Exists(align2Path)) vision.ImageToAlign2(align2Path);
+            vision.SelectAlignBank(0);
+        }
+
+        /// <summary>얼라인 템플릿 파일명 (정: Align.bmp / Align2.bmp, 역: Align_R.bmp / Align2_R.bmp)</summary>
+        public static string AlignFileName(int number, bool reverse)
+        {
+            return reverse ? ReverseAlignFileName(number) : (number == 1 ? "Align.bmp" : "Align2.bmp");
+        }
+
+        public static string ReverseAlignFileName(int number)
+        {
+            return number == 1 ? "Align_R.bmp" : "Align2_R.bmp";
+        }
+
         public BitmapSource LoadAlignData2(string path, int type)
         {
             if (type == 1)

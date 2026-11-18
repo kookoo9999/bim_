@@ -13,6 +13,8 @@ namespace HDS_ID_Marker.SubWindow
     {
         public string m_font = "normal";
         public int m_markPos = 0;
+        /// <summary>역방향 티칭 중이면 true (좌/우 기본값을 고객사 2D 위치의 반대로 계산)</summary>
+        public bool IsReverse = false;
         public double m_sizeY = 1.6;
         public double m_sizeX = 18;
         public double m_gap = 0;
@@ -45,6 +47,7 @@ namespace HDS_ID_Marker.SubWindow
 
             MainWindow ptrmainwin = Application.Current.MainWindow as MainWindow;
             string location = ptrmainwin.model.markingInformation.customerInformation.MarkingLocation;
+            if (IsReverse) location = ReverseLayout.SwapLR(location); // 역방향 티칭은 좌/우 반전
 
             string[] sss = location.Split(',');
             string dir = "";
@@ -159,6 +162,7 @@ namespace HDS_ID_Marker.SubWindow
 
             MainWindow ptrmainwin = Application.Current.MainWindow as MainWindow;
             string location = ptrmainwin.model.markingInformation.customerInformation.MarkingLocation;
+            if (IsReverse) location = ReverseLayout.SwapLR(location); // 역방향 티칭은 좌/우 반전
 
             string[] sss = location.Split(',');
             string dir = "";

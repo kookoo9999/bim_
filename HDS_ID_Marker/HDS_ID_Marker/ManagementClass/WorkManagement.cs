@@ -513,6 +513,9 @@ namespace HDS_ID_Marker
 
         public bool StartMarking()
         {
+            // 정/역 혼합 배열 시작 전 검증 (역방향 열이 있을 때만)
+            if (!CheckReverseLayoutReady()) return false;
+
             //이어가기, Model Index 설정
             if (!CheckWorkHistory()) return false;
 
@@ -530,8 +533,76 @@ namespace HDS_ID_Marker
 
         private void LogMarkData()
         {
-            ptrMain.workSettingWindow.topHRControl.LogTeachingData("자동시작/" + ptrMain.model.modelInformation.Name + "/TOP");
-            ptrMain.workSettingWindow.botHRControl.LogTeachingData("자동시작/" + ptrMain.model.modelInformation.Name+ "/BOT");
+            int count = ptrMain.model.modelInformation.StripIter != null ? ptrMain.model.modelInformation.StripIter.Count : 0;
+            bool hasReverse = MainWindow.HasReverseRow(count);
+            logger.WriteLog(LogType.Info, string.Format("[자동시작/열 방향] {0} (lot : {1})", MainWindow.GetOrientText(count), string.Join(",", MainWindow.lots)));
+
+            ptrMain.workSettingWindow.topHRControl.LogTeachingData("자동시작/" + ptrMain.model.modelInformation.Name + "/TOP", ptrMain.workSettingWindow.topHRControl.GetMarkSet(false));
+            ptrMain.workSettingWindow.botHRControl.LogTeachingData("자동시작/" + ptrMain.model.modelInformation.Name+ "/BOT", ptrMain.workSettingWindow.botHRControl.GetMarkSet(false));
+            if (hasReverse)
+            {
+                ptrMain.workSettingWindow.topHRControl.LogTeachingData("자동시작/" + ptrMain.model.modelInformation.Name + "/TOP_R", ptrMain.workSettingWindow.topHRControl.GetMarkSet(true));
+                ptrMain.workSettingWindow.botHRControl.LogTeachingData("자동시작/" + ptrMain.model.modelInformation.Name + "/BOT_R", ptrMain.workSettingWindow.botHRControl.GetMarkSet(true));
+            }
+        }
+
+        /// <summary>
+        /// 역방향 열이 포함된 lot 의 시작 가능 여부 검사. 불가하면 경고 후 false.
+        /// </summary>
+        private bool CheckReverseLayoutReady()
+        {
+            string reason = GetReverseLayoutBlockReason();
+            if (reason == null) return true;
+
+            logger.WriteLog(LogType.Info, "[역방향 배열 시작 차단] " + reason.Replace("\n", " "));
+            MaterialWarningDlg dlg = new MaterialWarningDlg(reason);
+            dlg.ShowDialog();
+            return false;
+        }
+
+        /// <summary>
+        /// 역방향 열이 있을 때 시작을 막아야 하는 사유. 문제 없거나 역방향 열이 없으면 null.
+        /// </summary>
+        public string GetReverseLayoutBlockReason()
+        {
+            int count = ptrMain.model.modelInformation.StripIter != null ? ptrMain.model.modelInformation.StripIter.Count : 0;
+            if (!MainWindow.HasReverseRow(count)) return null;
+
+            var markingInfo = ptrMain.model.markingInformation;
+            int method = markingInfo.customerInformation.MarkingMethod;
+
+            if (Setting.General.MachineType != "PC")
+                return "역방향 배열은 PC 모드에서만 지원합니다.";
+            if (ptrMain.model.modelInformation.UseAOIMark)
+                return "역방향 배열은 AOI 마크 사용 모델을 지원하지 않습니다.\n모델 관리에서 AOI 마크 사용을 해제하세요.";
+            if (ptrMain.model.modelInformation.MakringShiftCheck)
+                return "역방향 배열은 마킹 시프트 검사를 지원하지 않습니다.\n모델 관리에서 시프트 검사를 해제하세요.";
+
+            MarkSet topRev = ptrMain.workSettingWindow.topHRControl.GetMarkSet(true);
+            MarkSet botRev = ptrMain.workSettingWindow.botHRControl.GetMarkSet(true);
+
+            if (method == 1 || method == 3)
+            {
+                if (topRev.BlockCount == 0) return "역방향 상부 마킹 티칭 데이터가 없습니다.\n역방향 티칭을 확인하세요.";
+                if (markingInfo.IsRevTopStale()) return "정방향 상부 기준점이 변경되었습니다.\n역방향 상부를 다시 티칭하세요.";
+            }
+            if (method == 2 || method == 3)
+            {
+                if (botRev.BlockCount == 0) return "역방향 하부 마킹 티칭 데이터가 없습니다.\n역방향 티칭을 확인하세요.";
+                if (markingInfo.IsRevBotStale()) return "정방향 하부 기준점이 변경되었습니다.\n역방향 하부를 다시 티칭하세요.";
+            }
+
+            // 얼라인은 첫 열 / 마지막 열에서 수행하므로 그 열이 역방향일 때 역방향 얼라인 데이터 필요
+            if (MainWindow.IsReverseRow(0) || MainWindow.IsReverseRow(count - 1))
+            {
+                if (!topRev.alignROIs.Exists(a => a.number == 1) || !topRev.alignROIs.Exists(a => a.number == 2))
+                    return "역방향 얼라인 ROI(1, 2)가 없습니다.\n역방향 티칭을 확인하세요.";
+                if (!ptrMain.PCSInstance.Visions[0].HasAlignBank(1))
+                    return "역방향 얼라인 템플릿(Align_R.bmp, Align2_R.bmp)이 없습니다.\n역방향 티칭을 저장하세요.";
+                if (markingInfo.IsRevTopStale())
+                    return "정방향 상부 기준점이 변경되었습니다.\n역방향 상부(얼라인)를 다시 티칭하세요.";
+            }
+            return null;
         }
 
         private void BranchMarking()
@@ -1226,9 +1297,9 @@ namespace HDS_ID_Marker
                     //Mark Data Set
                     for (int i = 0; i < ptrMain.model.modelInformation.StripIter.Count; i++)
                     {
-                        Cust1_id[i] = GetCustomIDString(0, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.model.markingInformation.customerInformation.MarkingLocation, i, MarkingTime);
-                        Cust2_id[i] = GetCustomIDString(1, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.model.markingInformation.customerInformation.MarkingLocation, i, MarkingTime);
-                        Int1_id[i] = GetInternal1IDString(MainWindow.lots[i], ptrMain.model.stripID, ptrMain.model.markingInformation.customerInformation.MarkingLocation);                        
+                        Cust1_id[i] = GetCustomIDString(0, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i), i, MarkingTime);
+                        Cust2_id[i] = GetCustomIDString(1, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i), i, MarkingTime);
+                        Int1_id[i] = GetInternal1IDString(MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i));                        
                     } 
                     if (!CheckCustomID_Length(Cust1_id, ptrMain.model.markingInformation.customerInformation.MarkingLength)) { nErrorCode = eErrorCode.MARKING_LENGTH_MISMATCH; break; }
                     TactLog.Add("TENSION_DATA", tTact);
@@ -1261,7 +1332,7 @@ namespace HDS_ID_Marker
                             //SaveWorkHistory(Int1_id[0], ptrMain.model.markingInformation.customerInformation.MarkingLocation);
 
                             tTact = TactLog.Now;
-                            if (!WriteITSOneShot(ConvertInternal1ID(Int1_id, ptrMain.model.markingInformation.customerInformation.MarkingLocation)[i], Cust1_id[i], isEnd,i))
+                            if (!WriteITSCompleted(i, isEnd, MarkingTime)) // 이번 사이클에 완성된 strip 기록 (정/역·고객사 설정 공통 규칙)
                             {
                                 nErrorCode = eErrorCode.ITS_FILE_ACCESS_ERROR;
                                 break;
@@ -1270,7 +1341,7 @@ namespace HDS_ID_Marker
                         }
 
                         tTact = TactLog.Now;
-                        SaveWorkHistory(Int1_id[0], ptrMain.model.markingInformation.customerInformation.MarkingLocation);
+                        SaveCompletedStrip(GetCompletedStrip(0, ptrMain.model.stripID));
                         TactLog.Add("SAVE_HISTORY", tTact);
 
                         if (isMarkingFail)
@@ -1330,14 +1401,14 @@ namespace HDS_ID_Marker
 
                             //SaveWorkHistory(Int1_id[0], ptrMain.model.markingInformation.customerInformation.MarkingLocation);
 
-                            if (!WriteITSOneShot(ConvertInternal1ID(Int1_id, ptrMain.model.markingInformation.customerInformation.MarkingLocation)[i], Cust1_id[i], isEnd,i))
+                            if (!WriteITSCompleted(i, isEnd, MarkingTime)) // 이번 사이클에 완성된 strip 기록 (정/역·고객사 설정 공통 규칙)
                             {
                                 nErrorCode = eErrorCode.ITS_FILE_ACCESS_ERROR;
                                 break;
                             }
                         }
 
-                        SaveWorkHistory(Int1_id[0], ptrMain.model.markingInformation.customerInformation.MarkingLocation);
+                        SaveCompletedStrip(GetCompletedStrip(0, ptrMain.model.stripID));
 
                         if (isMarkingFail)
                         {
@@ -1393,14 +1464,14 @@ namespace HDS_ID_Marker
 
                             //SaveWorkHistory(Int1_id[0], ptrMain.model.markingInformation.customerInformation.MarkingLocation);
 
-                            if (!WriteITSOneShot(ConvertInternal1ID(Int1_id, ptrMain.model.markingInformation.customerInformation.MarkingLocation)[i], Cust1_id[i], isEnd,i))
+                            if (!WriteITSCompleted(i, isEnd, MarkingTime)) // 이번 사이클에 완성된 strip 기록 (정/역·고객사 설정 공통 규칙)
                             {
                                 nErrorCode = eErrorCode.ITS_FILE_ACCESS_ERROR;
                                 break;
                             }
                         }
 
-                        SaveWorkHistory(Int1_id[0], ptrMain.model.markingInformation.customerInformation.MarkingLocation);
+                        SaveCompletedStrip(GetCompletedStrip(0, ptrMain.model.stripID));
 
                         if (isMarkingFail)
                         {
@@ -1550,7 +1621,7 @@ namespace HDS_ID_Marker
                 if (isEnd)
                 {
                     if (Int1_id[0] == null) nErrorCode = eErrorCode.ALIGN_UNABLE_LOST_IMPORMATION;
-                    if(!WriteITS(ConvertInternal1ID(Int1_id, ptrMain.model.markingInformation.customerInformation.MarkingLocation), Cust1_id, isEnd))
+                    if(!WriteITSEnd())
                     {
                         nErrorCode = eErrorCode.ITS_FILE_ACCESS_ERROR;
                     }
@@ -1710,9 +1781,9 @@ namespace HDS_ID_Marker
                     //Mark Data Set
                     for (int i = 0; i < ptrMain.model.modelInformation.StripIter.Count; i++)
                     {
-                        Cust1_id[i] = GetCustomIDString(0, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.model.markingInformation.customerInformation.MarkingLocation, i, MarkingTime);
-                        Cust2_id[i] = GetCustomIDString(1, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.model.markingInformation.customerInformation.MarkingLocation, i, MarkingTime);
-                        Int1_id[i] = GetInternal1IDString(MainWindow.lots[i], ptrMain.model.stripID, ptrMain.model.markingInformation.customerInformation.MarkingLocation);                      
+                        Cust1_id[i] = GetCustomIDString(0, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i), i, MarkingTime);
+                        Cust2_id[i] = GetCustomIDString(1, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i), i, MarkingTime);
+                        Int1_id[i] = GetInternal1IDString(MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i));                      
                     }
 
                     if (!CheckCustomID_Length(Cust1_id, ptrMain.model.markingInformation.customerInformation.MarkingLength)) { nErrorCode = eErrorCode.MARKING_LENGTH_MISMATCH; break; }
@@ -1944,6 +2015,12 @@ namespace HDS_ID_Marker
 
         private bool WriteITSInfo(string lot, string infoITS, bool isEnd)
         {
+            return WriteITSInfo(lot, infoITS, isEnd, -1);
+        }
+
+        /// <param name="removeStrip">isEnd 시 삭제할 strip 번호 (첫 사이클 미완성 strip). -1 이면 삭제 없음</param>
+        private bool WriteITSInfo(string lot, string infoITS, bool isEnd, int removeStrip)
+        {
             try
             {
                 string itsTempPath = "\\\\" + Setting.General.ITSIP + "\\ITS(temp)\\" + lot + ".lmh";
@@ -1962,6 +2039,7 @@ namespace HDS_ID_Marker
                         while ((line = reader.ReadLine()) != null)
                         {
                             if (line.IndexOf("EOL") >= 0 || line == "") continue;
+                            if (removeStrip >= 0 && ParseITSStrip(line) == removeStrip) continue; // 첫 사이클 미완성 strip 삭제
                             writer.WriteLine(line);
                         }
 
@@ -1980,6 +2058,7 @@ namespace HDS_ID_Marker
                         while ((line = reader.ReadLine()) != null)
                         {
                             if (line.IndexOf("EOL") >= 0 || line == "") continue;
+                            if (removeStrip >= 0 && ParseITSStrip(line) == removeStrip) continue; // 첫 사이클 미완성 strip 삭제
                             writer.WriteLine(line);
                         }
 
@@ -2047,6 +2126,137 @@ namespace HDS_ID_Marker
 
             return true;
         }
+
+        #region 정/역 혼합 배열 - 완성 strip 기록 (ITS / 작업이력 / 이어하기 공통 규칙)
+        // 마크는 화면 우측(신규 strip S)에서 먼저 찍히고, 피딩 후 화면 좌측(이전 strip, 위치 문자열의 '우' = S−1)에서 나머지가 찍힌다.
+        // ITS 는 "이번 사이클에 마지막 마크가 찍혀 완성된 strip" 을 기록한다. 정/역·AAAA/AABB/BBBB 모두 같은 규칙.
+
+        /// <summary>
+        /// 열의 티칭된 마크 중 위치 문자열 '우'(= stripID − 1, 이전 strip)에 찍히는 마크(hasPrev)와 '좌'(= stripID) 마크(hasCur) 존재 여부
+        /// </summary>
+        public void GetRowMarkSides(int row, out bool hasPrev, out bool hasCur)
+        {
+            hasPrev = false;
+            hasCur = false;
+            string location = ptrMain.GetRowMarkingLocation(row);
+            foreach (string reference in GetRowReferences(row))
+            {
+                if (location.Contains(reference + " 우")) hasPrev = true;
+                else hasCur = true;
+            }
+        }
+
+        private List<string> GetRowReferences(int row)
+        {
+            var refs = new List<string>();
+            int method = ptrMain.model.markingInformation.customerInformation.MarkingMethod;
+            var sets = new List<MarkSet>();
+            if (method == 1 || method == 3) sets.Add(ptrMain.GetTopSet(row));
+            if (method == 2 || method == 3) sets.Add(ptrMain.GetBotSet(row));
+
+            foreach (var set in sets)
+            {
+                foreach (var m in set.customMarks) if (!string.IsNullOrEmpty(m.reference) && !refs.Contains(m.reference)) refs.Add(m.reference);
+                foreach (var m in set.interMarks) if (!string.IsNullOrEmpty(m.reference) && !refs.Contains(m.reference)) refs.Add(m.reference);
+                foreach (var m in set.ocrMarks) if (!string.IsNullOrEmpty(m.reference) && !refs.Contains(m.reference)) refs.Add(m.reference);
+            }
+            return refs;
+        }
+
+        /// <summary>
+        /// 기준 stripID 사이클에서 완성되는 strip 번호. 이전 strip(화면 좌측)에 찍히는 마크가 있으면 stripID − 1, 아니면 stripID.
+        /// </summary>
+        public int GetCompletedStrip(int row, int stripID)
+        {
+            bool hasPrev, hasCur;
+            GetRowMarkSides(row, out hasPrev, out hasCur);
+            return hasPrev ? stripID - 1 : stripID;
+        }
+
+        /// <summary>
+        /// 이어하기 시 마지막 ITS 기록 strip 에 더할 값 (다음 기준 stripID = 마지막 기록 + 이 값 + 1)
+        /// </summary>
+        public int GetResumeOffset(int row)
+        {
+            bool hasPrev, hasCur;
+            GetRowMarkSides(row, out hasPrev, out hasCur);
+            return hasPrev ? 1 : 0;
+        }
+
+        /// <summary>
+        /// 이번 사이클에 완성된 strip 의 ITS 레코드(사내 ID, 고객 ID)를 기록한다.
+        /// </summary>
+        private bool WriteITSCompleted(int row, bool isEnd, DateTime markingTime)
+        {
+            int strip = GetCompletedStrip(row, ptrMain.model.stripID);
+            string location = ptrMain.GetRowMarkingLocation(row);
+
+            string inter = MainWindow.lots[row] + " " + strip.ToString("D4");
+            // GetCustomIDString 은 '고객1 우' 이면 내부에서 −1 하므로, 완성 strip 번호가 나오도록 보정해서 넘긴다.
+            int custArg = location.Contains("고객1 우") ? strip + 1 : strip;
+            string custom = GetCustomIDString(0, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[row], custArg, location, row, markingTime);
+
+            return WriteITSOneShot(inter, custom, isEnd, row);
+        }
+
+        /// <summary>
+        /// lot 종료(EOL) 기록. 각 열 lot 파일에 EOL 을 남기고, 첫 사이클의 미완성 strip(시작번호 − 1) 레코드는 삭제한다.
+        /// (첫 strip 레코드는 첫 사이클 직후 중단 시 이어하기 번호 계산을 위해 기록해 두었다가 EOL 시점에 지운다.)
+        /// </summary>
+        private bool WriteITSEnd()
+        {
+            for (int i = 0; i < ptrMain.model.modelInformation.StripIter.Count; i++)
+            {
+                bool hasPrev, hasCur;
+                GetRowMarkSides(i, out hasPrev, out hasCur);
+                // 앞/뒤 strip 에 나눠 찍히는 경우에만 첫 strip 이 미완성
+                int removeStrip = (hasPrev && hasCur) ? ptrMain.model.fisrtID - 1 : -1;
+
+                int retry = 0;
+                while (!WriteITSInfo(MainWindow.lots[i], "", true, removeStrip))
+                {
+                    retry++;
+                    if (retry == 3)
+                    {
+                        return false;
+                    }
+                    Thread.Sleep(1000);
+                }
+            }
+            return true;
+        }
+
+        /// <summary>마지막 완성 strip 을 작업이력(DB)에 저장 (ITS 마지막 기록과 동일 값)</summary>
+        public void SaveCompletedStrip(int stripID)
+        {
+            try
+            {
+                if (isExistLotFromDB(ptrMain.model.lot, ptrMain.model.modelInformation.Name)) UpdateWorkHistory(ptrMain.model.lot, ptrMain.model.modelInformation.Name, stripID, ptrMain.model.historyID);
+                else CreateWorkHistory(ptrMain.model.lot, ptrMain.model.modelInformation.Name, stripID, ptrMain.model.historyID);
+            }
+            finally
+            {
+                if (ConnectFactory.DBConnector() != null)
+                {
+                    ConnectFactory.DBConnector().CloseCmd();
+                }
+            }
+        }
+
+        /// <summary>ITS 레코드 한 줄에서 사내 ID 의 strip 번호(끝 4자리)를 읽는다. 실패 시 -1</summary>
+        private static int ParseITSStrip(string line)
+        {
+            try
+            {
+                string[] info = line.Split(',');
+                if (info.Length < 2 || info[1].Length < 4) return -1;
+                int strip;
+                if (int.TryParse(info[1].Substring(info[1].Length - 4, 4), out strip)) return strip;
+            }
+            catch { }
+            return -1;
+        }
+        #endregion
 
         private string[] ConvertInternal1ID(string[] inter, string markingLocation)
         {
@@ -2390,6 +2600,9 @@ namespace HDS_ID_Marker
                 //카메라 위치로 이동
                 for (int i = ptrMain.model.modelInformation.StripIter.Count - 1; i >= 0; i--)
                 {
+                    // 열 방향(정/역)에 맞는 검사 ROI
+                    MarkSet topSet = ptrMain.GetTopSet(i);
+                    MarkSet botSet = ptrMain.GetBotSet(i);
                     isFailReading1[i] = false;
                     isFailReading2[i] = false;
 
@@ -2413,21 +2626,21 @@ namespace HDS_ID_Marker
 
                     if (type == 1 || type == 3) // 상부할때
                     {
-                        ptrMain.workSettingWindow.topHRControl.customMarks.Sort(new RefComparer());
+                        topSet.customMarks.Sort(new RefComparer());
                         string roi = "";
-                        if (ptrMain.workSettingWindow.topHRControl.customMarks.Count == 0)
+                        if (topSet.customMarks.Count == 0)
                         {
-                            roi = ptrMain.workSettingWindow.topHRControl.interMarks[0].roi;
+                            roi = topSet.interMarks[0].roi;
                         }
                         else
                         {
-                            roi = ptrMain.workSettingWindow.topHRControl.customMarks[0].roi;
-                            if (ptrMain.workSettingWindow.topHRControl.customMarks[0].reference == "고객1")
+                            roi = topSet.customMarks[0].roi;
+                            if (topSet.customMarks[0].reference == "고객1")
                             {
                                 CheckID[i] = cust_id1[i];
                                 customType = 0;
                             }
-                            else if (ptrMain.workSettingWindow.topHRControl.customMarks[0].reference == "고객2")
+                            else if (topSet.customMarks[0].reference == "고객2")
                             {
                                 CheckID[i] = cust_id2[i];
                                 customType = 1;
@@ -2437,10 +2650,10 @@ namespace HDS_ID_Marker
                         bms = ptrMain.PCSInstance.Visions[0].GetTopMarkBmpToROI(roi);
                         TactLog.Add($"C{i + 1}_TOP_GRAB", tTact);
                         var roirect = ptrMain.PCSInstance.Visions[0].GetRoiRect();
-                        markFormat = ptrMain.workSettingWindow.topHRControl.customMarks[0].format;
+                        markFormat = topSet.customMarks[0].format;
                         System.Drawing.Point dummyDataMatrixCenter;
                         tTact = TactLog.Now;
-                        var result = ptrMain.dataMatrix.Decode(bms, "TOP", 0, MainWindow.ri.TopCamResolution, out dummyDataMatrixCenter);
+                        var result = ptrMain.dataMatrix.Decode(bms, "TOP", i, MainWindow.ri.TopCamResolution, out dummyDataMatrixCenter);
                         TactLog.Add($"C{i + 1}_TOP_DECODE1", tTact);
 
                         if (Setting.General.TestMode == "1")
@@ -2524,28 +2737,29 @@ namespace HDS_ID_Marker
 
                     if (type == 2 || type == 3)
                     {
-                        ptrMain.workSettingWindow.botHRControl.customMarks.Sort(new RefComparer());
+                        botSet.customMarks.Sort(new RefComparer());
                         string roi = "";
-                        if (ptrMain.workSettingWindow.botHRControl.customMarks.Count == 0)
+                        if (botSet.customMarks.Count == 0)
                         {
-                            roi = ptrMain.workSettingWindow.botHRControl.interMarks[0].roi;
+                            roi = botSet.interMarks[0].roi;
                         }
                         else
                         {
-                            roi = ptrMain.workSettingWindow.botHRControl.customMarks[0].roi;
-                            if (ptrMain.workSettingWindow.botHRControl.customMarks[0].reference == "고객1")
+                            roi = botSet.customMarks[0].roi;
+                            if (botSet.customMarks[0].reference == "고객1")
                                 CheckID[i] = cust_id1[i];
-                            else if (ptrMain.workSettingWindow.botHRControl.customMarks[0].reference == "고객2")
+                            else if (botSet.customMarks[0].reference == "고객2")
                                 CheckID[i] = cust_id2[i];
                         }
 
                         tTact = TactLog.Now;
                         bms = ptrMain.PCSInstance.Visions[1].GetBotMarkBmpToROI(roi);
                         TactLog.Add($"C{i + 1}_BOT_GRAB", tTact);
-                        markFormat = ptrMain.workSettingWindow.topHRControl.customMarks[0].format;
+                        // 하부 디코딩은 하부 마크 포맷 사용 (하부 고객 마크가 없으면 기존처럼 상부 포맷)
+                        markFormat = botSet.customMarks.Count > 0 ? botSet.customMarks[0].format : topSet.customMarks[0].format;
                         System.Drawing.Point dummyDataMatrixCenter;
                         tTact = TactLog.Now;
-                        var result = ptrMain.dataMatrix.Decode(bms, "BOT", 0, MainWindow.ri.BotCamResolution, out dummyDataMatrixCenter);
+                        var result = ptrMain.dataMatrix.Decode(bms, "BOT", i, MainWindow.ri.BotCamResolution, out dummyDataMatrixCenter);
                         TactLog.Add($"C{i + 1}_BOT_DECODE1", tTact);
                         // Save Mark image
                         //try
@@ -2691,6 +2905,9 @@ namespace HDS_ID_Marker
                 int customType = 0;
                 for (int i = colCount - 1; i >= 0; i--)
                 {
+                    // 열 방향(정/역)에 맞는 검사 ROI
+                    MarkSet topSet = ptrMain.GetTopSet(i);
+                    MarkSet botSet = ptrMain.GetBotSet(i);
                     string checkID = null;
 
                     long tTact = TactLog.Now;
@@ -2713,21 +2930,21 @@ namespace HDS_ID_Marker
 
                     if (type == 1 || type == 3) // 상부
                     {
-                        ptrMain.workSettingWindow.topHRControl.customMarks.Sort(new RefComparer());
+                        topSet.customMarks.Sort(new RefComparer());
                         string roi = "";
-                        if (ptrMain.workSettingWindow.topHRControl.customMarks.Count == 0)
+                        if (topSet.customMarks.Count == 0)
                         {
-                            roi = ptrMain.workSettingWindow.topHRControl.interMarks[0].roi;
+                            roi = topSet.interMarks[0].roi;
                         }
                         else
                         {
-                            roi = ptrMain.workSettingWindow.topHRControl.customMarks[0].roi;
-                            if (ptrMain.workSettingWindow.topHRControl.customMarks[0].reference == "고객1")
+                            roi = topSet.customMarks[0].roi;
+                            if (topSet.customMarks[0].reference == "고객1")
                             {
                                 checkID = cust_id1[i];
                                 customType = 0;
                             }
-                            else if (ptrMain.workSettingWindow.topHRControl.customMarks[0].reference == "고객2")
+                            else if (topSet.customMarks[0].reference == "고객2")
                             {
                                 checkID = cust_id2[i];
                                 customType = 1;
@@ -2747,25 +2964,25 @@ namespace HDS_ID_Marker
                             Bmp = bms,
                             RoiRect = roirect,
                             CheckID = checkID,
-                            MarkFormat = ptrMain.workSettingWindow.topHRControl.customMarks[0].format,
+                            MarkFormat = topSet.customMarks[0].format,
                             CustomType = customType
                         });
                     }
 
                     if (type == 2 || type == 3) // 하부
                     {
-                        ptrMain.workSettingWindow.botHRControl.customMarks.Sort(new RefComparer());
+                        botSet.customMarks.Sort(new RefComparer());
                         string roi = "";
-                        if (ptrMain.workSettingWindow.botHRControl.customMarks.Count == 0)
+                        if (botSet.customMarks.Count == 0)
                         {
-                            roi = ptrMain.workSettingWindow.botHRControl.interMarks[0].roi;
+                            roi = botSet.interMarks[0].roi;
                         }
                         else
                         {
-                            roi = ptrMain.workSettingWindow.botHRControl.customMarks[0].roi;
-                            if (ptrMain.workSettingWindow.botHRControl.customMarks[0].reference == "고객1")
+                            roi = botSet.customMarks[0].roi;
+                            if (botSet.customMarks[0].reference == "고객1")
                                 checkID = cust_id1[i];
-                            else if (ptrMain.workSettingWindow.botHRControl.customMarks[0].reference == "고객2")
+                            else if (botSet.customMarks[0].reference == "고객2")
                                 checkID = cust_id2[i];
                         }
 
@@ -2779,8 +2996,8 @@ namespace HDS_ID_Marker
                             IsTop = false,
                             Bmp = bms,
                             CheckID = checkID,
-                            // 기존 CheckMarks2 와 동일하게 상부 포맷 사용
-                            MarkFormat = ptrMain.workSettingWindow.topHRControl.customMarks[0].format,
+                            // 하부 디코딩은 하부 마크 포맷 사용 (하부 고객 마크가 없으면 기존처럼 상부 포맷)
+                            MarkFormat = botSet.customMarks.Count > 0 ? botSet.customMarks[0].format : topSet.customMarks[0].format,
                             CustomType = customType
                         });
                     }
@@ -2826,7 +3043,7 @@ namespace HDS_ID_Marker
             System.Drawing.Point dummyDataMatrixCenter;
 
             long tTact = TactLog.Now;
-            var result = ptrMain.dataMatrix.Decode(job.Bmp, side, 0, resolution, out dummyDataMatrixCenter);
+            var result = ptrMain.dataMatrix.Decode(job.Bmp, side, i, resolution, out dummyDataMatrixCenter);
             TactLog.Add($"C{i + 1}_{side}_DECODE1", tTact);
 
             if (result != null)

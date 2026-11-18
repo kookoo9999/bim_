@@ -594,6 +594,7 @@ namespace HDS_ID_Marker
                     return;
                 }
                 MainWindow.lots = new string[ptrMain.model.modelInformation.StripIter.Count];
+                MainWindow.orients = new bool[ptrMain.model.modelInformation.StripIter.Count];
                 ptrMain.teachingManagement.alignOffset = new Point[ptrMain.model.modelInformation.StripIter.Count];
                 ptrMain.teachingManagement.motionOffsetBot = new Point[ptrMain.model.modelInformation.StripIter.Count];
                 ptrMain.teachingManagement.motionOffsetTop = new Point[ptrMain.model.modelInformation.StripIter.Count];
@@ -718,6 +719,7 @@ namespace HDS_ID_Marker
                         ptrMain.workSettingControl.imgAlign.Source = ptrMain.teachingManagement.LoadAlignData(alignPath);
                     break;
                 case "PC":
+                    ptrMain.PCSInstance.Visions[0].SelectAlignBank(0);
                     if (File.Exists(alignPath))
                     {
                         ptrMain.workSettingWindow.imgtemplate.Source = ptrMain.teachingManagement.LoadAlignData2(alignPath, 1);
@@ -725,6 +727,10 @@ namespace HDS_ID_Marker
 
                     if (File.Exists(align2Path))
                         ptrMain.workSettingWindow.imgAlign.Source = ptrMain.teachingManagement.LoadAlignData2(align2Path,2);
+
+                    // 역방향 얼라인 템플릿 (뱅크 1) 및 역방향 티칭 기준점 스냅샷
+                    ptrMain.teachingManagement.LoadReverseAlignData(ptrMain.model.modelInformation.modelPath);
+                    ptrMain.model.markingInformation.LoadReverseInfo(ptrMain.model.modelInformation.modelPath);
                     break;
             }
             ptrMain.workInfoViewer.lblModel.Content = ptrMain.model.modelInformation.Name;

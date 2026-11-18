@@ -77,6 +77,30 @@
                             </Grid>
                             <Grid Margin="15" >
                                 <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
+                                       ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="제품 방향 (정/역)" Background="#0C1E34">
+                                    <StackPanel Margin="10" Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton x:Name="rbOrientFwd" GroupName="OrientGroup" IsChecked="True" Style="{StaticResource MaterialDesignUserForegroundRadioButton}" Content="  정방향" FontSize="25" Foreground="White"/>
+                                            <Separator Style="{StaticResource MaterialDesignDarkSeparator}" Width="60"/>
+                                            <RadioButton x:Name="rbOrientRev" GroupName="OrientGroup" Style="{StaticResource MaterialDesignUserForegroundRadioButton}" Content="  역방향(180°)" FontSize="25" Foreground="White"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                            <Label Content="티칭 열 : " Foreground="White" FontSize="25" VerticalContentAlignment="Center"/>
+                                            <ComboBox x:Name="cbTeachRow" FontSize="25" Width="100" Style="{StaticResource ComboBoxStyle1}" SelectedIndex="0">
+                                                <ComboBoxItem Content="1열"/>
+                                                <ComboBoxItem Content="2열"/>
+                                                <ComboBoxItem Content="3열"/>
+                                                <ComboBoxItem Content="4열"/>
+                                            </ComboBox>
+                                            <Button x:Name="btnMoveTeachRow" Height="45" Margin="10 0 0 0" ToolTip="선택한 티칭 열의 카메라 위치로 이동 (기준점 + 열 간격)" Background="#16365d" Foreground="White" FontSize="18" Content="티칭 열 이동"/>
+                                        </StackPanel>
+                                        <Button x:Name="btnCopyFwdToRev" Height="45" Margin="0 10 0 0" IsEnabled="False" ToolTip="정방향 마크/얼라인의 파라미터를 역방향으로 복사 (각도 +180°, 좌/우 반전). ROI 위치만 맞추고 저장하세요." Background="#16365d" Foreground="White" FontSize="18" Content="정방향 파라미터 복사 (+180°)"/>
+                                        <TextBlock x:Name="tbReverseStatus" Margin="0 10 0 0" FontSize="20" Foreground="LightGray" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Expander>
+                            </Grid>
+                            <Grid Margin="15" >
+                                <Expander  materialDesign:ExpanderAssist.HeaderFontSize="35" Style="{StaticResource  MaterialDesignExpander}"
            ScrollViewer.VerticalScrollBarVisibility="Visible" Foreground="LightGoldenrodYellow" Margin="0 0 0 0" HorizontalAlignment="Stretch" Header="Grid View" Background="#0C1E34">
                                     <Grid Margin="10">
                                         <StackPanel Orientation="Horizontal">

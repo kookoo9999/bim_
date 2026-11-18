@@ -253,8 +253,9 @@ namespace HDS_ID_Marker.SubWindow
 
                     m_lastStripID = Convert.ToInt32(lastInfo[1].Substring(10, 4));
                     
-                    if (ptrMain.model.markingInformation.customerInformation.MarkingLocation.Contains("고객1 우"))
-                        m_lastStripID += 1;
+                    // ITS 는 완성 strip 을 기록하므로, 이전 strip 에 찍히는 마크가 있는 경우(완성 = 기준번호 − 1) 다음 시작번호를 1 더 진행
+                    // (기존 "고객1 우" 조건을 정/역 공통 규칙으로 일반화. 1열 lot 파일 기준이므로 1열 방향 사용)
+                    m_lastStripID += ptrMain.workManagement.GetResumeOffset(0);
 
                     m_registTime = Convert.ToDateTime(lastInfo[3]);
                 }
