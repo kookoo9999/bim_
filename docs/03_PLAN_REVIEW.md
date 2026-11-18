@@ -146,3 +146,74 @@ MarkRecipe GetRecipe(int row, Surface s)   // A: 원본, B: Rotate180(A, C), Blo
 5. **시프트 검사**: 대상 제품에서 `MakringShiftCheck`를 실제로 사용하는가? (사용한다면 1.3이 1차 범위에 들어가야 함)
 6. **하부 마킹**: 이 제품은 `MarkingMethod=3`(양면)인가? 하부도 B 회전이 적용되는가?
 7. **거버**: 혼합 배열 제품의 거버에서도 `GetStripIteration`이 4열 피치를 정상으로 뽑는가?
+
+---
+
+## 6. 2차 — 답변 반영 결정사항
+
+| # | 답변 | 결정 / 설계 영향 |
+|---|---|---|
+| 1 | `AABB`, `BBAA` 등 A/B 임의 조합 | **"1열 = A" 가정 전면 제거.** 레이아웃은 4자리 A/B 문자열(검증: 길이=`StripIter.Count`, 문자 ∈ {A,B}). `refCol(v)` = 해당 Variant 최초 등장 열 (BBAA면 B=0, A=2). A 정의 = **기존 모델이 티칭된 방향(FOV 우상단=얼라인2)** → 기존 데이터 전부 `A`로 하위호환 |
+| 2 | FOV에는 한 열만 보임 → A/B 각각 티칭 | §2 자동생성안 **철회**, 계획서의 별도 티칭 방식 채택. 대신 §1.4 결합 문제를 아래 6.1로 해소 |
+| 3 | 순수 180° 회전이나 자동생성은 무리 | 별도 티칭 확정. (선택) "A→B 초기값 생성" 버튼 정도만 편의기능으로 고려, 필수 아님 |
+| 4 | 첫 사이클 폐기, 사이클 내 ID 동일·끝번호만 변경 | 6.2 참조 — 현행 문자열 규칙 그대로, **열별 좌/우 스왑**만 추가 |
+| 5 | 시프트 검사 미사용 | 범위 제외 유지. 단 레이아웃에 B 포함 + `MakringShiftCheck=true`면 **시작 차단** 가드 1줄 |
+| 6 | 양면, 하부도 AABB | 상·하부 모두 Variant별 레시피/블록/검사 ROI. `BotMarkY`도 Variant별 |
+| 7 | 거버 정상 추출 | `StripIter` 변경 없음 |
+
+### 6.1 Variant별 모션 기준점 (권장)
+
+BBAA처럼 1열이 B일 수 있으므로 "A 저장 시에만 `TopAlignY` 갱신"은 성립하지 않음. 각 Variant가 **자기 모션 기준점을 따로** 갖게 하면 A/B 결합이 사라짐.
+
+```
+저장 시:   BaseTopY[v] = 현재 Y − StripIter[refCol(v)]     (BaseBotY[v] 동일)
+런타임:    열 i 이동 = BaseTopY[variant(i)] + StripIter[i] (+CamToY)
+티칭 가드: |현재 Y − (기존 기준 + StripIter[refCol(v)])| 확인 → 기존 `posY > 90` 대체
+```
+
+- A 재티칭이 B에 영향 없음(각 ROI 세트와 그 촬상 위치가 한 쌍으로 저장됨).
+- 저장 위치: `marking_info`에 `TopAlignY_B`, `TopMarkY_B`, `BotMarkY_B` 추가(또는 variant 행 분리). 기존 컬럼 = A.
+- 티칭창에 "선택 Variant 기준열로 이동" 버튼(`StripIter[refCol(v)]` 반영) 추가.
+- 얼라인 기울기 계산은 실제 위치 사용: `ΔY = (BaseTopY[v_last] + StripIter[last] + roiCY_last·res) − (BaseTopY[v_first] + roiCY_first·res)` 기반 (§3.1과 통합).
+
+### 6.2 strip ID 문자열 조합 위치 (현행)
+
+사이클 내 기준 `stripID`(=S)는 4열 공통, 마크 위치가 **우(=이전 스트립)** 이면 끝번호만 −1:
+
+| 함수 | 위치 | 규칙 |
+|---|---|---|
+| `GetInternal1IDString` | `WorkManagement.cs:2921` | `"사내1 우"` 포함 → S−1 |
+| `GetCustomIDString` | `:2986-2989` | `"고객1 우"`/`"고객2 우"` 포함 → S−1 (이후 포맷 조합) |
+| `ConvertInternal1ID` (ITS 기록용) | `:2051` | `"사내1 좌, 고객1 우"` → −1, `"사내1 우, 고객1 좌"` → +1 (사내ID를 고객ID와 같은 물리 스트립으로 맞춤) |
+| `SaveWorkHistory(string,string)` | `:93` | 위와 동일 규칙으로 DB 이력 stripID 산출 (`Int1_id[0]` 사용 → **0열 Variant 문자열**로 호출해야 함) |
+| 미리보기 `GetMarkData` | `MainWindow.xaml.cs:638` | 위 두 함수 호출 |
+
+→ `GetRowMarkingLocation(i)`(B열이면 좌↔우 스왑) 하나로 위 호출부 모두 해결. 사이클 내 S 동일 유지라는 기존 원칙과 일치.
+
+**ITS 결과 (S=10 사이클 예, `"사내1 좌, 고객1 우"` 고객):**
+
+| 열 | 인쇄: 좌(S) / 우(S−1) | ITS 레코드 (lot 파일은 열별 `lots[i]`) |
+|---|---|---|
+| A | 사내1=0010 / 고객1=0009 | `0009, 0009` (완성된 스트립) |
+| B | 고객1=0010 / 사내1=0009 | `0010, 0010` (사내1은 다음 사이클에 인쇄) |
+
+- 첫 사이클: A열 lot 파일엔 미완성 strip 1 레코드가 남고, B열 lot 파일엔 strip 1 레코드 자체가 없음(첫 레코드=strip 2).
+- 마지막: A열은 마지막 strip이 미기록, B열은 마지막 strip이 **사내1 미인쇄 상태로 기록**됨.
+- 이는 기존 `"사내1 우, 고객1 좌"` 고객 모델에서 이미 발생하는 동작과 동일 → ITS 쪽 수용 여부만 확인 필요.
+
+### 6.3 1열이 B일 때 추가 점검 지점
+
+| 지점 | 근거 | 조치 |
+|---|---|---|
+| 첫 사이클 RightOnly 얼라인 | `TeachingManagement.cs:290` (`number==2` 고정) | 0열/말열 Variant의 **화면 우측** 얼라인 번호·템플릿 선택 (A: 2번, B: 1번) |
+| 피딩 보정 | `WorkManagement.cs:1456` `alignOffset[0].X` | 변경 불필요(변위값) |
+| 이력 저장 | `SaveWorkHistory(Int1_id[0], …)` | 0열 Variant 문자열 사용 |
+| AOI ID 리더 | `WorkManagement.cs:1162` `IDReaders[0].ReadID()` | **질문 A** |
+| 레이저 프로젝트 로드 | `LoadProjectTop/Bot` | A/B 블록군 모두 등록(1열 Variant와 무관) |
+
+### 6.4 추가 질문
+
+- **A. AOI ID 리더**(`UseAOIMark`): 리더가 읽는 AOI 마크가 특정 열/위치 고정인가? 1열이 B가 되면 마크가 180° 반대편으로 가서 리더 시야를 벗어나는지?
+- **B. ITS**: 6.2 표의 B열 동작(레코드 strip 번호가 A열보다 1 큼, 마지막 strip 미완성 기록)이 ITS/MES 측에서 문제 없는지? 기존 `"사내1 우, 고객1 좌"` 고객 모델 운영 실적이 있으면 그걸로 갈음 가능.
+- **C. 티칭 정지 위치**: A/B 티칭 시 스테이지 Y가 열 피치만큼만 다르고 동일한 상대 위치인지(6.1 Variant별 기준점으로 가도 될지, 아니면 공통 기준점 + B 위치 잠금을 선호하는지)?
+- **D. 레이저 블록 상한**: Keyence 모델의 프로그램당 블록 수 상한 (A/B 블록군 오프셋 20 사용 가능 여부) — 현재 `index`는 얼라인 ROI까지 포함해 매겨짐.
