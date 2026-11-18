@@ -147,9 +147,8 @@ string GetRowMarkingLocation(int row) =>
 | 위치 | 내용 |
 |---|---|
 | `WorkManagement.MarkingPC` `:1229-1231` | 열별 `Cust1/Cust2/Int1` ID 생성 |
-| `:1264`, `:1333`, `:1396` | 열별 `WriteITSOneShot(ConvertInternal1ID(…))` → 열 i의 문자열로 변환 |
-| `:1273`, `:1340`, `:1403` | `SaveWorkHistory(Int1_id[0], …)` → **0열 문자열** |
-| `:1553` | 종료 시 `WriteITS(ConvertInternal1ID(Int1_id, …))` → 열별로 변환하도록 수정 |
+| `:1264`, `:1333`, `:1396` / `:1273`, `:1340`, `:1403` | ITS 기록·작업 이력 저장 → **6.1의 완성 시점 규칙**(`GetITSRecord`) |
+| `WorkHistoryWindow.GetLastWorkHistory` `:250-256` | 이어하기 시작번호 계산 → 6.1 참조 |
 | `MainWindow.GetMarkData` `:638-645` | 작업 시작 전 ID 미리보기 |
 | `MarkingTEST` (`:1713~`) | 같은 방식으로 적용(하드웨어 없이 검증할 때 사용) |
 
