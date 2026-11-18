@@ -208,7 +208,7 @@ BBAA처럼 1열이 B일 수 있으므로 "A 저장 시에만 `TopAlignY` 갱신"
 | 첫 사이클 RightOnly 얼라인 | `TeachingManagement.cs:290` (`number==2` 고정) | 0열/말열 Variant의 **화면 우측** 얼라인 번호·템플릿 선택 (A: 2번, B: 1번) |
 | 피딩 보정 | `WorkManagement.cs:1456` `alignOffset[0].X` | 변경 불필요(변위값) |
 | 이력 저장 | `SaveWorkHistory(Int1_id[0], …)` | 0열 Variant 문자열 사용 |
-| AOI ID 리더 | `WorkManagement.cs:1162` `IDReaders[0].ReadID()` | **질문 A** |
+| AOI ID 리더 | `WorkManagement.cs:1173` `IDReaders[0].ReadID()` | **질문 A** |
 | 레이저 프로젝트 로드 | `LoadProjectTop/Bot` | A/B 블록군 모두 등록(1열 Variant와 무관) |
 
 ### 6.4 추가 질문
