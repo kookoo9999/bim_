@@ -27,6 +27,7 @@ namespace HDS_ID_Marker.SubWindow
 
         int m_lastStripID = 0;
         int m_curStripID = 0;
+        int m_lastITSStrip = -1;   // ITS 마지막 기록(완성) strip 번호
         DateTime m_registTime;
 
         public WorkHistoryWindow(MainWindow main)
@@ -70,6 +71,9 @@ namespace HDS_ID_Marker.SubWindow
             this.gridMain.Children.Add(smokeBorder);
             {
                 string msg = String.Format("현재 Strip ID = {0} 부터, \n이어서 진행 하시겠습니까 ? ", m_curStripID);
+                // ITS 는 완성 strip 을 기록하므로 기준 번호와 기록 번호의 관계를 함께 안내
+                if (m_lastITSStrip >= 0)
+                    msg += String.Format("\n(ITS 마지막 완성 strip : {0} → 이번 사이클 완성 strip : {1})", m_lastITSStrip, ptrMain.workManagement.GetCompletedStrip(0, m_curStripID));
                 MaterialAlertDlg alertDlg = new MaterialAlertDlg(msg);
                 alertDlg.ShowDialog();
                 result = alertDlg.DialogResult.Value;
@@ -252,6 +256,7 @@ namespace HDS_ID_Marker.SubWindow
                     var lastInfo = lotInfo.Last();
 
                     m_lastStripID = Convert.ToInt32(lastInfo[1].Substring(10, 4));
+                    m_lastITSStrip = m_lastStripID;
                     
                     // ITS 는 완성 strip 을 기록하므로, 이전 strip 에 찍히는 마크가 있는 경우(완성 = 기준번호 − 1) 다음 시작번호를 1 더 진행
                     // (기존 "고객1 우" 조건을 정/역 공통 규칙으로 일반화. 1열 lot 파일 기준이므로 1열 방향 사용)

@@ -282,7 +282,8 @@ namespace HDS_ID_Marker
 
             int stripID = ptrMain.model.stripID;
 
-            if (ptrMain.model.markingInformation.customerInformation.MarkingLocation.Contains("고객1 우")) stripID -= 1;
+            // 열 방향(정/역)에 맞는 위치 문자열 기준 (역방향 열은 좌/우 반전)
+            if (ptrMain.GetRowMarkingLocation(colStrip).Contains("고객1 우")) stripID -= 1;
 
             string path = ptrMain.model.modelInformation.modelPath + ptrMain.model.lot.ToString("D9") + "/" + type + "/" + MainWindow.lots[colStrip] + "_" + stripID + "_" + colStrip + "(" + (ptrMain.model.historyID + colStrip) + ")" + "_" + DateTime.Now.ToString("yyMMdd_HHmmss") + ".jpg";
 

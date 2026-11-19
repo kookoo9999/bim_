@@ -585,6 +585,8 @@ namespace HDS_ID_Marker
             ptrMain.model = lbModel.SelectedItem as Data.Model;
             GerberLoader gerber = new GerberLoader();
             ptrMain.model.modelInformation.StripIter = gerber.GetStripIteration(ptrMain.model.modelInformation.GerberPath);
+            // 모델 전환 시 이전 lot 의 열 방향이 남지 않도록 초기화 (MotionUse 여부와 무관)
+            MainWindow.orients = new bool[Math.Max(4, ptrMain.model.modelInformation.StripIter != null ? ptrMain.model.modelInformation.StripIter.Count : 4)];
             if (Setting.Device.MotionUse) // 테스트 환경 off
             {               
                 if (ptrMain.model.modelInformation.StripIter == null)
@@ -594,7 +596,6 @@ namespace HDS_ID_Marker
                     return;
                 }
                 MainWindow.lots = new string[ptrMain.model.modelInformation.StripIter.Count];
-                MainWindow.orients = new bool[ptrMain.model.modelInformation.StripIter.Count];
                 ptrMain.teachingManagement.alignOffset = new Point[ptrMain.model.modelInformation.StripIter.Count];
                 ptrMain.teachingManagement.motionOffsetBot = new Point[ptrMain.model.modelInformation.StripIter.Count];
                 ptrMain.teachingManagement.motionOffsetTop = new Point[ptrMain.model.modelInformation.StripIter.Count];

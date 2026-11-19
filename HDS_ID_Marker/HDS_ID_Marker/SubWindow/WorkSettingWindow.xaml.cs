@@ -256,8 +256,8 @@ namespace HDS_ID_Marker.SubWindow
             vision.resultToAlignToROI(ptrMain.model.modelInformation.modelPath + TeachingManagement.AlignFileName(1, true), align.roi);
             vision.resultToAlign2ToROI(ptrMain.model.modelInformation.modelPath + TeachingManagement.AlignFileName(2, true), align2.roi);
 
-            imgAlign.Source = vision.AlignTemplateBmp.Clone();
-            imgtemplate.Source = vision.AlignTemplateBmp2.Clone();
+            imgtemplate.Source = vision.AlignTemplateBmp.Clone();
+            imgAlign.Source = vision.AlignTemplateBmp2.Clone();
             return true;
         }
 
@@ -861,8 +861,9 @@ namespace HDS_ID_Marker.SubWindow
                 }
                 ptrMain.PCSInstance.Visions[0].resultToAlign2ToROI(path2, roi2);
 
-                ptrMain.workSettingWindow.imgAlign.Source = ptrMain.PCSInstance.Visions[0].AlignTemplateBmp.Clone();
-                ptrMain.workSettingWindow.imgtemplate.Source = ptrMain.PCSInstance.Visions[0].AlignTemplateBmp2.Clone();
+                // 모델 로드 시와 같은 배치 (imgtemplate = Align1, imgAlign = Align2)
+                ptrMain.workSettingWindow.imgtemplate.Source = ptrMain.PCSInstance.Visions[0].AlignTemplateBmp.Clone();
+                ptrMain.workSettingWindow.imgAlign.Source = ptrMain.PCSInstance.Visions[0].AlignTemplateBmp2.Clone();
 
                 double posTopX = MainWindow.MCS2.GetActPos(0);
                 // 기준점은 1열 기준으로 환산 (정방향을 1열이 아닌 열에서 티칭한 경우 열 간격만큼 빼서 저장)
@@ -1083,6 +1084,16 @@ namespace HDS_ID_Marker.SubWindow
                 return;
             }
 
+            // 블록 번호 상한 : 역방향 블록은 20 + index 로 등록되므로 정/역 혼합 사용 시 방향별 ROI(얼라인 포함) 20개 이하
+            MainHRControl saveCtrl = (m_mode == "top") ? topHRControl : botHRControl;
+            if ((reverse || saveCtrl.GetMarkSet(true).ObjectCount > 0) &&
+                (saveCtrl.GetMarkSet(false).ObjectCount > ReverseLayout.RevBlockBase || saveCtrl.AllObjectCount() > ReverseLayout.RevBlockBase))
+            {
+                MaterialWarningDlg warningDlg = new MaterialWarningDlg(string.Format("정/역 혼합 사용 시 방향별 ROI(얼라인 포함)는 {0}개 이하만 가능합니다.\nROI 수를 확인하세요.", ReverseLayout.RevBlockBase));
+                warningDlg.ShowDialog();
+                return;
+            }
+
             // 역방향 최초 저장 전 모델 폴더 백업
             if (reverse && double.IsNaN(markingInfo.RevBaseTopY) && double.IsNaN(markingInfo.RevBaseBotY))
                 BackupModelFolderForReverse();
@@ -1101,7 +1112,8 @@ namespace HDS_ID_Marker.SubWindow
                     }
                     else
                     {
-                        // 역방향 : 템플릿만 저장, 기준점 스냅샷 기록 (모션 좌표는 변경하지 않음)
+                        // 역방향 : DB 저장 확인 후 템플릿 저장, 기준점 스냅샷 기록 (모션 좌표는 변경하지 않음)
+                        if (!VerifyReverseSaved(topHRControl)) return;
                         if (Setting.Device.MotionUse) isSaved = SaveReverseAlignTemplate();
                         if (isSaved)
                         {
@@ -1119,24 +1131,11 @@ namespace HDS_ID_Marker.SubWindow
                     }
                     else
                     {
+                        if (!VerifyReverseSaved(botHRControl)) return;
                         markingInfo.RevBaseBotY = markingInfo.BotMarkY;
                         markingInfo.SaveReverseInfo(ptrMain.model.modelInformation.modelPath);
                     }
                     break;
-            }
-
-            // 역방향 저장 확인 : DB 에 다시 읽힌 건수가 화면 ROI 수와 다르면 저장 실패
-            // (DB orientation 컬럼에 'top_r' / 'bot_r' (5자)가 들어가지 않는 경우 등)
-            if (reverse)
-            {
-                MainHRControl ctrl = (m_mode == "top") ? topHRControl : botHRControl;
-                if (ctrl.GetMarkSet(true).ObjectCount != ctrl.CanvasObjectCount())
-                {
-                    MainWindow.logger.WriteLog(LogType.Exception, string.Format("[티칭] 역방향 저장 건수 불일치 : DB {0}, 화면 {1}", ctrl.GetMarkSet(true).ObjectCount, ctrl.CanvasObjectCount()));
-                    MaterialWarningDlg warningDlg = new MaterialWarningDlg("역방향 티칭 데이터 일부가 DB에 저장되지 않았습니다.\nDB orientation 컬럼 길이(5자 이상)를 확인하세요.");
-                    warningDlg.ShowDialog();
-                    isSaved = false;
-                }
             }
 
             // 정방향 재티칭으로 기준점이 허용오차 이상 바뀌면 역방향 재티칭 안내
@@ -1168,6 +1167,23 @@ namespace HDS_ID_Marker.SubWindow
             CaptureTeachingScreen();
         }
 
+        /// <summary>
+        /// 역방향 저장 확인 : DB 에서 다시 읽은 건수가 화면 ROI 수와 다르면 저장 실패로 보고 중단한다.
+        /// (DB orientation 컬럼에 'top_r' / 'bot_r' (5자)가 들어가지 않는 경우 등) 실패 시 Reverse.ini 와 레이저 프로그램은 갱신하지 않는다.
+        /// </summary>
+        private bool VerifyReverseSaved(MainHRControl ctrl)
+        {
+            int saved = ctrl.GetMarkSet(true).ObjectCount;
+            int drawn = ctrl.CanvasObjectCount();
+            if (saved == drawn) return true;
+
+            MainWindow.logger.WriteLog(LogType.Exception, string.Format("[티칭] 역방향 저장 건수 불일치 : DB {0}, 화면 {1}", saved, drawn));
+            MaterialWarningDlg warningDlg = new MaterialWarningDlg("역방향 티칭 데이터 일부가 DB에 저장되지 않았습니다.\nDB orientation 컬럼 길이(5자 이상)를 확인하세요.");
+            warningDlg.ShowDialog();
+            UpdateReverseStatus();
+            return false;
+        }
+
         /// <summary>정방향/역방향 고객 마크의 반전 인쇄 값이 모두 같은지</summary>
         private bool IsFlipConsistent(MainHRControl control)
         {
@@ -1180,6 +1196,11 @@ namespace HDS_ID_Marker.SubWindow
             this.Hide();
             topHRControl.ClearTextRectangle(topHRControl.textRectangles);
             botHRControl.ClearTextRectangle(botHRControl.textRectangles);
+
+            // 저장하지 않은 티칭 변경은 버리고 DB 기준으로 다시 읽는다 (정/역 모두, 정방향 화면·얼라인 뱅크 0 으로 복원)
+            // 런타임은 티칭 컨트롤의 정/역 데이터를 그대로 사용하므로 미저장 데이터가 자동 마킹에 쓰이지 않게 한다.
+            if (ptrMain.model != null) ChangeModel();
+
             // 마킹 위치 업데이트
             
             ptrMain.laserManagement.UpdateMarkInfo();

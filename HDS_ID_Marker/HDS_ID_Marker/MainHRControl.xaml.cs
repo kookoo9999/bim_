@@ -914,6 +914,7 @@ namespace HDS_ID_Marker
                         {
                             //ROI 업데이트 부분 함수로 분리 할 것
                             markParaSetting = new MarkParaSettingWindow();
+                            markParaSetting.IsReverse = m_reverse; // 역방향 티칭이면 좌/우 기본값 반전
                             CustomMark mark = customMarks.Find(x => x.index == ClickedRectangle.index);
                             markParaSetting.SetCustomMarkObj(mark);
                             var result = markParaSetting.ShowDialog();
@@ -967,6 +968,7 @@ namespace HDS_ID_Marker
                         else if (ClickedRectangle.rectangle.Stroke == Brushes.LawnGreen)
                         {
                             markParaSetting = new MarkParaSettingWindow();
+                            markParaSetting.IsReverse = m_reverse; // 역방향 티칭이면 좌/우 기본값 반전
                             InterMark mark = interMarks.Find(x => x.index == ClickedRectangle.index);
                             markParaSetting.SetInterMarkObj(mark);
                             var result = markParaSetting.ShowDialog();
@@ -1020,6 +1022,7 @@ namespace HDS_ID_Marker
                         else if (ClickedRectangle.rectangle.Stroke == Brushes.White)
                         {
                             oCRParaSetting = new OCRParaSettingWindow();
+                            oCRParaSetting.IsReverse = m_reverse; // 역방향 티칭이면 좌/우 기본값 반전
                             OCRMark mark = ocrMarks.Find(x => x.index == ClickedRectangle.index);
                             oCRParaSetting.SetOCRMarkObj(mark);
                             var result = oCRParaSetting.ShowDialog();
@@ -1467,7 +1470,9 @@ namespace HDS_ID_Marker
             {
                 if (ConnectFactory.DBConnector() != null)
                 {
-                    string strQuery = "SELECT (SELECT COUNT(*) FROM idmarker.para_alignroi) + (SELECT COUNT(*) FROM idmarker.para_custommark) + (SELECT COUNT(*) FROM idmarker.para_intermark) + (SELECT COUNT(*) FROM idmarker.para_ocrmark);";
+                    // 현재 모델 · 현재 방향(orientation)의 ROI 수만 센다 (인덱스 당김 반복 횟수)
+                    string cond = string.Format("where model='{0}' and orientation='{1}'", m_modelName, DbOrientation);
+                    string strQuery = string.Format("SELECT (SELECT COUNT(*) FROM idmarker.para_alignroi {0}) + (SELECT COUNT(*) FROM idmarker.para_custommark {0}) + (SELECT COUNT(*) FROM idmarker.para_intermark {0}) + (SELECT COUNT(*) FROM idmarker.para_ocrmark {0});", cond);
 
                     dataReader = ConnectFactory.DBConnector().ExecuteQuery19(strQuery);
 
@@ -2061,7 +2066,12 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                                 index, modelName, DbOrientation,ocrMark.markPos);
                             break;
                         case "align":
-                            strQuery = string.Format("update idmarker.para_alignroi set roi = '{2}' where `index` = '{0}' and model='{1}' and orientation='{3}'", index, modelName, roi, DbOrientation);
+                            AlignROI alignROI = alignROIs.Find(x => x.index == index);
+                            if (alignROI.number > 0)
+                                strQuery = string.Format("update idmarker.para_alignroi set roi = '{2}', size = '{4}', `number` = {5}, `match` = {6}, `type` = {7} where `index` = '{0}' and model='{1}' and orientation='{3}'",
+                                    index, modelName, roi, DbOrientation, alignROI.size, alignROI.number, alignROI.match, alignROI.type);
+                            else
+                                strQuery = string.Format("update idmarker.para_alignroi set roi = '{2}' where `index` = '{0}' and model='{1}' and orientation='{3}'", index, modelName, roi, DbOrientation);
                             break;
                     }
 
@@ -2213,7 +2223,13 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                 m.degree = ReverseLayout.RotateDegree180(src.degree);
                 m.markPos = 1 - src.markPos;
                 m.orientation = DbOrientation;
-                if (i >= 0) { customMarks[i] = m; updated++; }
+                if (i >= 0)
+                {
+                    m.roi = ResizeRoiKeepCenter(m.roi, src.roi);
+                    customMarks[i] = m;
+                    UpdateCanvasRect(m.index, m.roi, MakeGDIMatrix("pack://application:,,/Images/datamatrixcustom.png", PreviewDegree(m.degree)));
+                    updated++;
+                }
                 else
                 {
                     m.index = AllObjectCount();
@@ -2233,7 +2249,13 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                 m.degree = ReverseLayout.RotateDegree180(src.degree);
                 m.markPos = 1 - src.markPos;
                 m.orientation = DbOrientation;
-                if (i >= 0) { interMarks[i] = m; updated++; }
+                if (i >= 0)
+                {
+                    m.roi = ResizeRoiKeepCenter(m.roi, src.roi);
+                    interMarks[i] = m;
+                    UpdateCanvasRect(m.index, m.roi, MakeGDIMatrix("pack://application:,,/Images/datamatrixcustom.png", PreviewDegree(m.degree)));
+                    updated++;
+                }
                 else
                 {
                     m.index = AllObjectCount();
@@ -2253,7 +2275,15 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                 m.degree = ReverseLayout.RotateDegree180(src.degree);
                 m.markPos = 1 - src.markPos;
                 m.orientation = DbOrientation;
-                if (i >= 0) { ocrMarks[i] = m; updated++; }
+                if (i >= 0)
+                {
+                    m.roi = ResizeRoiKeepCenter(m.roi, src.roi);
+                    ocrMarks[i] = m;
+                    string cust_code = "", int_code = "";
+                    Set2DInfo(ref cust_code, ref int_code);
+                    UpdateCanvasRect(m.index, m.roi, MakeGDIText(m.reference == "사내1" ? int_code : cust_code, PreviewDegree(m.degree)));
+                    updated++;
+                }
                 else
                 {
                     m.index = AllObjectCount();
@@ -2270,7 +2300,13 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                 AlignROI m = (i >= 0) ? alignROIs[i] : new AlignROI();
                 m.size = src.size; m.number = src.number; m.match = src.match; m.type = src.type;
                 m.orientation = DbOrientation;
-                if (i >= 0) { alignROIs[i] = m; updated++; }
+                if (i >= 0)
+                {
+                    m.roi = ResizeRoiKeepCenter(m.roi, src.roi);
+                    alignROIs[i] = m;
+                    UpdateCanvasRect(m.index, m.roi, null);
+                    updated++;
+                }
                 else
                 {
                     m.index = AllObjectCount();
@@ -2282,6 +2318,40 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
             }
 
             LogTeachingData(string.Format("정방향복사/{0}/{1}/생성 {2}, 갱신 {3}", m_modelName, DbOrientation, created, updated));
+        }
+
+        /// <summary>ROI 중심은 유지하고 크기만 기준 ROI 크기로 맞춘다.</summary>
+        private static string ResizeRoiKeepCenter(string roi, string sizeRoi)
+        {
+            if (string.IsNullOrEmpty(roi) || string.IsNullOrEmpty(sizeRoi)) return roi;
+            string[] r = roi.Split(',');
+            string[] z = sizeRoi.Split(',');
+            double cy = Convert.ToDouble(r[0]) + Convert.ToDouble(r[3]) / 2.0;
+            double cx = Convert.ToDouble(r[1]) + Convert.ToDouble(r[2]) / 2.0;
+            double w = Convert.ToDouble(z[2]);
+            double h = Convert.ToDouble(z[3]);
+            return string.Format("{0},{1},{2},{3}", Math.Round(cy - h / 2.0, 3), Math.Round(cx - w / 2.0, 3), Math.Round(w, 3), Math.Round(h, 3));
+        }
+
+        /// <summary>캔버스 미리보기 각도 (DrawObjects 와 동일 규칙 : 하부는 −90°)</summary>
+        private double PreviewDegree(double degree)
+        {
+            return (m_orientation == "top") ? degree : degree - 90;
+        }
+
+        /// <summary>캔버스의 해당 index ROI 사각형 위치·크기·미리보기 갱신 (저장 시 캔버스 값이 DB 에 기록됨)</summary>
+        private void UpdateCanvasRect(int index, string roi, Brush fill)
+        {
+            if (index < 0 || index >= drawingCanvas.Children.Count) return;
+            TextRectangle rect = drawingCanvas.Children[index] as TextRectangle;
+            if (rect == null) return;
+
+            string[] r = roi.Split(',');
+            Canvas.SetTop(rect, Convert.ToDouble(r[0]));
+            Canvas.SetLeft(rect, Convert.ToDouble(r[1]));
+            rect.Width = Convert.ToDouble(r[2]);
+            rect.Height = Convert.ToDouble(r[3]);
+            if (fill != null) rect.rectangle.Fill = fill;
         }
 
         public void LogTeachingData(string action, MarkSet set = null)

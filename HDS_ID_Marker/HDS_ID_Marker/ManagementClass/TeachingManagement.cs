@@ -424,7 +424,9 @@ namespace HDS_ID_Marker
         /// 첫 열/마지막 열 얼라인 ROI 의 열 내 높이 차이에 따른 기울기 계산 베이스라인 보정(mm).
         /// 정방향 마크는 열 상단, 역방향 마크는 열 하단에 있어 두 열의 방향이 다르면 실제 마크 간 거리가 열 간격과 달라진다.
         /// 두 열의 방향이 같으면(정정정정, 역역역역 등) 0 → 기존 계산과 동일.
-        /// 부호는 기존 식(거리 = 열 간격 − 마지막 열 y 오프셋, 화면 아래쪽 +)과 같은 규칙을 따른다.
+        /// 실기 확인 : 화면 위쪽 = 1열, 아래쪽 = 4열 (스테이지 +Y 와 화면 픽셀 +Y 가 같은 물리 방향).
+        /// 따라서 마지막 열 ROI 가 화면에서 더 아래(큰 Y)에 있으면 실제 마크 간 거리는 열 간격보다 길다 (+).
+        /// 예) 정정역역 : 1열 얼라인은 열 상단, 4열 얼라인은 열 하단 → 보정값 양수 / 역역정정 → 음수.
         /// </summary>
         private double GetRoiBaselineOffset(string roiFirst, string roiLast, bool revFirst, bool revLast)
         {
@@ -432,7 +434,7 @@ namespace HDS_ID_Marker
             if (string.IsNullOrEmpty(roiFirst) || string.IsNullOrEmpty(roiLast)) return 0;
 
             double canvasToCam = 1.0 / ptrMain.workSettingWindow.topHRControl.ratioY;
-            double offset = -(RoiCenterY(roiLast) - RoiCenterY(roiFirst)) * canvasToCam * MainWindow.ri.TopCamResolution;
+            double offset = (RoiCenterY(roiLast) - RoiCenterY(roiFirst)) * canvasToCam * MainWindow.ri.TopCamResolution;
             MainWindow.logger.WriteLog(LogType.Info, $"[Align] 정/역 혼합 베이스라인 보정 : {offset:F4} mm (첫 열 {(revFirst ? "역" : "정")}, 마지막 열 {(revLast ? "역" : "정")})");
             return offset;
         }

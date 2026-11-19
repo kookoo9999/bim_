@@ -143,6 +143,15 @@ namespace HDS_ID_Marker.SubWindow
                     SetOrient(GetPhysicalRow(1), tsRevB.IsChecked);
                     SetOrient(GetPhysicalRow(2), tsRevC.IsChecked);
                     SetOrient(GetPhysicalRow(3), tsRevD.IsChecked);
+
+                    // 역방향 열이 있으면 시작 가능 여부(티칭 누락, 재티칭 필요, 얼라인 템플릿 등)를 여기서 바로 안내
+                    string reason = ptrMain.workManagement.GetReverseLayoutBlockReason();
+                    if (reason != null)
+                    {
+                        MaterialWarningDlg dlg = new MaterialWarningDlg(reason);
+                        dlg.ShowDialog();
+                        return;
+                    }
                     ptrMain.model.SetResultPath();
 
                     this.DialogResult = true;
@@ -276,14 +285,15 @@ namespace HDS_ID_Marker.SubWindow
         private void InitOrientToggles()
         {
             var toggles = new[] { tsRevA, tsRevB, tsRevC, tsRevD };
-            bool revAvailable = ptrMain.workSettingWindow.topHRControl.GetMarkSet(true).BlockCount > 0
-                             || ptrMain.workSettingWindow.botHRControl.GetMarkSet(true).BlockCount > 0;
+            // 배열과 무관한 역방향 불가 사유 (설비 모드, AOI/시프트 검사 사용, 역방향 티칭 누락, 재티칭 필요)
+            string issue = ptrMain.workManagement.GetReverseTeachingIssue();
+            bool revAvailable = issue == null;
 
             for (int i = 0; i < toggles.Length; i++)
             {
                 toggles[i].IsChecked = revAvailable && MainWindow.IsReverseRow(GetPhysicalRow(i));
                 toggles[i].IsEnabled = revAvailable;
-                toggles[i].ToolTip = revAvailable ? "열 제품 방향 (정방향 / 역방향 180°)" : "역방향 티칭 데이터가 없는 모델입니다.";
+                toggles[i].ToolTip = revAvailable ? "열 제품 방향 (정방향 / 역방향 180°)" : "역방향 사용 불가 : " + issue.Replace("\n", " ");
             }
         }
         #endregion

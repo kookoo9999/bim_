@@ -856,11 +856,13 @@ namespace HDS_ID_Marker
 
         private void UpdateBotMarkInfo()
         {
+            // 정방향 티칭 기준 (UpdateTopMarkInfo 와 동일)
+            MarkSet fwdBotSet = ptrMain.workSettingWindow.botHRControl.GetMarkSet(false);
             double BotOffsetX = Setting.Device.laserConfigs[1].CamToX;
             double BotOffsetY = 0;
             double BotOffsetZ = 0.0; /*ptrMain.PCSInstance.Lasers[1].FocusCheck(Setting.Device.laserConfigs[1].FocusIndex);*/
             bool flip = false;
-            if (ptrMain.workSettingWindow.botHRControl.customMarks.Count > 0)  flip = ptrMain.workSettingWindow.botHRControl.customMarks[0].flip ? true : false;
+            if (fwdBotSet.customMarks.Count > 0)  flip = fwdBotSet.customMarks[0].flip ? true : false;
 
             if (BotOffsetZ >= 100)
                 MainWindow.logger.WriteLog(LogType.Laser, string.Format("[BotCustomMark] 오토포커스 측정 실패 : {0}", "UpdateBotMarkInfo", BotOffsetZ));
@@ -871,7 +873,7 @@ namespace HDS_ID_Marker
             BotOffsetY = Math.Round(BotOffsetY, 3);
             BotOffsetZ = Math.Round(BotOffsetZ, 3);
             
-            foreach (var block in ptrMain.workSettingWindow.botHRControl.customMarks)
+            foreach (var block in fwdBotSet.customMarks)
             {
                 double dX = Math.Round((GetCenterX(block.roi, block.degree) - viewerCenterX) * resTop * ratioX, 3);
                 double dY = Math.Round((viewerCenterY - GetCenterY(block.roi, block.degree)) * resTop * ratioY, 3);
@@ -886,7 +888,7 @@ namespace HDS_ID_Marker
                 markInitpos[(int)SURFACE.BOT, (int)TYPE.CUSTOM, 0] = new MarkPos(mx, my, mz);
             }
 
-            foreach (var block in ptrMain.workSettingWindow.botHRControl.interMarks)
+            foreach (var block in fwdBotSet.interMarks)
             {
                 double dX = Math.Round((GetCenterX(block.roi, block.degree) - viewerCenterX) * resTop * ratioX, 3);
                 double dY = Math.Round((viewerCenterY - GetCenterY(block.roi, block.degree)) * resTop * ratioY, 3);
@@ -901,7 +903,7 @@ namespace HDS_ID_Marker
                 markInitpos[(int)SURFACE.BOT, (int)TYPE.INTER, 0] = new MarkPos(mx, my, mz);
             }
 
-            foreach (var block in ptrMain.workSettingWindow.botHRControl.ocrMarks)
+            foreach (var block in fwdBotSet.ocrMarks)
             {
                 double dX = Math.Round((GetCenterX(block.roi, block.degree) - viewerCenterX) * resTop * ratioX, 3);
                 double dY = Math.Round((viewerCenterY - GetCenterY(block.roi, block.degree)) * resTop * ratioY, 3);
@@ -944,6 +946,7 @@ namespace HDS_ID_Marker
             int blockBase = reverse ? ReverseLayout.RevBlockBase : 0;
             int otherBase = reverse ? 0 : ReverseLayout.RevBlockBase;
             bool flip = GetHeadFlip(ptrMain.workSettingWindow.topHRControl.GetMarkSet(false), ptrMain.workSettingWindow.topHRControl.GetMarkSet(true));
+            MainWindow.logger.WriteLog(LogType.Laser, string.Format("[TopMark] C{0} 방향 : {1}, 블록군 : {2}~, 위치 : {3}", colStrip + 1, reverse ? "역" : "정", blockBase, ptrMain.GetRowMarkingLocation(colStrip)));
 
             long tFocus = TactLog.Now;
             for (int i = 0; i < 3; i++)
@@ -1236,6 +1239,7 @@ namespace HDS_ID_Marker
             int blockBase = reverse ? ReverseLayout.RevBlockBase : 0;
             int otherBase = reverse ? 0 : ReverseLayout.RevBlockBase;
             bool flip = GetHeadFlip(ptrMain.workSettingWindow.botHRControl.GetMarkSet(false), ptrMain.workSettingWindow.botHRControl.GetMarkSet(true));
+            MainWindow.logger.WriteLog(LogType.Laser, string.Format("[BotMark] C{0} 방향 : {1}, 블록군 : {2}~, 위치 : {3}", colStrip + 1, reverse ? "역" : "정", blockBase, ptrMain.GetRowMarkingLocation(colStrip)));
 
             long tFocus = TactLog.Now;
             for (int i = 0; i < 3; i++)

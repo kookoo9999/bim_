@@ -1,5 +1,6 @@
 # 02_REFACTOR_PLAN.md — 4열 정/역 혼합 배열 마킹 리팩토링 계획 (v2)
 
+> **v2.1 (구현 검토 반영)**: Gemini/Neon 교차검증 결과를 반영해 4장(얼라인 짝·부호), 3장(취소·저장 순서·블록 상한), 6장(ITS 중복 체크·FirstID·인쇄 ID), 8장(lot 입력창 사전 검사)을 현행화했다. 상세는 `03_PLAN_REVIEW.md` §14.
 > **v2 개정**: `03_PLAN_REVIEW.md`(1~6차 검토)에서 확정한 내용을 반영해 v1을 다시 썼다. v1은 git 이력(`a057fce`)에 남아 있다.
 > **목적**: 4열 마킹에서 열마다 **정방향 / 역방향(180° 회전)** 제품이 섞여 들어와도(예: 정정역역, 역역정정, 정역정역) 기존과 같은 정밀도, 택트, 안정성으로 얼라인 → 레이저 마킹 → 비전 검사 → ID/ITS 기록을 수행한다.
 > **기준 경로**: `MarkingPC`(`MachineType=PC`, `TestMode=0`), Vision=`MILCL`, Laser=`Keyence`, 상·하부 양면 마킹.
@@ -102,6 +103,11 @@ MarkRecipe GetRecipe(int row, Surface s) => orients[row] ? Rev[s] : Fwd[s];
 - 공통 기준점 + 열 간격 방식은 현재 2~4열을 마킹하는 방식과 같다. 따라서 **마킹 품질이 기존과 같다**.
 - 역방향을 **처음 저장하기 전에** 모델을 자동 백업한다(`para_*` 행과 모델 폴더).
 - 저장 시 `LoadProjectTop/Bot`을 호출해 정/역 블록을 함께 재등록한다(5장).
+- 역방향 저장은 **DB 저장 건수 확인 → 템플릿 저장 → `Reverse.ini` 기록 → 레이저 등록** 순서로 한다. 건수가 다르면(예: orientation 컬럼 길이 부족) 그 자리에서 중단하고 `Reverse.ini`·레이저 프로그램은 갱신하지 않는다.
+- 블록 번호 상한: 정/역을 함께 쓰는 모델은 방향별 ROI(얼라인 포함) 20개 이하만 저장할 수 있다(역방향 블록 = 20 + index).
+- **취소**: 저장하지 않은 변경은 버리고 정/역 모두 DB에서 다시 읽는다. 화면은 정방향, 얼라인 템플릿 뱅크는 0으로 복원한다(런타임이 티칭 데이터를 그대로 쓰므로 미저장 데이터가 자동 마킹에 쓰이지 않게 하기 위함).
+- 기존 ROI 더블클릭 편집 창에도 정/역 정보를 넘겨 좌/우 기본값이 방향에 맞게 계산되게 한다.
+- 파라미터 복사 시 이미 있는 역방향 항목은 ROI 중심을 유지한 채 크기·미리보기를 캔버스에 함께 반영한다.
 
 ---
 
@@ -109,11 +115,15 @@ MarkRecipe GetRecipe(int row, Surface s) => orients[row] ? Rev[s] : Fwd[s];
 
 - **`MarkingAlignToROI`** (`:178-275`)
   - 0열 측정에는 `GetRecipe(0)`의 얼라인 ROI와 템플릿을, 마지막 열 측정에는 `GetRecipe(last)`의 것을 사용한다.
-  - 같은 번호끼리 짝을 짓는다.
-  - **기울기 계산 베이스라인 보정**: 현재 식(`alignDistanceY = StripIter[last] − y12`)은 두 마크가 열 안에서 같은 높이에 있다고 가정한다. 정방향 마크는 열 상단, 역방향 마크는 열 하단에 있으므로 이 가정이 깨진다. 실제 ROI 중심 Y의 차이(`(roiCY_last − roiCY_0) · res`)를 더해 계산한다.
+  - **화면(FOV)상 같은 좌/우 쪽 얼라인끼리 짝을 짓는다**(`GetSameSideAlign`). 180° 회전으로 역방향은 번호가 반대쪽에 오므로, 번호가 아니라 위치로 맞춰야 같은 물리 스트립 위치를 비교한다. 정정정정이면 1번 ↔ 1번으로 기존과 같다.
+  - **기울기 계산 베이스라인 보정**: 현재 식(`alignDistanceY = StripIter[last] − y12`)은 두 마크가 열 안에서 같은 높이에 있다고 가정한다. 정방향 마크는 열 상단, 역방향 마크는 열 하단에 있으므로 이 가정이 깨진다.
+    - 실기 확인: **화면 위쪽 = 1열, 아래쪽 = 4열** (스테이지를 +Y로 움직이면 화면 속 패턴이 위로 이동 → 스테이지 +Y와 화면 픽셀 +Y가 같은 물리 방향).
+    - 따라서 `ΔY = StripIter[last] + (roiCY_last − roiCY_0) · canvasToCam · res` 를 더한다. 정정역역이면 보정값 양수, 역역정정이면 음수, 같은 방향이면 0(기존과 동일).
+    - 참고: 같은 이유로 기존 `−y12` 항도 원래 부호는 반대이나, 0.1mm 수준이라 기울기 영향이 0.1% 미만이므로 정정정정 동작 유지를 위해 그대로 둔다.
 - **`MarkingAlignToROI_RightOnly`** (`:277-351`, 첫 사이클)
   - 현재 `number == 2`와 템플릿2로 고정돼 있다. 이를 **각 열 레시피에서 ROI X가 더 큰(화면 우측) 얼라인**과 그 번호의 템플릿으로 바꾼다. 정방향은 2번, 역방향은 1번이다.
-- **비전 API**: `SearchPointAlignToROI/Align2ToROI`에 템플릿 `Mat`을 인자로 받는 오버로드를 추가한다(`DCS/Camera/MILCL.cs`, `Vision.cs`). 템플릿 필드를 교체하는 방식은 쓰지 않는다.
+- **비전 API (구현)**: 기존 검색 함수 시그니처를 바꾸지 않고 템플릿 **뱅크(0: 정, 1: 역)** 를 선택하는 방식으로 구현했다(`SelectAlignBank`/`HasAlignBank`/`ClearAlignBank`). 런타임 얼라인은 검색 직전에 항상 뱅크를 명시 선택한다.
+- 운용 주의: 정/역 얼라인 템플릿은 **틀어짐 없는 같은 패널에서 Y축만 열 간격 이동해 캡처**해야 `x12 − x11`의 기준 편향이 0이 된다.
 - `lastFoundAlignPos`는 시프트 검사 전용이다(범위 밖). 0열 기준을 유지한다.
 
 ---
@@ -150,7 +160,6 @@ string GetRowMarkingLocation(int row) =>
 | `:1264`, `:1333`, `:1396` / `:1273`, `:1340`, `:1403` | ITS 기록·작업 이력 저장 → **6.1의 완성 시점 규칙**(`GetITSRecord`) |
 | `WorkHistoryWindow.GetLastWorkHistory` `:250-256` | 이어하기 시작번호 계산 → 6.1 참조 |
 | `MainWindow.GetMarkData` `:638-645` | 작업 시작 전 ID 미리보기 |
-| `MarkingTEST` (`:1713~`) | 같은 방식으로 적용(하드웨어 없이 검증할 때 사용) |
 
 - 기준 stripID(S)는 4열 공통이고, '우' 마크만 −1 한다. 기존 원칙은 그대로 유지된다.
 
@@ -182,12 +191,14 @@ string GetRowMarkingLocation(int row) =>
 
 | 위치 | 현행 | 변경 |
 |---|---|---|
-| `WriteITSOneShot` 호출부 (`WorkManagement.cs:1264, 1333, 1396`) | `ConvertInternal1ID(Int1_id, 공통문자열)[i], Cust1_id[i]` | `GetITSRecord(i, S)` → strip S−1 (첫 strip은 스킵) |
+| `WriteITSOneShot` 호출부 (`WorkManagement.cs:1264, 1333, 1396`) | `ConvertInternal1ID(Int1_id, 공통문자열)[i], Cust1_id[i]` | `WriteITSCompleted(i, …)` → strip S−1. 고객 ID는 **해당 strip에 실제 인쇄한 문자열**을 보관해 두었다가 그대로 기록(자정 경계 등 재계산 차이 방지). 첫 strip은 기록 후 EOL 시 삭제 |
+| 작업이력 `CreateWorkHistory` | FirstID 칸에 첫 기록 strip 저장 | **lot 시작 기준 번호(`fisrtID`)** 저장 → 이어하기 후에도 EOL 첫 strip 삭제·텐션 계산·AOI 미설정 판단이 신규 lot과 같게 동작 |
+| 시작 시 ITS 중복 체크 (`MarkingPC`) | 기준 번호 S로 검색 | **이번 사이클 완성 번호(S−1)** 로 검색. ITS↔DB 불일치로 번호를 수동 입력한 경우에도 같은 검사를 다시 수행 |
 | `SaveWorkHistory(Int1_id[0], …)` (`:1273, 1340, 1403`) | 고객 문자열로 ±1 | 마지막 완성 strip(S−1) 저장 |
 | 이어하기 `WorkHistoryWindow.GetLastWorkHistory` (`:250-256`) | `"고객1 우"` 포함이면 +1 | 분기 제거, 항상 +1 → 시작번호 = 마지막 완성 strip + 2 |
 | 시작 시 ITS/DB 비교 (`MarkingPC` `:1023-1027`) | `GetLastStripNoITS`(lots[0]) vs `GetStripID` | 위 두 곳이 같은 규칙이면 변경 없음 |
 | 종료 `WriteITS(…, isEnd)` (`:1553`) | isEnd이면 EOL만 기록 | 변경 없음 |
-| `MarkingTEST` | 같은 호출 구조 | 같은 규칙 적용 |
+| 이어하기 확인창 | 시작 번호만 표시 | "ITS 마지막 완성 strip → 이번 사이클 완성 strip" 함께 안내 |
 
 > **이행 주의**: 배포 전에 기존 규칙으로 기록하던 lot을 배포 후 이어하기하면 마지막 레코드의 의미가 다르다. 배포는 **lot 경계에서** 한다(진행 중 lot은 기존 버전으로 마감).
 
@@ -209,7 +220,8 @@ string GetRowMarkingLocation(int row) =>
 ### 8.1 `LotWindow`
 - `tbLotA~D` 옆에 정/역 토글을 둔다.
 - `lots[]`와 **같은 `MarkingDirection` 매핑**(`LotWindow.xaml.cs:127-140`)을 거쳐 물리 열 인덱스 기준 `orients[]`에 저장한다. 그대로 저장하면 D→A 모델에서 정/역이 뒤집힌다.
-- 역방향이 티칭되지 않았거나 "재티칭 필요" 상태이면 역 토글을 비활성화하고 사유를 표시한다.
+- 역방향 사용 불가 사유(티칭 누락, 재티칭 필요, AOI/시프트 검사 사용, PLC 모드)가 있으면 역 토글을 비활성화하고 사유를 툴팁에 표시한다(`GetReverseTeachingIssue`).
+- 확인 버튼에서 배열까지 포함한 시작 가능 여부(얼라인 ROI·템플릿 등)를 바로 검사해 안내한다(`GetReverseLayoutBlockReason`).
 - `WorkMarkInfoWindow`(시작 전 확인창)에 열별 정/역과 ID 미리보기를 함께 표시한다.
 
 ### 8.2 시작 차단 가드 (`StartMarking` 진입부)
@@ -237,13 +249,17 @@ string GetRowMarkingLocation(int row) =>
 | 1. 데이터 | DB 컬럼(`orient`, `RevBase*`), 구조체 필드, `MarkRecipe`/`GetRecipe`, `orients[]` | 기존 모델을 로드했을 때 정방향 레시피가 기존 리스트와 일치 |
 | 2. 티칭 | 정/역 라디오, 티칭 열 선택, 쿼리 `orient` 격리, 저장 규칙, 파라미터 복사 버튼, 백업 | 역방향 저장·삭제·인덱스 갱신 후 정방향 DB 행이 변하지 않음 |
 | 3. 레이저·얼라인 | 블록 이중 등록과 Enable 토글, 얼라인 레시피·템플릿 선택, 베이스라인 보정, RightOnly 우측 선택 | 정정정정 lot의 MARK 명령 로그가 기존과 **동일**(역방향 블록 Disable만 추가) |
-| 4. ID·검사·UI | `GetRowMarkingLocation` 적용, 열별 검사 ROI·format, `LotWindow` 토글, 가드, 로그 | `MarkingTEST`로 정정역역·역역정정 ID와 ITS 기록 검증 |
+| 4. ID·검사·UI | `GetRowMarkingLocation` 적용, 열별 검사 ROI·format, `LotWindow` 토글, 가드, 로그 | 실기(MarkingPC)에서 정정역역·역역정정 ID와 ITS 기록 검증 |
 
 ### 실기 검증
 1. (완료) Keyence 회전 각도 테스트
 2. 정정정정 lot 회귀 테스트(기존 모델, 재티칭 없이)
 3. 혼합 시료(정정역역, 역역정정)로 얼라인 → 마킹 → 디코딩 → ID 확인. strip 1 폐기와 2번부터 양품인 흐름을 정/역 열 모두에서 확인
 4. 정방향을 재티칭한 뒤 역방향 "재티칭 필요" 차단이 동작하는지 확인
+5. 얼라인 로그의 베이스라인 보정값 부호 확인 (정정역역 양수, 역역정정 음수, 정정정정 0)
+6. 역방향 ROI 더블클릭 편집 후 좌/우 유지, 취소 후 미저장 변경 원복, DB 저장 실패 시 `Reverse.ini` 미갱신
+7. 이어하기: 중단 → 재개 시 ITS 중복 차단(수동으로 한 단계 앞 번호 입력 시 차단), FirstID 유지, EOL 시 strip 1 삭제
+8. 역방향 열 인식 이미지 파일명의 strip 번호, lot 입력창 역 토글 비활성화·사유 표시
 
 ---
 
@@ -253,5 +269,6 @@ string GetRowMarkingLocation(int row) =>
 |---|---|
 | 확인 | ITS/MES 측 공유: 기록 시점이 한 사이클 늦어지고, 마지막 미완성 strip N이 빠지며, 첫 strip은 EOL 시 삭제됨(6.1). 변동 시 재검토 |
 | 확인 | DB `orientation` 컬럼 길이 5자 이상(`top_r`). 부족하면 역방향 저장 시 경고가 뜬다 |
-| 범위 밖 | `MarkingPLC`/`WorkSettingControl`(PLC), AOI ID 리더, 마킹 시프트 검사, 티칭창 단발 마킹/리딩 테스트 버튼 |
+| 범위 밖 | `MarkingPLC`/`WorkSettingControl`(PLC), **`MarkingTEST`(테스트 모드)** — 실제 설비는 `MarkingPC` 루프만 사용, AOI ID 리더, 마킹 시프트 검사, 티칭창 단발 마킹/리딩 테스트 버튼(현장 미사용. 재사용 시 반대 방향 블록 Disable·`GetHeadFlip` 적용 필요) |
+| 현장 확인 | 첫 사이클(시작번호 2) 마킹 검사: 역방향 열(이 제품)은 고객1이 폐기 strip(화면 좌측)에 찍힌다. 그 위치에 기판이 없어 인식 불량 알람이 나면 "lot 첫 사이클의 폐기 strip 고객1 검사 생략"을 적용한다 |
 | 별도 버그 | `ModelManager.RestoreSelectedModel` `:115`에서 `MarkingDirection`이 `MarkingLeft`로 덮어써짐(별도 작업) |

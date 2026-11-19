@@ -275,9 +275,12 @@ namespace HDS_ID_Marker
                     string strQuery = string.Empty;
 
                     //strip pitch default 0
+                    // FirstID 는 lot 시작 기준 번호(fisrtID). 기록 strip(완성 번호)과 분리해야 이어하기 후에도
+                    // EOL 첫 strip 삭제, 텐션 계산, AOI 미설정 판단(fisrtID == 1)이 신규 lot 과 같게 동작한다.
+                    int firstID = ptrMain.model.fisrtID > 0 ? ptrMain.model.fisrtID : stripID;
                     strQuery = String.Format("INSERT INTO work_history(Name, Lot, FirstID, StripID, Date, HistoryID)" +
                         " VALUES('{0}', {1}, {2}, {3},  '{4}', {5})",
-                        name, lot, stripID, stripID, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), historyID);
+                        name, lot, firstID, stripID, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), historyID);
 
                     if (ConnectFactory.DBConnector().Execute(strQuery) > 0)
                     {
@@ -568,6 +571,31 @@ namespace HDS_ID_Marker
             int count = ptrMain.model.modelInformation.StripIter != null ? ptrMain.model.modelInformation.StripIter.Count : 0;
             if (!MainWindow.HasReverseRow(count)) return null;
 
+            string issue = GetReverseTeachingIssue();
+            if (issue != null) return issue;
+
+            var markingInfo = ptrMain.model.markingInformation;
+            MarkSet topRev = ptrMain.workSettingWindow.topHRControl.GetMarkSet(true);
+
+            // 얼라인은 첫 열 / 마지막 열에서 수행하므로 그 열이 역방향일 때 역방향 얼라인 데이터 필요
+            if (MainWindow.IsReverseRow(0) || MainWindow.IsReverseRow(count - 1))
+            {
+                if (!topRev.alignROIs.Exists(a => a.number == 1) || !topRev.alignROIs.Exists(a => a.number == 2))
+                    return "역방향 얼라인 ROI(1, 2)가 없습니다.\n역방향 티칭을 확인하세요.";
+                if (!ptrMain.PCSInstance.Visions[0].HasAlignBank(1))
+                    return "역방향 얼라인 템플릿(Align_R.bmp, Align2_R.bmp)이 없습니다.\n역방향 티칭을 저장하세요.";
+                if (markingInfo.IsRevTopStale())
+                    return "정방향 상부 기준점이 변경되었습니다.\n역방향 상부(얼라인)를 다시 티칭하세요.";
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 배열과 무관하게 역방향 작업이 불가한 사유 (설비 모드, 모델 옵션, 역방향 티칭 누락/재티칭 필요). 문제 없으면 null.
+        /// lot 입력창의 역방향 토글 활성화 판단에도 사용한다.
+        /// </summary>
+        public string GetReverseTeachingIssue()
+        {
             var markingInfo = ptrMain.model.markingInformation;
             int method = markingInfo.customerInformation.MarkingMethod;
 
@@ -590,17 +618,6 @@ namespace HDS_ID_Marker
             {
                 if (botRev.BlockCount == 0) return "역방향 하부 마킹 티칭 데이터가 없습니다.\n역방향 티칭을 확인하세요.";
                 if (markingInfo.IsRevBotStale()) return "정방향 하부 기준점이 변경되었습니다.\n역방향 하부를 다시 티칭하세요.";
-            }
-
-            // 얼라인은 첫 열 / 마지막 열에서 수행하므로 그 열이 역방향일 때 역방향 얼라인 데이터 필요
-            if (MainWindow.IsReverseRow(0) || MainWindow.IsReverseRow(count - 1))
-            {
-                if (!topRev.alignROIs.Exists(a => a.number == 1) || !topRev.alignROIs.Exists(a => a.number == 2))
-                    return "역방향 얼라인 ROI(1, 2)가 없습니다.\n역방향 티칭을 확인하세요.";
-                if (!ptrMain.PCSInstance.Visions[0].HasAlignBank(1))
-                    return "역방향 얼라인 템플릿(Align_R.bmp, Align2_R.bmp)이 없습니다.\n역방향 티칭을 저장하세요.";
-                if (markingInfo.IsRevTopStale())
-                    return "정방향 상부 기준점이 변경되었습니다.\n역방향 상부(얼라인)를 다시 티칭하세요.";
             }
             return null;
         }
@@ -1083,7 +1100,8 @@ namespace HDS_ID_Marker
                 // 중복체크
                 if (isExistLot())
                 {
-                    ITSHistoryWindow itsHistory = new ITSHistoryWindow(ptrMain, ptrMain.model.lot.ToString() + " " + ptrMain.model.stripID.ToString("D4"));
+                    // ITS 에는 완성 strip 이 기록되므로, 이번 사이클에 기록될 완성 번호로 중복을 확인한다.
+                    ITSHistoryWindow itsHistory = new ITSHistoryWindow(ptrMain, ptrMain.model.lot.ToString() + " " + GetCompletedStrip(0, ptrMain.model.stripID).ToString("D4"));
                     if (itsHistory.GetITSHistory())
                     {
                         itsHistory.ShowDialog();
@@ -1117,8 +1135,19 @@ namespace HDS_ID_Marker
                                 
                                 if (int.TryParse(inputNumberBox.m_strResult, out newStripID))
                                 {
-                                    SaveWorkHistory(ptrMain.model.stripID, newStripID);
-                                    ptrMain.model.stripID = newStripID;
+                                    // 수동 입력 번호로도 ITS 중복(이번 사이클 완성 번호) 재확인
+                                    ITSHistoryWindow itsRecheck = new ITSHistoryWindow(ptrMain, ptrMain.model.lot.ToString() + " " + GetCompletedStrip(0, newStripID).ToString("D4"));
+                                    if (itsRecheck.GetITSHistory())
+                                    {
+                                        itsRecheck.ShowDialog();
+                                        nErrorCode = eErrorCode.OVERLAP_MARKING;
+                                        isReady = false;
+                                    }
+                                    else
+                                    {
+                                        SaveWorkHistory(ptrMain.model.stripID, newStripID);
+                                        ptrMain.model.stripID = newStripID;
+                                    }
                                 }
                                 else
                                 {
@@ -1139,6 +1168,7 @@ namespace HDS_ID_Marker
 
                 // 2D Marking 각인 시 날짜 및 시간
                 DateTime MarkingTime = DateTime.Now;
+                ResetPrintedCustomIDs(Cust1_id.Length);
 
                 while (isReady)
                 {
@@ -1300,6 +1330,7 @@ namespace HDS_ID_Marker
                         Cust1_id[i] = GetCustomIDString(0, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i), i, MarkingTime);
                         Cust2_id[i] = GetCustomIDString(1, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i), i, MarkingTime);
                         Int1_id[i] = GetInternal1IDString(MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i));                        
+                        RememberPrintedCustomID(i, ptrMain.model.stripID, Cust1_id[i]);
                     } 
                     if (!CheckCustomID_Length(Cust1_id, ptrMain.model.markingInformation.customerInformation.MarkingLength)) { nErrorCode = eErrorCode.MARKING_LENGTH_MISMATCH; break; }
                     TactLog.Add("TENSION_DATA", tTact);
@@ -1781,9 +1812,9 @@ namespace HDS_ID_Marker
                     //Mark Data Set
                     for (int i = 0; i < ptrMain.model.modelInformation.StripIter.Count; i++)
                     {
-                        Cust1_id[i] = GetCustomIDString(0, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i), i, MarkingTime);
-                        Cust2_id[i] = GetCustomIDString(1, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i), i, MarkingTime);
-                        Int1_id[i] = GetInternal1IDString(MainWindow.lots[i], ptrMain.model.stripID, ptrMain.GetRowMarkingLocation(i));                      
+                        Cust1_id[i] = GetCustomIDString(0, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.model.markingInformation.customerInformation.MarkingLocation, i, MarkingTime);
+                        Cust2_id[i] = GetCustomIDString(1, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[i], ptrMain.model.stripID, ptrMain.model.markingInformation.customerInformation.MarkingLocation, i, MarkingTime);
+                        Int1_id[i] = GetInternal1IDString(MainWindow.lots[i], ptrMain.model.stripID, ptrMain.model.markingInformation.customerInformation.MarkingLocation);                      
                     }
 
                     if (!CheckCustomID_Length(Cust1_id, ptrMain.model.markingInformation.customerInformation.MarkingLength)) { nErrorCode = eErrorCode.MARKING_LENGTH_MISMATCH; break; }
@@ -2128,6 +2159,25 @@ namespace HDS_ID_Marker
         }
 
         #region 정/역 혼합 배열 - 완성 strip 기록 (ITS / 작업이력 / 이어하기 공통 규칙)
+        // 열별로 실제 인쇄한 고객1 ID (key: strip 번호). ITS 에 인쇄 문자열을 그대로 기록하기 위함 (자정 경계 등 재계산 차이 방지)
+        private Dictionary<int, string>[] m_printedCust1 = new Dictionary<int, string>[0];
+
+        private void ResetPrintedCustomIDs(int rowCount)
+        {
+            m_printedCust1 = new Dictionary<int, string>[rowCount];
+            for (int i = 0; i < rowCount; i++) m_printedCust1[i] = new Dictionary<int, string>();
+        }
+
+        /// <summary>이번 사이클에 인쇄한 고객1 ID 를 해당 strip 번호로 보관 (최근 몇 개만 유지)</summary>
+        private void RememberPrintedCustomID(int row, int stripID, string cust1)
+        {
+            if (row < 0 || row >= m_printedCust1.Length) return;
+            int strip = ptrMain.GetRowMarkingLocation(row).Contains("고객1 우") ? stripID - 1 : stripID;
+            var dic = m_printedCust1[row];
+            dic[strip] = cust1;
+            foreach (int key in dic.Keys.Where(k => k < strip - 3).ToList()) dic.Remove(key);
+        }
+
         // 마크는 화면 우측(신규 strip S)에서 먼저 찍히고, 피딩 후 화면 좌측(이전 strip, 위치 문자열의 '우' = S−1)에서 나머지가 찍힌다.
         // ITS 는 "이번 사이클에 마지막 마크가 찍혀 완성된 strip" 을 기록한다. 정/역·AAAA/AABB/BBBB 모두 같은 규칙.
 
@@ -2192,9 +2242,18 @@ namespace HDS_ID_Marker
             string location = ptrMain.GetRowMarkingLocation(row);
 
             string inter = MainWindow.lots[row] + " " + strip.ToString("D4");
-            // GetCustomIDString 은 '고객1 우' 이면 내부에서 −1 하므로, 완성 strip 번호가 나오도록 보정해서 넘긴다.
-            int custArg = location.Contains("고객1 우") ? strip + 1 : strip;
-            string custom = GetCustomIDString(0, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[row], custArg, location, row, markingTime);
+            string custom;
+            if (row < m_printedCust1.Length && m_printedCust1[row].TryGetValue(strip, out custom))
+            {
+                // 실제 인쇄한 문자열을 그대로 기록
+            }
+            else
+            {
+                // 이어하기 첫 사이클 등 보관값이 없으면 재계산.
+                // GetCustomIDString 은 '고객1 우' 이면 내부에서 −1 하므로, 완성 strip 번호가 나오도록 보정해서 넘긴다.
+                int custArg = location.Contains("고객1 우") ? strip + 1 : strip;
+                custom = GetCustomIDString(0, ptrMain.model.markingInformation.customerInformation.Name, MainWindow.lots[row], custArg, location, row, markingTime);
+            }
 
             return WriteITSOneShot(inter, custom, isEnd, row);
         }
@@ -2210,7 +2269,7 @@ namespace HDS_ID_Marker
                 bool hasPrev, hasCur;
                 GetRowMarkSides(i, out hasPrev, out hasCur);
                 // 앞/뒤 strip 에 나눠 찍히는 경우에만 첫 strip 이 미완성
-                int removeStrip = (hasPrev && hasCur) ? ptrMain.model.fisrtID - 1 : -1;
+                int removeStrip = (hasPrev && hasCur && ptrMain.model.fisrtID >= 2) ? ptrMain.model.fisrtID - 1 : -1;
 
                 int retry = 0;
                 while (!WriteITSInfo(MainWindow.lots[i], "", true, removeStrip))
