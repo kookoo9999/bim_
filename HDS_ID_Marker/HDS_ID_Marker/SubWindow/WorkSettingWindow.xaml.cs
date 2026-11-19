@@ -133,6 +133,8 @@ namespace HDS_ID_Marker.SubWindow
             m_teachRow = 0;
             cbTeachRow.SelectedIndex = 0;
             ptrMain.PCSInstance.Visions[0].SelectAlignBank(0);
+            imgtemplate.Source = ptrMain.PCSInstance.Visions[0].AlignTemplateBmp;
+            imgAlign.Source = ptrMain.PCSInstance.Visions[0].AlignTemplateBmp2;
 
             SetUI();
             UpdateReverseStatus();

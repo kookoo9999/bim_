@@ -123,6 +123,24 @@ namespace HDS_ID_Marker.SubWindow
 
                 if (checkLot(strLot))
                 {
+                    // 열별 정/역 : lot 입력칸과 같은 열 순서(MarkingDirection) 매핑으로 물리 열 인덱스에 반영 후 시작 가능 여부 선검사
+                    // 차단 후 사용자가 창을 닫아도 기존 전역 orients·lot 값이 오염되지 않도록 백업/복원한다.
+                    bool[] prevOrients = MainWindow.orients != null ? (bool[])MainWindow.orients.Clone() : null;
+                    SetOrient(GetPhysicalRow(0), tsRevA.IsChecked);
+                    SetOrient(GetPhysicalRow(1), tsRevB.IsChecked);
+                    SetOrient(GetPhysicalRow(2), tsRevC.IsChecked);
+                    SetOrient(GetPhysicalRow(3), tsRevD.IsChecked);
+
+                    // 역방향 열이 있으면 시작 가능 여부(티칭 누락, 재티칭 필요, 얼라인 템플릿 등)를 여기서 바로 안내
+                    string reason = ptrMain.workManagement.GetReverseLayoutBlockReason();
+                    if (reason != null)
+                    {
+                        MainWindow.orients = prevOrients;
+                        MaterialWarningDlg dlg = new MaterialWarningDlg(reason);
+                        dlg.ShowDialog();
+                        return;
+                    }
+
                     ptrMain.model.lot = Convert.ToInt32(strLot);
                     if (ptrMain.model.modelInformation.MarkingDirection)
                     {
@@ -137,20 +155,6 @@ namespace HDS_ID_Marker.SubWindow
                         MainWindow.lots[2] = tbLotB.Text;
                         MainWindow.lots[1] = tbLotC.Text;
                         MainWindow.lots[0] = tbLotD.Text;
-                    }
-                    // 열별 정/역 : lot 입력칸과 같은 열 순서(MarkingDirection) 매핑으로 물리 열 인덱스에 저장
-                    SetOrient(GetPhysicalRow(0), tsRevA.IsChecked);
-                    SetOrient(GetPhysicalRow(1), tsRevB.IsChecked);
-                    SetOrient(GetPhysicalRow(2), tsRevC.IsChecked);
-                    SetOrient(GetPhysicalRow(3), tsRevD.IsChecked);
-
-                    // 역방향 열이 있으면 시작 가능 여부(티칭 누락, 재티칭 필요, 얼라인 템플릿 등)를 여기서 바로 안내
-                    string reason = ptrMain.workManagement.GetReverseLayoutBlockReason();
-                    if (reason != null)
-                    {
-                        MaterialWarningDlg dlg = new MaterialWarningDlg(reason);
-                        dlg.ShowDialog();
-                        return;
                     }
                     ptrMain.model.SetResultPath();
 

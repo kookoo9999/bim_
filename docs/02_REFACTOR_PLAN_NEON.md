@@ -131,11 +131,29 @@
 
 ## 6. 후속 작업 순서 및 검증 체크리스트
 
-1. **Step 1 (필수 결함 수정)**: §2.1 ~ §2.5 반영
-2. **Step 2 (권장 사양 보강)**: §3.1 ~ §3.7 반영
-3. **Step 3 (검증)**
+1. **Step 1 (필수 결함 수정)**: §2.1 ~ §2.5 반영 — **완료 (`e4f3ef6`)**
+2. **Step 2 (권장 사양 보강)**: §3.1 ~ §3.7 반영 — **완료 (`e4f3ef6`, `MarkingTEST`는 범위 제외로 원복)**
+3. **Step 2.5 (교차검증 후속 엣지 케이스 보완)**: §7.1 ~ §7.2 반영 — **완료**
+4. **Step 3 (실기 검증)**
    - [ ] `AAAA` 기존 모델 회귀: 얼라인(`GetRoiBaselineOffset == 0`), 마킹, ITS, 이어하기 기존과 100% 동일 동작
    - [ ] `AABB` / `BBAA` 혼합 모델 얼라인 로그 확인: `AABB`에서 베이스라인 보정값이 **양수(`+`)**, `BBAA`에서 **음수(`-`)** 로 출력되고 실기 기울기 보정 방향 일치
-   - [ ] 역방향 티칭: ROI 더블클릭 수정 후 `markPos` 유지 확인, `Cancel` 후 메모리 원복 확인, DB 저장 실패 시 `Reverse.ini` 미갱신 확인
+   - [ ] 역방향 티칭: ROI 더블클릭 수정 후 `markPos` 유지 확인, `Cancel` 후 메모리·정방향 썸네일 원복 확인, DB 저장 실패 시 `Reverse.ini` 미갱신 확인
    - [ ] 이어하기 시나리오: 중단 → 재개 시 `ITSHistoryWindow` 중복 차단(수동 1단계 앞 번호 입력 차단) 및 `FirstID` 유지·EOL 정상 처리 확인
-   - [ ] 역방향 열 `SaveRecogImg` 파일명 strip 번호 일치 및 `LotWindow` Stale 토글 비활성화 확인
+   - [ ] 역방향 열 `SaveRecogImg` 파일명 strip 번호 일치, `LotWindow` Stale 토글 비활성화 및 차단 후 취소 시 `orients` 원복 확인
+
+---
+
+## 7. 커밋 `e4f3ef6` 재검토 및 추가 엣지 케이스 보완
+
+커밋 `e4f3ef6`(Gemini · Neon 교차검증 반영)을 전수 검토한 결과 §2~§3 핵심 결함 및 문서 정합성은 모두 정상 반영되었으며, 신규 추가 코드에서 확인된 아래 2건의 엣지 케이스를 함께 보완했다.
+
+### 7.1 `LotWindow` 역방향 차단 후 취소 시 전역 `orients`/`lot` 상태 잔존 방지
+- **위치**: `SubWindow/LotWindow.xaml.cs` — `btnOK_Click` (L124~162)
+- **현상**: `SetOrient(...)`로 전역 `MainWindow.orients`(및 `ptrMain.model.lot`·`MainWindow.lots`)를 먼저 덮어쓴 뒤 `GetReverseLayoutBlockReason()`으로 차단(`return`)하여, 사용자가 경고 확인 후 창을 닫아도 차단된 역방향 배열이 `MainWindow.orients`에 그대로 남아 있었다.
+- **조치**: `SetOrient` 직전 기존 `MainWindow.orients`를 복제해 두고 `GetReverseLayoutBlockReason()`을 `lot`/`lots` 대입 전에 선검사하도록 순서를 조정했으며, 차단(`reason != null`) 시 `MainWindow.orients`를 이전 값으로 즉시 복원한다.
+
+### 7.2 `WorkSettingWindow` 역방향 탭에서 취소(`Cancel`) 후 템플릿 썸네일 미복원
+- **위치**: `SubWindow/WorkSettingWindow.xaml.cs` — `ChangeModel` (L125~141)
+- **현상**: 역방향 티칭 화면에서 `Cancel`을 누르면 `ChangeModel()`이 정방향(`rbOrientFwd`)과 `SelectAlignBank(0)`을 복원하지만, `imgtemplate.Source`/`imgAlign.Source`를 Bank 0 이미지로 갱신하지 않아 다시 티칭 창을 열었을 때 정방향 화면에 역방향 템플릿 썸네일이 잠시 남을 수 있었다.
+- **조치**: `ChangeModel()`의 `SelectAlignBank(0)` 직후 `imgtemplate.Source`/`imgAlign.Source`를 Bank 0의 `AlignTemplateBmp`/`AlignTemplateBmp2`로 동기화한다.
+
