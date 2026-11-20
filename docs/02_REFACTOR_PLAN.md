@@ -104,7 +104,9 @@ MarkRecipe GetRecipe(int row, Surface s) => orients[row] ? Rev[s] : Fwd[s];
 - 역방향을 **처음 저장하기 전에** 모델을 자동 백업한다(`para_*` 행과 모델 폴더).
 - 저장 시 `LoadProjectTop/Bot`을 호출해 정/역 블록을 함께 재등록한다(5장).
 - 역방향 저장은 **DB 저장 건수 확인 → 템플릿 저장 → `Reverse.ini` 기록 → 레이저 등록** 순서로 한다. 건수가 다르면(예: orientation 컬럼 길이 부족) 그 자리에서 중단하고 `Reverse.ini`·레이저 프로그램은 갱신하지 않는다.
-- 블록 번호 상한: 정/역을 함께 쓰는 모델은 방향별 ROI(얼라인 포함) 20개 이하만 저장할 수 있다(역방향 블록 = 20 + index).
+- 블록 번호 상한: 정/역을 함께 쓰는 모델은 방향별 ROI(얼라인 포함) 20개 이하, 최대 index 19 이하만 저장할 수 있다(역방향 블록 = 20 + index).
+- 역방향 템플릿 저장이 실패하면 즉시 중단한다(`Reverse.ini`·레이저 미갱신).
+- **역방향 초기화** 시 저장 여부와 무관하게 레이저 프로그램을 즉시 재등록한다(레이저에 남은 `20 + index` 블록의 이중 각인 방지).
 - **취소**: 저장하지 않은 변경은 버리고 정/역 모두 DB에서 다시 읽는다. 화면은 정방향, 얼라인 템플릿 뱅크는 0으로 복원한다(런타임이 티칭 데이터를 그대로 쓰므로 미저장 데이터가 자동 마킹에 쓰이지 않게 하기 위함).
 - 기존 ROI 더블클릭 편집 창에도 정/역 정보를 넘겨 좌/우 기본값이 방향에 맞게 계산되게 한다.
 - 파라미터 복사 시 이미 있는 역방향 항목은 ROI 중심을 유지한 채 크기·미리보기를 캔버스에 함께 반영한다.
@@ -194,7 +196,8 @@ string GetRowMarkingLocation(int row) =>
 |---|---|---|
 | `WriteITSOneShot` 호출부 (`WorkManagement.cs:1264, 1333, 1396`) | `ConvertInternal1ID(Int1_id, 공통문자열)[i], Cust1_id[i]` | `WriteITSCompleted(i, …)` → strip S−1. 고객 ID는 **해당 strip에 실제 인쇄한 문자열**을 보관해 두었다가 그대로 기록(자정 경계 등 재계산 차이 방지). 첫 strip은 기록 후 EOL 시 삭제 |
 | 작업이력 `CreateWorkHistory` | FirstID 칸에 첫 기록 strip 저장 | **lot 시작 기준 번호(`fisrtID`)** 저장 → 이어하기 후에도 EOL 첫 strip 삭제·텐션 계산·AOI 미설정 판단이 신규 lot과 같게 동작 |
-| 시작 시 ITS 중복 체크 (`MarkingPC`) | 기준 번호 S로 검색 | **이번 사이클 완성 번호(S−1)** 로 검색. ITS↔DB 불일치로 번호를 수동 입력한 경우에도 같은 검사를 다시 수행 |
+| 시작 시 ITS 중복 체크 (`MarkingPC`) | `model.lot` + 기준 번호 S로 검색 | **`lots[0]` + 이번 사이클 완성 번호(S−1)** 로 검색(ITS 레코드 형식과 동일). ITS↔DB 불일치로 번호를 수동 입력한 경우에도 같은 검사를 다시 수행 |
+| ITS↔DB 불일치 수동 입력 시 DB 저장값 | 입력한 기준 번호 | **ITS 마지막 완성 번호**(ITS 파일이 없으면 `완성 번호 − 1`). 첫 사이클 전에 중단돼도 재시작 시 불일치가 다시 나지 않는다 |
 | `SaveWorkHistory(Int1_id[0], …)` (`:1273, 1340, 1403`) | 고객 문자열로 ±1 | 마지막 완성 strip(S−1) 저장 |
 | 이어하기 `WorkHistoryWindow.GetLastWorkHistory` (`:250-256`) | `"고객1 우"` 포함이면 +1 | 분기 제거, 항상 +1 → 시작번호 = 마지막 완성 strip + 2 |
 | 시작 시 ITS/DB 비교 (`MarkingPC` `:1023-1027`) | `GetLastStripNoITS`(lots[0]) vs `GetStripID` | 위 두 곳이 같은 규칙이면 변경 없음 |
