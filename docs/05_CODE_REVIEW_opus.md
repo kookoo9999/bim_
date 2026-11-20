@@ -119,39 +119,9 @@
 - 운용 방식: 사내 저장소(사내망 리모트)와 GitHub 클론 사이를 **프로젝트 폴더 통째 복사**로 오간다. 사내 저장소에 GitHub 리모트를 추가하기는 어렵다(망 분리).
 - 폴더를 통째로 복사하면 이번 작업에서 **건드리지 않은 파일까지** GitHub 버전(2.0.6 기준)으로 덮어써진다. `MainWindow.xaml`·`AssemblyInfo.cs` 버전 되돌림(H-3)이 이렇게 생겼다.
 
-### 1단계 — 차이 확인 (사내 저장소에서)
-`5b01d8d`가 GitHub 기준과 무엇이 다른지 먼저 확인한다.
-
-```bash
-git log --oneline -8 5b01d8d
-```
-```bash
-git show --stat 5b01d8d
-```
-- 결과가 버전·TEST 버튼 등 몇 개 파일뿐이면 → 그 파일 내용만 GitHub 브랜치에 반영하면 끝난다(2단계 생략 가능).
-- 소스 변경이 많거나 확실하지 않으면 → 2단계.
-
-### 2단계 — 사내 기준 소스를 GitHub 별도 브랜치로 올리기 (GitHub 클론 PC에서)
-1. 사내 저장소에서 `5b01d8d` 상태의 프로젝트 폴더를 준비한다(작업 중 변경이 없는 깨끗한 체크아웃).
-2. GitHub 클론에서 `main` 기준 새 브랜치를 만든다.
-   ```bash
-   git switch -c base/5b01d8d origin/main
-   ```
-3. 1의 폴더를 GitHub 클론에 덮어쓴다. **빌드 산출물(`obj`, `bin`, `.vs`)은 빼고** 복사한다(Windows 예시).
-   ```bash
-   robocopy D:\사내\HDS_ID_Marker D:\github\bim_\HDS_ID_Marker /E /XD obj bin .vs
-   ```
-4. 커밋하고 올린다.
-   ```bash
-   git add -A
-   ```
-   ```bash
-   git commit -m "사내 5b01d8d 기준 소스 동기화"
-   ```
-   ```bash
-   git push origin base/5b01d8d
-   ```
-→ 이 브랜치와 `main`의 차이 = GitHub에 빠져 있던 사내 변경분. Claude가 작업 브랜치에 병합(강제 푸시 없음, 충돌 시 2.0.7 기준)한 뒤 수정 계획을 진행한다.
+### 확인 결과 (2026-11-20)
+- 사내 `5b01d8d` = GitHub `73b81c0`(MarkingPC 단계별 tact 로그)과 같은 작업 + **버전 2.0.7 지정**(`MainWindow.xaml` Title `version 2.0.7 [2026.10.12]`, `AssemblyInfo.cs` `2.0.7.0`, `btntestShift` `Visibility="Hidden"`).
+- 따라서 **기준 브랜치 동기화(`base/5b01d8d`)는 필요 없다.** 다음 코드 커밋에서 위 3곳만 2.0.7 상태로 맞춘다(H-3 해결).
 
 ### 3단계 — 앞으로 GitHub → 사내 반영은 **패치로** (폴더 통째 복사 금지)
 GitHub 클론에서 작업 브랜치의 변경분만 패치 파일로 만든다.
