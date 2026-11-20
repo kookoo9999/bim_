@@ -262,23 +262,24 @@ namespace HDS_ID_Marker
                 ptrMain.teachingManagement.alignOffset[i].Y = y11 + (ptrMain.model.modelInformation.StripIter[i] * Math.Cos(radian) - ptrMain.model.modelInformation.StripIter[i]);
             }
 
+            var cmpLast = alignLast.number == 1 ? ptrMain.PCSInstance.Visions[0].cmpAlignBmp : ptrMain.PCSInstance.Visions[0].cmpAlignBmp2;
             Action action;
             action = delegate
             {
                 //align
-                ptrMain.workInfoViewer.imgAlign.Source = ptrMain.PCSInstance.Visions[0].cmpAlignBmp;
+                ptrMain.workInfoViewer.imgAlign.Source = cmpLast;
                 ptrMain.workInfoViewer.lblAlignOffsetX.Content = x12.ToString();
                 ptrMain.workInfoViewer.lblAlignOffsetY.Content = y12.ToString();
                 ptrMain.workInfoViewer.lblAlignMatch.Content = match2.ToString();
 
                 //top
-                ptrMain.workInfoViewer.imgTopAlign.Source = ptrMain.PCSInstance.Visions[0].cmpAlignBmp;
+                ptrMain.workInfoViewer.imgTopAlign.Source = cmpLast;
                 ptrMain.workInfoViewer.lblTopOffsetX.Content = x12.ToString();
                 ptrMain.workInfoViewer.lblTopOffsetY.Content = y12.ToString();
                 ptrMain.workInfoViewer.lblTopMatch.Content = match2.ToString();
 
                 //bottom
-                ptrMain.workInfoViewer.imgBotAlign.Source = ptrMain.PCSInstance.Visions[0].cmpAlignBmp;
+                ptrMain.workInfoViewer.imgBotAlign.Source = cmpLast;
                 ptrMain.workInfoViewer.lblBotOffsetX.Content = x12.ToString();
                 ptrMain.workInfoViewer.lblBotOffsetY.Content = y12.ToString();
                 ptrMain.workInfoViewer.lblBotMatch.Content = match2.ToString();
@@ -347,19 +348,21 @@ namespace HDS_ID_Marker
                 ptrMain.teachingManagement.alignOffset[i].Y = yR1 + (iter * Math.Cos(radian) - iter);
             }
 
+            var cmpFirst = alignRight.number == 1 ? ptrMain.PCSInstance.Visions[0].cmpAlignBmp : ptrMain.PCSInstance.Visions[0].cmpAlignBmp2;
+            var cmpLast = alignRightLast.number == 1 ? ptrMain.PCSInstance.Visions[0].cmpAlignBmp : ptrMain.PCSInstance.Visions[0].cmpAlignBmp2;
             Action action = delegate
             {
-                ptrMain.workInfoViewer.imgAlign.Source = ptrMain.PCSInstance.Visions[0].cmpAlignBmp;
+                ptrMain.workInfoViewer.imgAlign.Source = cmpLast;
                 ptrMain.workInfoViewer.lblAlignOffsetX.Content = xR2.ToString();
                 ptrMain.workInfoViewer.lblAlignOffsetY.Content = yR2.ToString();
                 ptrMain.workInfoViewer.lblAlignMatch.Content = matchR2.ToString();
 
-                ptrMain.workInfoViewer.imgTopAlign.Source = ptrMain.PCSInstance.Visions[0].cmpAlignBmp;
+                ptrMain.workInfoViewer.imgTopAlign.Source = cmpFirst;
                 ptrMain.workInfoViewer.lblTopOffsetX.Content = xR1.ToString();
                 ptrMain.workInfoViewer.lblTopOffsetY.Content = yR1.ToString();
                 ptrMain.workInfoViewer.lblTopMatch.Content = matchR1.ToString();
 
-                ptrMain.workInfoViewer.imgBotAlign.Source = ptrMain.PCSInstance.Visions[0].cmpAlignBmp;
+                ptrMain.workInfoViewer.imgBotAlign.Source = cmpLast;
                 ptrMain.workInfoViewer.lblBotOffsetX.Content = xR2.ToString();
                 ptrMain.workInfoViewer.lblBotOffsetY.Content = yR2.ToString();
                 ptrMain.workInfoViewer.lblBotMatch.Content = matchR2.ToString();
@@ -441,6 +444,30 @@ namespace HDS_ID_Marker
 
         float bfY11, bfY21, bfY12, bfY22;
         bool isFirst11 = true, isFirst21 = true, isFirst12 = true, isFirst22 = true;
+        string m_lastAlignContext = null;
+
+        /// <summary>얼라인 직전 Y 비교 이력을 초기화한다.</summary>
+        public void ResetAlignHistory()
+        {
+            isFirst11 = isFirst21 = isFirst12 = isFirst22 = true;
+        }
+
+        /// <summary>
+        /// 모델 또는 열 방향(정/역)이 직전 실행과 달라진 경우에만 얼라인 이력을 리셋한다.
+        /// (같은 모델·같은 AAAA 연속 실행 시 이상값 검출력을 유지하면서, AAAA→BBAA 전환 시 첫 사이클 -4 오알람 방지)
+        /// </summary>
+        public void ResetAlignHistoryIfContextChanged(string modelName, int rowCount)
+        {
+            string orientSig = "";
+            for (int i = 0; i < rowCount; i++) orientSig += MainWindow.IsReverseRow(i) ? "R" : "F";
+            string ctx = (modelName ?? "") + "|" + orientSig;
+            if (m_lastAlignContext != null && m_lastAlignContext != ctx)
+            {
+                ResetAlignHistory();
+                MainWindow.logger.WriteLog(LogType.Info, string.Format("[Align] 모델/열 방향 변경({0} → {1})으로 얼라인 비교 이력 초기화", m_lastAlignContext, ctx));
+            }
+            m_lastAlignContext = ctx;
+        }
         private bool CheckAlign11(float y11)
         {
             if (!isFirst11)

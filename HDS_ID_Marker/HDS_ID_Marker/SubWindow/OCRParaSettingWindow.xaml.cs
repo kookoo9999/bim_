@@ -31,6 +31,36 @@ namespace HDS_ID_Marker.SubWindow
         public OCRParaSettingWindow()
         {
             InitializeComponent();
+            IsVisibleChanged += Window_IsVisibleChanged;
+        }
+
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (IsVisible) SyncMarkPosFromOrientation();
+        }
+
+        public void SyncMarkPosFromOrientation()
+        {
+            MainWindow ptrmainwin = Application.Current.MainWindow as MainWindow;
+            if (ptrmainwin == null || ptrmainwin.model == null || ptrmainwin.model.markingInformation == null || ptrmainwin.model.markingInformation.customerInformation == null)
+                return;
+
+            string location = ptrmainwin.model.markingInformation.customerInformation.MarkingLocation;
+            if (string.IsNullOrEmpty(location)) return;
+            if (IsReverse) location = ReverseLayout.SwapLR(location); // 역방향 티칭은 좌/우 반전
+
+            string[] sss = location.Split(',');
+            foreach (string s in sss)
+            {
+                if (!string.IsNullOrEmpty(m_reference) && s.Contains(m_reference))
+                {
+                    string dir = s.Substring(s.Length - 1, 1);
+                    m_markPos = (dir == "좌") ? 1 : 0;
+                }
+            }
+
+            if (m_markPos == 1) rbLeft.IsChecked = true;
+            if (m_markPos == 0) rbRight.IsChecked = true;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -45,23 +75,7 @@ namespace HDS_ID_Marker.SubWindow
             tbPower.Text = m_power.ToString();
             tbSpeed.Text = m_speed.ToString();
 
-            MainWindow ptrmainwin = Application.Current.MainWindow as MainWindow;
-            string location = ptrmainwin.model.markingInformation.customerInformation.MarkingLocation;
-            if (IsReverse) location = ReverseLayout.SwapLR(location); // 역방향 티칭은 좌/우 반전
-
-            string[] sss = location.Split(',');
-            string dir = "";
-            foreach (string s in sss)
-            {
-                if (s.Contains(m_reference))
-                {
-                    dir = s.Substring(s.Length - 1, 1);
-                    m_markPos = (dir == "좌") ? 1 : 0;
-                }
-            }
-
-            if (m_markPos == 1) rbLeft.IsChecked = true;
-            if (m_markPos == 0) rbRight.IsChecked = true;
+            SyncMarkPosFromOrientation();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)

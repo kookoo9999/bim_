@@ -1086,12 +1086,15 @@ namespace HDS_ID_Marker.SubWindow
                 return;
             }
 
-            // 블록 번호 상한 : 역방향 블록은 20 + index 로 등록되므로 정/역 혼합 사용 시 방향별 ROI(얼라인 포함) 20개 이하
+            // 블록 번호 상한 : 역방향 블록은 20 + index 로 등록되므로 정/역 혼합 사용 시 방향별 ROI(얼라인 포함) 20개 이하 및 최대 index < 20
             MainHRControl saveCtrl = (m_mode == "top") ? topHRControl : botHRControl;
-            if ((reverse || saveCtrl.GetMarkSet(true).ObjectCount > 0) &&
-                (saveCtrl.GetMarkSet(false).ObjectCount > ReverseLayout.RevBlockBase || saveCtrl.AllObjectCount() > ReverseLayout.RevBlockBase))
+            MarkSet fwdSet = saveCtrl.GetMarkSet(false);
+            MarkSet revSet = saveCtrl.GetMarkSet(true);
+            if ((reverse || revSet.ObjectCount > 0) &&
+                (fwdSet.ObjectCount > ReverseLayout.RevBlockBase || saveCtrl.AllObjectCount() > ReverseLayout.RevBlockBase ||
+                 fwdSet.MaxIndex >= ReverseLayout.RevBlockBase || revSet.MaxIndex >= ReverseLayout.RevBlockBase))
             {
-                MaterialWarningDlg warningDlg = new MaterialWarningDlg(string.Format("정/역 혼합 사용 시 방향별 ROI(얼라인 포함)는 {0}개 이하만 가능합니다.\nROI 수를 확인하세요.", ReverseLayout.RevBlockBase));
+                MaterialWarningDlg warningDlg = new MaterialWarningDlg(string.Format("정/역 혼합 사용 시 방향별 ROI(얼라인 포함)는 {0}개 이하(인덱스 0~{1})만 가능합니다.\nROI 수를 확인하세요.", ReverseLayout.RevBlockBase, ReverseLayout.RevBlockBase - 1));
                 warningDlg.ShowDialog();
                 return;
             }
@@ -1116,12 +1119,13 @@ namespace HDS_ID_Marker.SubWindow
                     {
                         // 역방향 : DB 저장 확인 후 템플릿 저장, 기준점 스냅샷 기록 (모션 좌표는 변경하지 않음)
                         if (!VerifyReverseSaved(topHRControl)) return;
-                        if (Setting.Device.MotionUse) isSaved = SaveReverseAlignTemplate();
-                        if (isSaved)
+                        if (Setting.Device.MotionUse)
                         {
-                            markingInfo.RevBaseTopY = markingInfo.TopMarkY;
-                            markingInfo.SaveReverseInfo(ptrMain.model.modelInformation.modelPath);
+                            isSaved = SaveReverseAlignTemplate();
+                            if (!isSaved) return;
                         }
+                        markingInfo.RevBaseTopY = markingInfo.TopMarkY;
+                        markingInfo.SaveReverseInfo(ptrMain.model.modelInformation.modelPath);
                     }
                     break;
                 case "bot":
@@ -1955,12 +1959,22 @@ namespace HDS_ID_Marker.SubWindow
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            MaterialAlertDlg alertDlg = new MaterialAlertDlg((IsReverseTeaching ? "역방향" : "정방향") + " 티칭 데이터를 모두 초기화 합니다.\n초기화 하시겠습니까?");
+            bool wasReverse = IsReverseTeaching;
+            MaterialAlertDlg alertDlg = new MaterialAlertDlg((wasReverse ? "역방향" : "정방향") + " 티칭 데이터를 모두 초기화 합니다.\n초기화 하시겠습니까?");
             alertDlg.ShowDialog();
             //if (alertDlg.DialogResult.Value) { DeleteAllClear(); pnl_Functions.IsEnabled = true; }
             if (alertDlg.DialogResult.Value)
             {
+                // DeleteAllClear 는 마지막 테이블(OCR) 행이 없으면 false 를 반환하므로 반환값과 무관하게 후처리를 수행한다.
                 DeleteAllClear();
+                // 역방향 초기화 후 저장 없이 닫아도 Keyence 메모리에 20+index 블록이 남아 이중 각인되지 않도록 레이저 재등록
+                if (wasReverse)
+                {
+                    if (Setting.Device.laserConfigs[0].Use)
+                        ptrMain.AlarmErrorLaser(ptrMain.laserManagement.LoadProjectTop(Setting.Device.laserConfigs[0].BarcodeSpotValue, Setting.Device.laserConfigs[0].OCRSpotValue), 0);
+                    if (Setting.Device.laserConfigs[1].Use)
+                        ptrMain.AlarmErrorLaser(ptrMain.laserManagement.LoadProjectBot(Setting.Device.laserConfigs[1].BarcodeSpotValue, Setting.Device.laserConfigs[1].OCRSpotValue), 1);
+                }
                 // 신규모델 시 티칭기능 비활성
                 SetInitialize();  
                 UpdateReverseStatus();

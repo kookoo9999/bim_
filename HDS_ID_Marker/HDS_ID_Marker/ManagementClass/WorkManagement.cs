@@ -1146,7 +1146,9 @@ namespace HDS_ID_Marker
                                     }
                                     else
                                     {
-                                        SaveWorkHistory(ptrMain.model.stripID, newStripID);
+                                        // DB StripID 는 마지막 완성 strip(= ITS 마지막 기록) 기준을 유지해야 첫 사이클 전 중단 시에도 불일치가 재발하지 않는다.
+                                        int dbSyncStrip = ITS_stripID > 0 ? ITS_stripID : Math.Max(0, GetCompletedStrip(0, newStripID) - 1);
+                                        SaveWorkHistory(ptrMain.model.stripID, dbSyncStrip);
                                         ptrMain.model.stripID = newStripID;
                                     }
                                 }
@@ -1170,6 +1172,8 @@ namespace HDS_ID_Marker
                 // 2D Marking 각인 시 날짜 및 시간
                 DateTime MarkingTime = DateTime.Now;
                 ResetPrintedCustomIDs(Cust1_id.Length);
+                if (isReady && ptrMain.model.modelInformation.StripIter != null)
+                    ptrMain.teachingManagement.ResetAlignHistoryIfContextChanged(ptrMain.model.modelInformation.Name, ptrMain.model.modelInformation.StripIter.Count);
 
                 while (isReady)
                 {
@@ -2063,7 +2067,7 @@ namespace HDS_ID_Marker
                     string itsTempPathTemp = itsTempPath + "temp";
                     string itsPathTemp = itsPath + "temp";
 
-                    using (StreamWriter writer = new StreamWriter(itsTempPathTemp, true, new UTF8Encoding(false)))
+                    using (StreamWriter writer = new StreamWriter(itsTempPathTemp, false, new UTF8Encoding(false)))
                     using (StreamReader reader = new StreamReader(itsTempPath))
                     {
                         string line;
@@ -2082,7 +2086,7 @@ namespace HDS_ID_Marker
                     File.Delete(itsTempPath);
                     File.Move(itsTempPathTemp, itsTempPath);
 
-                    using (StreamWriter writer = new StreamWriter(itsPathTemp, true, new UTF8Encoding(false)))
+                    using (StreamWriter writer = new StreamWriter(itsPathTemp, false, new UTF8Encoding(false)))
                     using (StreamReader reader = new StreamReader(itsPath))
                     {
                         string line;
@@ -2645,6 +2649,23 @@ namespace HDS_ID_Marker
             if (isFailReading1.Count(n => n == true) > 0 && isFailReading2.Count(n => n == true) > 0) errCode = eErrorCode.BOTH_MARK_COGNITION_FAIL;
             return errCode;
         }
+
+        /// <summary>디코딩 폴백용 마크 포맷 조회 (고객 마크 → 사내 마크 → 대체 면 순)</summary>
+        private static string GetCheckMarkFormat(MarkSet primary, MarkSet fallback = null)
+        {
+            if (primary != null)
+            {
+                if (primary.customMarks.Count > 0) return primary.customMarks[0].format;
+                if (primary.interMarks.Count > 0) return primary.interMarks[0].format;
+            }
+            if (fallback != null)
+            {
+                if (fallback.customMarks.Count > 0) return fallback.customMarks[0].format;
+                if (fallback.interMarks.Count > 0) return fallback.interMarks[0].format;
+            }
+            return string.Empty;
+        }
+
         internal eErrorCode CheckMarks2(string[] cust_id1, string[] cust_id2, int type, System.Windows.Point alignPos)
         {
             eErrorCode errCode = eErrorCode.DEFUALT;
@@ -2710,7 +2731,7 @@ namespace HDS_ID_Marker
                         bms = ptrMain.PCSInstance.Visions[0].GetTopMarkBmpToROI(roi);
                         TactLog.Add($"C{i + 1}_TOP_GRAB", tTact);
                         var roirect = ptrMain.PCSInstance.Visions[0].GetRoiRect();
-                        markFormat = topSet.customMarks[0].format;
+                        markFormat = GetCheckMarkFormat(topSet);
                         System.Drawing.Point dummyDataMatrixCenter;
                         tTact = TactLog.Now;
                         var result = ptrMain.dataMatrix.Decode(bms, "TOP", i, MainWindow.ri.TopCamResolution, out dummyDataMatrixCenter);
@@ -2815,8 +2836,8 @@ namespace HDS_ID_Marker
                         tTact = TactLog.Now;
                         bms = ptrMain.PCSInstance.Visions[1].GetBotMarkBmpToROI(roi);
                         TactLog.Add($"C{i + 1}_BOT_GRAB", tTact);
-                        // 하부 디코딩은 하부 마크 포맷 사용 (하부 고객 마크가 없으면 기존처럼 상부 포맷)
-                        markFormat = botSet.customMarks.Count > 0 ? botSet.customMarks[0].format : topSet.customMarks[0].format;
+                        // 하부 디코딩은 하부 마크 포맷 사용 (고객 마크가 없으면 사내 마크/상부 포맷으로 폴백)
+                        markFormat = GetCheckMarkFormat(botSet, topSet);
                         System.Drawing.Point dummyDataMatrixCenter;
                         tTact = TactLog.Now;
                         var result = ptrMain.dataMatrix.Decode(bms, "BOT", i, MainWindow.ri.BotCamResolution, out dummyDataMatrixCenter);
@@ -2962,13 +2983,11 @@ namespace HDS_ID_Marker
 
             try
             {
-                int customType = 0;
                 for (int i = colCount - 1; i >= 0; i--)
                 {
                     // 열 방향(정/역)에 맞는 검사 ROI
                     MarkSet topSet = ptrMain.GetTopSet(i);
                     MarkSet botSet = ptrMain.GetBotSet(i);
-                    string checkID = null;
 
                     long tTact = TactLog.Now;
                     if (Setting.General.TestMode == "0")
@@ -2992,6 +3011,8 @@ namespace HDS_ID_Marker
                     {
                         topSet.customMarks.Sort(new RefComparer());
                         string roi = "";
+                        string topCheckID = null;
+                        int topCustomType = 0;
                         if (topSet.customMarks.Count == 0)
                         {
                             roi = topSet.interMarks[0].roi;
@@ -3001,13 +3022,13 @@ namespace HDS_ID_Marker
                             roi = topSet.customMarks[0].roi;
                             if (topSet.customMarks[0].reference == "고객1")
                             {
-                                checkID = cust_id1[i];
-                                customType = 0;
+                                topCheckID = cust_id1[i];
+                                topCustomType = 0;
                             }
                             else if (topSet.customMarks[0].reference == "고객2")
                             {
-                                checkID = cust_id2[i];
-                                customType = 1;
+                                topCheckID = cust_id2[i];
+                                topCustomType = 1;
                             }
                         }
 
@@ -3023,9 +3044,9 @@ namespace HDS_ID_Marker
                             IsTop = true,
                             Bmp = bms,
                             RoiRect = roirect,
-                            CheckID = checkID,
-                            MarkFormat = topSet.customMarks[0].format,
-                            CustomType = customType
+                            CheckID = topCheckID,
+                            MarkFormat = GetCheckMarkFormat(topSet),
+                            CustomType = topCustomType
                         });
                     }
 
@@ -3033,6 +3054,8 @@ namespace HDS_ID_Marker
                     {
                         botSet.customMarks.Sort(new RefComparer());
                         string roi = "";
+                        string botCheckID = null;
+                        int botCustomType = 0;
                         if (botSet.customMarks.Count == 0)
                         {
                             roi = botSet.interMarks[0].roi;
@@ -3041,9 +3064,15 @@ namespace HDS_ID_Marker
                         {
                             roi = botSet.customMarks[0].roi;
                             if (botSet.customMarks[0].reference == "고객1")
-                                checkID = cust_id1[i];
+                            {
+                                botCheckID = cust_id1[i];
+                                botCustomType = 0;
+                            }
                             else if (botSet.customMarks[0].reference == "고객2")
-                                checkID = cust_id2[i];
+                            {
+                                botCheckID = cust_id2[i];
+                                botCustomType = 1;
+                            }
                         }
 
                         tTact = TactLog.Now;
@@ -3055,10 +3084,10 @@ namespace HDS_ID_Marker
                             Col = i,
                             IsTop = false,
                             Bmp = bms,
-                            CheckID = checkID,
-                            // 하부 디코딩은 하부 마크 포맷 사용 (하부 고객 마크가 없으면 기존처럼 상부 포맷)
-                            MarkFormat = botSet.customMarks.Count > 0 ? botSet.customMarks[0].format : topSet.customMarks[0].format,
-                            CustomType = customType
+                            CheckID = botCheckID,
+                            // 하부 디코딩은 하부 마크 포맷 사용 (고객 마크가 없으면 사내 마크/상부 포맷으로 폴백)
+                            MarkFormat = GetCheckMarkFormat(botSet, topSet),
+                            CustomType = botCustomType
                         });
                     }
                 }

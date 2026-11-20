@@ -80,6 +80,18 @@ namespace HDS_ID_Marker
 
         public int BlockCount { get { return customMarks.Count + interMarks.Count + ocrMarks.Count; } }
         public int ObjectCount { get { return BlockCount + alignROIs.Count; } }
+        public int MaxIndex
+        {
+            get
+            {
+                int max = -1;
+                foreach (var m in customMarks) if (m.index > max) max = m.index;
+                foreach (var m in interMarks) if (m.index > max) max = m.index;
+                foreach (var m in ocrMarks) if (m.index > max) max = m.index;
+                foreach (var a in alignROIs) if (a.index > max) max = a.index;
+                return max;
+            }
+        }
 
         public void Clear()
         {

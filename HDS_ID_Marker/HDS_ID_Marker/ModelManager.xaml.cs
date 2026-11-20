@@ -720,14 +720,17 @@ namespace HDS_ID_Marker
                         ptrMain.workSettingControl.imgAlign.Source = ptrMain.teachingManagement.LoadAlignData(alignPath);
                     break;
                 case "PC":
+                    ptrMain.PCSInstance.Visions[0].ClearAlignBank(0);
                     ptrMain.PCSInstance.Visions[0].SelectAlignBank(0);
                     if (File.Exists(alignPath))
-                    {
                         ptrMain.workSettingWindow.imgtemplate.Source = ptrMain.teachingManagement.LoadAlignData2(alignPath, 1);
-                    }
+                    else
+                        ptrMain.workSettingWindow.imgtemplate.Source = null;
 
                     if (File.Exists(align2Path))
-                        ptrMain.workSettingWindow.imgAlign.Source = ptrMain.teachingManagement.LoadAlignData2(align2Path,2);
+                        ptrMain.workSettingWindow.imgAlign.Source = ptrMain.teachingManagement.LoadAlignData2(align2Path, 2);
+                    else
+                        ptrMain.workSettingWindow.imgAlign.Source = null;
 
                     // 역방향 얼라인 템플릿 (뱅크 1) 및 역방향 티칭 기준점 스냅샷
                     ptrMain.teachingManagement.LoadReverseAlignData(ptrMain.model.modelInformation.modelPath);

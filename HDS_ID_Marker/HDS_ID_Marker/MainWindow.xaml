@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterScreen" WindowState="Maximized"
         WindowStyle="None" ResizeMode="NoResize"
         HorizontalAlignment="Center" VerticalAlignment="Center"        
-        mc:Ignorable="d" FontFamily="Roboto" Title="Haesung DS BGA RtR ID Marker M/C version 2.0.6 [2026.04.07] [통합 버전]"
+        mc:Ignorable="d" FontFamily="Roboto" Title="Haesung DS BGA RtR ID Marker M/C version 2.1.0 [2026.11.20] [통합 버전]"
         Icon="images/ID_Matrix.png" d:DesignHeight="1080" d:DesignWidth="1920" KeyDown="Window_KeyDown" ContentRendered="Window_ContentRendered">
 
     <materialDesign:DialogHost x:Name="dlgExit" Style="{StaticResource MaterialDesignMJDialogHost}"
@@ -61,7 +61,7 @@
                 </Grid.ColumnDefinitions>
                 <Image x:Name="imgCI" Grid.Column="1" Grid.Row="0" Source="Images/CI.PNG" Opacity="1" Margin="0"/>
                 <local:MainToolBar x:Name="MainToolBarCtrl" Grid.Row="0" Grid.Column="2" Margin="10,0,0,0" Grid.ColumnSpan="4"/>
-                <Button Grid.Column="1" Visibility="Visible" Content="TEST" x:Name="btntestShift" HorizontalAlignment="Left" Margin="460,59,0,0" VerticalAlignment="Top"/>
+                <Button Grid.Column="1" Visibility="Hidden" Content="TEST" x:Name="btntestShift" HorizontalAlignment="Left" Margin="460,59,0,0" VerticalAlignment="Top"/>
             </Grid>
 
             <Grid Grid.Row="3">

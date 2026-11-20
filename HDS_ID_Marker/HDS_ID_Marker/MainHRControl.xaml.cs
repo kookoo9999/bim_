@@ -76,10 +76,10 @@ namespace HDS_ID_Marker
             ocrMarks = set.ocrMarks;
             alignROIs = set.alignROIs;
 
-            // 마크 설정창의 좌/우 기본값(고객사 2D 위치)도 방향에 맞춰 계산되도록 전달
-            if (customMarkSettingWindow != null) customMarkSettingWindow.IsReverse = m_reverse;
-            if (interMarkSettingWindow != null) interMarkSettingWindow.IsReverse = m_reverse;
-            if (ocrParaSettingWindow != null) ocrParaSettingWindow.IsReverse = m_reverse;
+            // 마크 설정창의 좌/우 기본값(고객사 2D 위치)도 방향에 맞춰 즉시 갱신 (재사용 창을 열지 않고 AddObject 하는 경우도 대응)
+            if (customMarkSettingWindow != null) { customMarkSettingWindow.IsReverse = m_reverse; customMarkSettingWindow.SyncMarkPosFromOrientation(); }
+            if (interMarkSettingWindow != null) { interMarkSettingWindow.IsReverse = m_reverse; interMarkSettingWindow.SyncMarkPosFromOrientation(); }
+            if (ocrParaSettingWindow != null) { ocrParaSettingWindow.IsReverse = m_reverse; ocrParaSettingWindow.SyncMarkPosFromOrientation(); }
         }
 
         private string m_modelName = "";
@@ -810,7 +810,7 @@ namespace HDS_ID_Marker
                     Canvas.SetLeft(rect, Convert.ToDouble(customMark.roi.Split(',')[1]));
                     rect.Width = Convert.ToDouble(customMark.roi.Split(',')[2]);
                     rect.Height = Convert.ToDouble(customMark.roi.Split(',')[3]);
-                    rect.rectangle.Fill = MakeGDIMatrix("pack://application:,,/Images/datamatrixcustom.png", customMark.degree);
+                    rect.rectangle.Fill = MakeGDIMatrix("pack://application:,,/Images/datamatrixcustom.png", PreviewDegree(customMark.degree));
                     rect.text.Text = customMark.reference.ToString();
                     drawingCanvas.Children.Insert(customMark.index, rect);
                     break;
@@ -826,7 +826,7 @@ namespace HDS_ID_Marker
                     Canvas.SetLeft(rect, Convert.ToDouble(interMark.roi.Split(',')[1]));
                     rect.Width = Convert.ToDouble(interMark.roi.Split(',')[2]);
                     rect.Height = Convert.ToDouble(interMark.roi.Split(',')[3]);
-                    rect.rectangle.Fill = MakeGDIMatrix("pack://application:,,/Images/datamatrixcustom.png", interMark.degree);
+                    rect.rectangle.Fill = MakeGDIMatrix("pack://application:,,/Images/datamatrixcustom.png", PreviewDegree(interMark.degree));
                     rect.text.Text = interMark.reference.ToString();
                     drawingCanvas.Children.Insert(interMark.index, rect);
                     break;
@@ -848,9 +848,9 @@ namespace HDS_ID_Marker
                     Set2DInfo(ref cust_code, ref int_code);
 
                     if (ocrMark.reference == "사내1")
-                        rect.rectangle.Fill = MakeGDIText(int_code, ocrMark.degree);
+                        rect.rectangle.Fill = MakeGDIText(int_code, PreviewDegree(ocrMark.degree));
                     else
-                        rect.rectangle.Fill = MakeGDIText(cust_code, ocrMark.degree);
+                        rect.rectangle.Fill = MakeGDIText(cust_code, PreviewDegree(ocrMark.degree));
                     rect.text.Text = ocrMark.reference.ToString();
                     drawingCanvas.Children.Insert(ocrMark.index, rect);
                     break;
@@ -2221,11 +2221,11 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                 m.shape = src.shape; m.sizeX = src.sizeX; m.sizeY = src.sizeY; m.format = src.format; m.gap = src.gap;
                 m.power = src.power; m.speed = src.speed; m.flip = src.flip; m.reference = src.reference;
                 m.degree = ReverseLayout.RotateDegree180(src.degree);
-                m.markPos = 1 - src.markPos;
+                m.markPos = (src.markPos == 1) ? 0 : 1;
                 m.orientation = DbOrientation;
                 if (i >= 0)
                 {
-                    m.roi = ResizeRoiKeepCenter(m.roi, src.roi);
+                    m.roi = ResizeRoiKeepCenter(GetCanvasRoi(m.index, m.roi), src.roi);
                     customMarks[i] = m;
                     UpdateCanvasRect(m.index, m.roi, MakeGDIMatrix("pack://application:,,/Images/datamatrixcustom.png", PreviewDegree(m.degree)));
                     updated++;
@@ -2247,11 +2247,11 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                 m.shape = src.shape; m.sizeX = src.sizeX; m.sizeY = src.sizeY; m.format = src.format; m.gap = src.gap;
                 m.power = src.power; m.speed = src.speed; m.reference = src.reference;
                 m.degree = ReverseLayout.RotateDegree180(src.degree);
-                m.markPos = 1 - src.markPos;
+                m.markPos = (src.markPos == 1) ? 0 : 1;
                 m.orientation = DbOrientation;
                 if (i >= 0)
                 {
-                    m.roi = ResizeRoiKeepCenter(m.roi, src.roi);
+                    m.roi = ResizeRoiKeepCenter(GetCanvasRoi(m.index, m.roi), src.roi);
                     interMarks[i] = m;
                     UpdateCanvasRect(m.index, m.roi, MakeGDIMatrix("pack://application:,,/Images/datamatrixcustom.png", PreviewDegree(m.degree)));
                     updated++;
@@ -2273,11 +2273,11 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                 m.font = src.font; m.sizeX = src.sizeX; m.sizeY = src.sizeY; m.gap = src.gap; m.alignment = src.alignment;
                 m.txtcount = src.txtcount; m.power = src.power; m.speed = src.speed; m.reference = src.reference;
                 m.degree = ReverseLayout.RotateDegree180(src.degree);
-                m.markPos = 1 - src.markPos;
+                m.markPos = (src.markPos == 1) ? 0 : 1;
                 m.orientation = DbOrientation;
                 if (i >= 0)
                 {
-                    m.roi = ResizeRoiKeepCenter(m.roi, src.roi);
+                    m.roi = ResizeRoiKeepCenter(GetCanvasRoi(m.index, m.roi), src.roi);
                     ocrMarks[i] = m;
                     string cust_code = "", int_code = "";
                     Set2DInfo(ref cust_code, ref int_code);
@@ -2302,7 +2302,7 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
                 m.orientation = DbOrientation;
                 if (i >= 0)
                 {
-                    m.roi = ResizeRoiKeepCenter(m.roi, src.roi);
+                    m.roi = ResizeRoiKeepCenter(GetCanvasRoi(m.index, m.roi), src.roi);
                     alignROIs[i] = m;
                     UpdateCanvasRect(m.index, m.roi, null);
                     updated++;
@@ -2318,6 +2318,19 @@ ocrMark.alignment, ocrMark.degree, ocrMark.reference, ocrMark.power, ocrMark.spe
             }
 
             LogTeachingData(string.Format("정방향복사/{0}/{1}/생성 {2}, 갱신 {3}", m_modelName, DbOrientation, created, updated));
+        }
+
+        /// <summary>캔버스에 그려진 ROI 현재 좌표(드래그로 이동한 미저장 위치 포함)를 읽는다.</summary>
+        private string GetCanvasRoi(int index, string fallback)
+        {
+            if (index < 0 || index >= drawingCanvas.Children.Count) return fallback;
+            TextRectangle rect = drawingCanvas.Children[index] as TextRectangle;
+            if (rect == null || double.IsNaN(rect.Width) || double.IsNaN(rect.Height)) return fallback;
+
+            double top = Canvas.GetTop(rect);
+            double left = Canvas.GetLeft(rect);
+            if (double.IsNaN(top) || double.IsNaN(left)) return fallback;
+            return string.Format("{0},{1},{2},{3}", Math.Round(top, 3), Math.Round(left, 3), Math.Round(rect.Width, 3), Math.Round(rect.Height, 3));
         }
 
         /// <summary>ROI 중심은 유지하고 크기만 기준 ROI 크기로 맞춘다.</summary>

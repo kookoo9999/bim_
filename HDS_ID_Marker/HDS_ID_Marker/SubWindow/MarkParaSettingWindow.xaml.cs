@@ -36,11 +36,13 @@ namespace HDS_ID_Marker.SubWindow
         public MarkParaSettingWindow()
         {
             InitializeComponent();
+            IsVisibleChanged += Window_IsVisibleChanged;
         }
 
         public MarkParaSettingWindow(string type)
         {
             InitializeComponent();
+            IsVisibleChanged += Window_IsVisibleChanged;
 
             switch (type)
             {
@@ -115,28 +117,42 @@ namespace HDS_ID_Marker.SubWindow
             mark.markPos = m_markPos;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (m_shape == "circle") rbCircle.IsChecked = true;
-            if (m_shape == "rect") rbRect.IsChecked = true;
-            
+            if (IsVisible) SyncMarkPosFromOrientation();
+        }
+
+        public void SyncMarkPosFromOrientation()
+        {
             MainWindow ptrmainwin = Application.Current.MainWindow as MainWindow;
+            if (ptrmainwin == null || ptrmainwin.model == null || ptrmainwin.model.markingInformation == null || ptrmainwin.model.markingInformation.customerInformation == null)
+                return;
+
             string location = ptrmainwin.model.markingInformation.customerInformation.MarkingLocation;
+            if (string.IsNullOrEmpty(location)) return;
             if (IsReverse) location = ReverseLayout.SwapLR(location); // 역방향 티칭은 좌/우 반전
 
             string[] sss = location.Split(',');
-            string dir = "";
             foreach (string s in sss)
             {
-                if(s.Contains(m_reference))
+                if (!string.IsNullOrEmpty(m_reference) && s.Contains(m_reference))
                 {
-                    dir = s.Substring(s.Length - 1, 1);
-                    m_markPos = (dir=="좌") ? 1 : 0;
+                    string dir = s.Substring(s.Length - 1, 1);
+                    m_markPos = (dir == "좌") ? 1 : 0;
                 }
             }
 
             if (m_markPos == 1) rbLeft.IsChecked = true;
             if (m_markPos == 0) rbRight.IsChecked = true;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (m_shape == "circle") rbCircle.IsChecked = true;
+            if (m_shape == "rect") rbRect.IsChecked = true;
+
+            SyncMarkPosFromOrientation();
+
             tbWidth.Text = m_sizeX.ToString();
             tbHeight.Text = m_sizeY.ToString();
             cbFormat.Text = m_format;

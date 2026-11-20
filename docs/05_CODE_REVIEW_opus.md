@@ -94,22 +94,22 @@
 | 2 | M-4 단일 측 마크 모델 | 지금처럼 둔다 | **의도된 동작으로 확정.** 단일 측 마크 모델은 열 방향에 따라 완성 시점(S / S−1)이 다르며 열별 lot 파일에 그대로 기록된다. 계획서 §6.1에 명시 |
 | 3 | H-3 원격 기준점 | `5b01d8d` = tact 로그 + 버전 2.0.7 지정 | 기준 동기화 불필요. **버전은 2.1.0으로 통일**(혼합 배열 대규모 패치). §6 참조 |
 
-### 확정 수정 계획 (코드 수정은 다음 단계)
+### 확정 수정 계획 (반영 완료)
 
-| 순위 | 항목 |
-|---|---|
-| 1 | H-1 역방향 초기화 후 레이저 재등록 |
-| 2 | H-4 수동 번호 입력 시 DB에 `GetCompletedStrip(0, new) − 1` 저장 |
-| 3 | M-1 모델 또는 열 방향이 직전 실행과 다를 때 얼라인 이력 리셋 |
-| 4 | M-3 검사 ROI 포맷 폴백, 상/하부 `checkID` 분리 |
-| 5 | M-5 복사 시 현재 캔버스 위치 기준, `markPos` 반전 방식, `refresh` 하부 미리보기 각도 |
-| 6 | M-6 모델 전환 시 뱅크 0 초기화 |
-| 7 | M-2-2 최대 index 가드, M-2-3 역방향 템플릿 저장 실패 시 조기 반환 |
-| 8 | H-2 설정창 표시 시 좌/우 재계산 |
-| 9 | L-2 뷰어 이미지, L-3 EOL temp 덮어쓰기 |
-| 0 | **H-3 버전 2.1.0 통일** : `MainWindow.xaml` Title, `AssemblyInfo.cs` `AssemblyVersion`/`AssemblyFileVersion` = `2.1.0.0`, `btntestShift` `Visibility="Hidden"` |
-| 문서 | 계획서 §3.1(L-1), §6.1(M-4), 04 체크리스트 H-1/H-4 시나리오·버전 2.1.0 — **반영 완료** |
-| 제외 | M-2-1 (기존 유지), M-4 (의도된 동작) |
+| 순위 | 항목 | 비고 |
+|---|---|---|
+| 0 | **H-3 버전 2.1.0 통일** : `MainWindow.xaml` Title (`version 2.1.0 [2026.11.20]`), `AssemblyInfo.cs` `2.1.0.0`, `btntestShift` `Visibility="Hidden"` | 반영 완료 |
+| 1 | H-1 역방향 초기화 후 레이저 재등록 | 반영 완료 (`DeleteAllClear` 반환값과 무관하게 역방향 초기화 시 `LoadProjectTop/Bot` 호출) |
+| 2 | H-4 수동 번호 입력 시 DB에 ITS 마지막 완성 번호(`ITS_stripID`, 없으면 `GetCompletedStrip(0, new) − 1`) 저장 | 반영 완료 (건너뛰기 입력 후 마킹 전 중단 시에도 ITS↔DB 일치 보장) |
+| 3 | M-1 모델 또는 열 방향이 직전 실행과 다를 때 얼라인 이력 리셋 | 반영 완료 (`ResetAlignHistoryIfContextChanged`) |
+| 4 | M-3 검사 ROI 포맷 폴백, 상/하부 `checkID` 분리 | 반영 완료 (`GetCheckMarkFormat`, `topCheckID`/`botCheckID` 분리) |
+| 5 | M-5 복사 시 현재 캔버스 위치 기준, `markPos` 반전 방식, `refresh` 하부 미리보기 각도 | 반영 완료 (`GetCanvasRoi`, `src.markPos == 1 ? 0 : 1`, `PreviewDegree`) |
+| 6 | M-6 모델 전환 시 뱅크 0 초기화 | 반영 완료 (`ClearAlignBank(0)` + 파일 없을 시 썸네일 null) |
+| 7 | M-2-2 최대 index 가드, M-2-3 역방향 템플릿 저장 실패 시 조기 반환 | 반영 완료 (`MarkSet.MaxIndex`, `if (!isSaved) return`) |
+| 8 | H-2 설정창 표시 시 좌/우 재계산 | 반영 완료 (`IsVisibleChanged` → `SyncMarkPosFromOrientation`) |
+| 9 | L-2 뷰어 이미지, L-3 EOL temp 덮어쓰기 | 반영 완료 (`cmpLast`/`cmpFirst`, `StreamWriter(..., false, ...)`) |
+| 문서 | 계획서 §3.1(L-1), §6.1(M-4), 04 체크리스트 H-1/H-4 시나리오·버전 2.1.0 | 반영 완료 |
+| 제외 | M-2-1 (기존 유지), M-4 (의도된 동작) | — |
 
 ---
 
@@ -123,21 +123,21 @@
 ### 확인 결과 (2026-11-20)
 - 사내 `5b01d8d` = GitHub `73b81c0`(MarkingPC 단계별 tact 로그)과 같은 작업 + **버전 2.0.7 지정**(`MainWindow.xaml` Title `version 2.0.7 [2026.10.12]`, `AssemblyInfo.cs` `2.0.7.0`, `btntestShift` `Visibility="Hidden"`).
 - 따라서 **기준 브랜치 동기화(`base/5b01d8d`)는 필요 없다.**
-- **버전 결정: 2.1.0으로 통일** (정/역 혼합 배열은 대규모 패치). 다음 코드 커밋에서 아래 3곳을 맞춘다(H-3 해결).
+- **버전 결정: 2.1.0으로 통일** (정/역 혼합 배열은 대규모 패치). 아래 3곳을 2.1.0으로 통일했다(H-3 해결).
 
-| 파일 | 현재 (GitHub) | 변경 |
+| 파일 | 변경 전 (GitHub) | 변경 후 |
 |---|---|---|
-| `MainWindow.xaml` Title | `version 2.0.6 [2026.04.07]` | `version 2.1.0 [배포일]` |
+| `MainWindow.xaml` Title | `version 2.0.6 [2026.04.07]` | `version 2.1.0 [2026.11.20]` |
 | `MainWindow.xaml` `btntestShift` | `Visibility="Visible"` | `Visibility="Hidden"` |
 | `Properties/AssemblyInfo.cs` | `2.0.6.0` | `AssemblyVersion` / `AssemblyFileVersion` = `2.1.0.0` |
 
 ### 3단계 — 앞으로 GitHub → 사내 반영은 **패치로** (폴더 통째 복사 금지)
-GitHub 클론에서 작업 브랜치의 변경분만 패치 파일로 만든다.
+사내 저장소(`5b01d8d`)에는 이미 `73b81c0`(tact 로그 + 디코딩 병렬화) 변경분이 들어가 있으므로, **패치 기준점은 `73b81c0`** 으로 잡아야 충돌 없이 적용된다.
 
 ```bash
-git diff origin/main origin/workera/sharp-fermi-7qdwcq -- "*.cs" "*.xaml" "*.csproj" > mixed_layout.patch
+git diff 73b81c0 origin/workera/sharp-fermi-7qdwcq -- "*.cs" "*.xaml" "*.csproj" ":(exclude)HDS_ID_Marker/HDS_ID_Marker/MainWindow.xaml" ":(exclude)HDS_ID_Marker/HDS_ID_Marker/Properties/AssemblyInfo.cs" > mixed_layout.patch
 ```
-사내 저장소에서 먼저 적용 가능 여부를 확인한 뒤 적용한다.
+사내 저장소에서 먼저 적용 가능 여부를 확인한 뒤 적용하고, 사내 기존 2.0.7과 컨텍스트가 다른 버전 파일 2개(`MainWindow.xaml` Title, `AssemblyInfo.cs`)만 2.1.0으로 맞춘다.
 
 ```bash
 git apply --check mixed_layout.patch
@@ -145,6 +145,6 @@ git apply --check mixed_layout.patch
 ```bash
 git apply mixed_layout.patch
 ```
-- 패치에는 **변경된 줄만** 들어 있으므로 `MainWindow.xaml`·`AssemblyInfo.cs` 등 손대지 않은 파일의 2.0.7 내용이 유지된다.
+- 패치에는 **`73b81c0` 이후 변경된 줄만** 들어 있으므로 사내 기존 파일과 충돌이 최소화된다.
 - `--check`에서 실패하는 파일은 사내 쪽과 내용이 다른 파일이다. 파일명을 알려주면 맞춰서 패치를 다시 만든다.
 - 빌드 산출물이 섞이지 않으므로, GitHub 쪽 산출물 추적 해제(A-2)와도 잘 맞는다.
