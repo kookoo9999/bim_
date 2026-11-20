@@ -272,5 +272,6 @@ string GetRowMarkingLocation(int row) =>
 | 확인 | DB `orientation` 컬럼 길이 5자 이상(`top_r`). 부족하면 역방향 저장 시 경고가 뜬다 |
 | 범위 밖 | `MarkingPLC`/`WorkSettingControl`(PLC), **`MarkingTEST`(테스트 모드)** — 실제 설비는 `MarkingPC` 루프만 사용, AOI ID 리더, 마킹 시프트 검사, 티칭창 단발 마킹/리딩 테스트 버튼(현장 미사용. 재사용 시 반대 방향 블록 Disable·`GetHeadFlip` 적용 필요) |
 | 현장 확인 | 첫 사이클(시작번호 2) 마킹 검사: 역방향 열(이 제품)은 고객1이 폐기 strip(화면 좌측)에 찍힌다. 그 위치에 기판이 없어 인식 불량 알람이 나면 "lot 첫 사이클의 폐기 strip 고객1 검사 생략"을 적용한다 |
-| 저장소 | 원격 기준점에 로컬 `5b01d8d`(2.0.7)가 없음 → `base/5b01d8d` 브랜치로 올린 뒤 병합 (`05_CODE_REVIEW_opus.md` §6) |
+| 배포 버전 | **2.1.0** (`MainWindow.xaml` Title·`AssemblyInfo.cs` 통일, `btntestShift` 숨김). 사내 `5b01d8d`(2.0.7)는 tact 로그 + 버전 지정뿐이라 기준 동기화 불필요 (`05_CODE_REVIEW_opus.md` §6) |
+| 반영 방식 | GitHub → 사내 반영은 폴더 통째 복사 대신 **패치(`git diff` / `git apply`)** 로 한다 (`05_CODE_REVIEW_opus.md` §6) |
 | 별도 버그 | `ModelManager.RestoreSelectedModel` `:115`에서 `MarkingDirection`이 `MarkingLeft`로 덮어써짐(별도 작업) |
