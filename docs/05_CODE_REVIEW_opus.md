@@ -65,7 +65,7 @@
 | # | 내용 | 조치 |
 |---|---|---|
 | A-1 | `04_TEST_CHECKLIST.md`는 `5b01d8d` 대비 검증을 전제로 한다. 그런데 원격 브랜치 기준점에 `5b01d8d`가 없어서, **체크리스트 기준 코드와 원격 코드가 서로 다를 수 있다**(H-3과 같은 원인). | 원격 기준점 정리 후 실기 테스트 |
-| A-2 | 빌드 산출물이 추적되고 있음(§1) | 추적 해제 커밋 따로 |
+| A-2 | 빌드 산출물이 추적되고 있음(§1) | **완료** : `obj/`, `.vs/`, `PCS/bin/`, `HDS_ID_Marker/bin/` 빌드 출력 964개 추적 해제. 프로젝트가 HintPath로 참조하는 `HDS_ID_Marker/bin`의 외부 DLL 3개(`WPFToolkit.dll`, `WPFToolkit.Extended.dll`, `System.Windows.Controls.DataVisualization.Toolkit.dll`)와 `packages/`, 이미지 리소스는 유지 |
 | A-3 | 04 체크리스트에 H-1 시나리오(AABB 마킹 → 역방향 초기화 → 취소 → AAAA 마킹 시 이중 각인 없음)와 H-4 시나리오(수동 번호 입력 → 첫 사이클 전 중단 → 재시작 시 ITS↔DB 일치) 추가 권장 | 체크리스트 보강 |
 
 ---
