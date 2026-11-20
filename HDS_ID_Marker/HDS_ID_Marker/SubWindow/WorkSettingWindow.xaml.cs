@@ -1599,6 +1599,8 @@ namespace HDS_ID_Marker.SubWindow
                         if (File.Exists(file)) File.Delete(file);
                     }
                     ptrMain.PCSInstance.Visions[0].ClearAlignBank(1);
+                    imgtemplate.Source = null;
+                    imgAlign.Source = null;
                     ptrMain.model.markingInformation.RevBaseTopY = double.NaN;
                     ptrMain.model.markingInformation.RevBaseBotY = double.NaN;
                     ptrMain.model.markingInformation.SaveReverseInfo(modelPath);

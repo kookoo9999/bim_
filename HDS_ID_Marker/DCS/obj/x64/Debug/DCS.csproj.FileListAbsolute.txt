@@ -15,6 +15,4 @@ D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\x64\Debug\DCS.csproj.Up2Date
 D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\x64\Debug\DCS.dll
 D:\BGA_ID_MARKING\HDS_ID_Marker\DCS\obj\x64\Debug\DCS.pdb
 D:\BGA_ID_MARKING\bin\dll\x64\OpenCvSharpExtern.dll
-D:\BGA_ID_MARKING\bin\dll\x86\OpenCvSharpExtern.dll
-D:\BGA_ID_MARKING\bin\dll\x86\opencv_videoio_ffmpeg451.dll
-D:\BGA_ID_MARKING\bin\dll\x64\opencv_videoio_ffmpeg451_64.dll
+D:\BGA_ID_MARKING\bin\dll\x64\opencv_videoio_ffmpeg4130_64.dll

@@ -1101,7 +1101,8 @@ namespace HDS_ID_Marker
                 if (isExistLot())
                 {
                     // ITS 에는 완성 strip 이 기록되므로, 이번 사이클에 기록될 완성 번호로 중복을 확인한다.
-                    ITSHistoryWindow itsHistory = new ITSHistoryWindow(ptrMain, ptrMain.model.lot.ToString() + " " + GetCompletedStrip(0, ptrMain.model.stripID).ToString("D4"));
+                    // ITSHistoryWindow 는 MainWindow.lots[0] 파일을 조회하므로 1열 lot 번호와 일치시켜 비교한다.
+                    ITSHistoryWindow itsHistory = new ITSHistoryWindow(ptrMain, MainWindow.lots[0] + " " + GetCompletedStrip(0, ptrMain.model.stripID).ToString("D4"));
                     if (itsHistory.GetITSHistory())
                     {
                         itsHistory.ShowDialog();
@@ -1136,7 +1137,7 @@ namespace HDS_ID_Marker
                                 if (int.TryParse(inputNumberBox.m_strResult, out newStripID))
                                 {
                                     // 수동 입력 번호로도 ITS 중복(이번 사이클 완성 번호) 재확인
-                                    ITSHistoryWindow itsRecheck = new ITSHistoryWindow(ptrMain, ptrMain.model.lot.ToString() + " " + GetCompletedStrip(0, newStripID).ToString("D4"));
+                                    ITSHistoryWindow itsRecheck = new ITSHistoryWindow(ptrMain, MainWindow.lots[0] + " " + GetCompletedStrip(0, newStripID).ToString("D4"));
                                     if (itsRecheck.GetITSHistory())
                                     {
                                         itsRecheck.ShowDialog();

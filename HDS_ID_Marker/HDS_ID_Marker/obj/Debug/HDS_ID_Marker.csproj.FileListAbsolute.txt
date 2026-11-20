@@ -83,3 +83,5 @@ D:\BGA_ID_MARKING\HDS_ID_Marker\HDS_ID_Marker\obj\Debug\HDS_ID_M.A8264C9C.Up2Dat
 D:\BGA_ID_MARKING\HDS_ID_Marker\HDS_ID_Marker\obj\Debug\HDS_ID_Marker.exe
 D:\BGA_ID_MARKING\HDS_ID_Marker\HDS_ID_Marker\obj\Debug\HDS_ID_Marker.pdb
 D:\BGA_ID_MARKING\HDS_ID_Marker\HDS_ID_Marker\obj\Debug\HDS_ID_Marker_Content.g.cs
+D:\BGA_ID_MARKING\bin\dll\x64\OpenCvSharpExtern.dll
+D:\BGA_ID_MARKING\bin\dll\x64\opencv_videoio_ffmpeg4130_64.dll

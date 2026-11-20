@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>실제 설비 테스트 체크리스트 (AAAA / AABB)</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 12mm 10mm;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Malgun Gothic", "맑은 고딕", "Segoe UI", sans-serif;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #111;
+    background: #f5f6f8;
+    margin: 0;
+    padding: 16px;
+  }
+  .sheet {
+    max-width: 210mm;
+    margin: 0 auto;
+    background: #fff;
+    padding: 16px 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border-radius: 6px;
+  }
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #1e3a5f;
+  }
+  .toolbar h1 {
+    font-size: 17px;
+    margin: 0;
+    color: #1e3a5f;
+  }
+  .toolbar .sub {
+    font-size: 11px;
+    color: #555;
+    margin-top: 3px;
+  }
+  .btn-print {
+    background: #1e3a5f;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-print:hover { background: #2c5282; }
+
+  .meta-box {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+    padding: 8px 10px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 11px;
+  }
+  .meta-item {
+    border-bottom: 1px dotted #94a3b8;
+    padding: 2px 0;
+  }
+  .meta-item strong { color: #334155; }
+
+  .goal-box {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    padding: 7px 10px;
+    margin-bottom: 14px;
+    font-size: 11px;
+  }
+
+  h2 {
+    font-size: 13.5px;
+    color: #fff;
+    background: #1e3a5f;
+    padding: 5px 10px;
+    margin: 14px 0 6px 0;
+    border-radius: 3px;
+    page-break-after: avoid;
+  }
+  .section-note {
+    font-size: 10.5px;
+    color: #475569;
+    margin: 0 0 6px 2px;
+    page-break-after: avoid;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    table-layout: fixed;
+  }
+  thead { display: table-header-group; }
+  tr { page-break-inside: avoid; }
+  th, td {
+    border: 1px solid #94a3b8;
+    padding: 5px 6px;
+    vertical-align: top;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  th {
+    background: #e2e8f0;
+    color: #0f172a;
+    font-weight: bold;
+    text-align: center;
+    font-size: 11px;
+  }
+  td.col-no { text-align: center; font-weight: bold; color: #1e3a5f; }
+  td.col-menu { font-weight: bold; background: #f8fafc; }
+  td.col-chk { text-align: center; vertical-align: middle; }
+  .chk-wrap {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 10px;
+    color: #475569;
+  }
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #1e3a5f;
+  }
+  .badge {
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: bold;
+  }
+  .b-imp { background: #fee2e2; color: #991b1b; }
+  .b-warn { background: #fef3c7; color: #92400e; }
+  code {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 10px;
+    background: #f1f5f9;
+    padding: 0 3px;
+    border-radius: 2px;
+  }
+
+  .memo-table td { height: 28px; }
+  .memo-table td.memo-label {
+    width: 28%;
+    font-weight: bold;
+    background: #f8fafc;
+    vertical-align: middle;
+  }
+
+  .page-break { page-break-before: always; }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .sheet { box-shadow: none; padding: 0; max-width: none; }
+    .no-print { display: none !important; }
+    h2 { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    th, td.col-menu, .goal-box, .meta-box, .badge, code {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="toolbar">
+    <div>
+      <h1>HDS_ID_Marker 실제 설비 테스트 체크리스트 (AAAA / AABB)</h1>
+      <div class="sub">기준 경로: MarkingPC · MILCL · Keyence · 상/하부 양면 (변경 코드 vs 기존 5b01d8d 비교 검증)</div>
+    </div>
+    <button class="btn-print no-print" onclick="window.print()">🖨️ 인쇄하기 (Ctrl+P)</button>
+  </div>
+
+  <div class="meta-box">
+    <div class="meta-item"><strong>테스트 일자:</strong> 2026-____-____</div>
+    <div class="meta-item"><strong>설비 / 호기:</strong> ____________</div>
+    <div class="meta-item"><strong>모델 / 고객사:</strong> ____________</div>
+    <div class="meta-item"><strong>점검자:</strong> ____________</div>
+  </div>
+
+  <div class="goal-box">
+    <strong>합격 기준:</strong> 기존 배열(<strong>AAAA</strong>)과 혼합 배열(<strong>AABB</strong>) 모두 기존과 동일한 마킹 품질·정밀도·안정성으로 동작하고, 실물 ID·ITS·DB·이어하기·EOL이 일관되게 기록되어야 한다.
+  </div>
+
+  <!-- Section 0 -->
+  <h2>0. 테스트 전 사전 준비</h2>
+  <table>
+    <colgroup>
+      <col style="width:6%"><col style="width:15%"><col style="width:34%"><col style="width:37%"><col style="width:8%">
+    </colgroup>
+    <thead>
+      <tr><th>No</th><th>항목(메뉴)</th><th>확인 절차</th><th>기대 결과</th><th>판정</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-no">0-1</td>
+        <td class="col-menu">DB / 배포 전</td>
+        <td><code>para_custommark</code>, <code>para_intermark</code>, <code>para_ocrmark</code>, <code>para_alignroi</code>의 <code>orientation</code> 컬럼 길이 확인</td>
+        <td>5자 이상 (<code>top_r</code>, <code>bot_r</code> 저장 가능)</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">0-2</td>
+        <td class="col-menu">빌드 / 배포</td>
+        <td><code>AssemblyInfo.cs</code> / <code>MainWindow.xaml</code> 버전 및 <code>btntestShift</code> 숨김(<code>Hidden</code>) 확인 후 빌드</td>
+        <td>빌드 오류 0건, 디버그 TEST 버튼 미노출</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">0-3</td>
+        <td class="col-menu">배포 시점</td>
+        <td>진행 중이던 기존 Lot 마감 여부 확인 (기존 ITS vs 완성 strip 규칙 혼재 방지)</td>
+        <td><strong>Lot 경계</strong>에서 신규 버전 실행</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">0-4</td>
+        <td class="col-menu">백업</td>
+        <td>테스트 대상 모델 DB(<code>para_*</code>, <code>marking_info</code>) 및 모델 폴더 백업</td>
+        <td>롤백 가능 상태 확보</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section 1 -->
+  <h2>1. 기존 배열 (AAAA) 회귀 테스트 — 기존 동작·마킹 품질 1:1 확인</h2>
+  <p class="section-note">※ 조건: 기존 모델 그대로 (역방향 미티칭 상태, 또는 역방향 티칭 후 Lot 입력에서 4열 전부 <strong>정방향</strong> 선택)</p>
+  <table>
+    <colgroup>
+      <col style="width:6%"><col style="width:15%"><col style="width:34%"><col style="width:37%"><col style="width:8%">
+    </colgroup>
+    <thead>
+      <tr><th>No</th><th>항목(메뉴)</th><th>확인 절차</th><th>기대 결과 (기존 대비)</th><th>판정</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-no">1-1</td>
+        <td class="col-menu">모델관리</td>
+        <td>기존 모델 선택 → 시작</td>
+        <td><code>Align.bmp</code>/<code>Align2.bmp</code> 정상 로드, 썸네일(<code>imgtemplate</code>=Align1, <code>imgAlign</code>=Align2) 정상, 레이저 로드 알람 없음</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">1-2</td>
+        <td class="col-menu">티칭</td>
+        <td>티칭 창 진입 → 기본 상태 확인</td>
+        <td><code>정방향</code> / <code>1열</code> 선택, [정방향 파라미터 복사] 비활성, 기존 ROI·파라미터 동일 표시</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">1-3</td>
+        <td class="col-menu">Lot 입력</td>
+        <td>자동시작 → <code>LotWindow</code> 진입</td>
+        <td>역방향 미티칭 모델은 <code>tsRevA~D</code> 토글 4개 <strong>비활성화</strong> + 툴팁에 불가 사유 표시. 티칭 완료 모델이면 4열 전부 정방향</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">1-4</td>
+        <td class="col-menu">마킹정보 확인</td>
+        <td><code>WorkMarkInfoWindow</code> 확인</td>
+        <td>1~4열 고객/사내 ID 미리보기가 기존과 동일, 열 옆 <code>정/역</code> 접미사 미표시</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">1-5</td>
+        <td class="col-menu">자동시작<br>(얼라인)</td>
+        <td><code>stripID=2</code>(RightOnly) 및 <code>stripID&gt;=3</code> 얼라인 수행</td>
+        <td>얼라인 정상 통과. 로그에 정/역 베이스라인 보정 로그 <strong>미출력</strong> (보정값 0)</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">1-6</td>
+        <td class="col-menu">자동시작<br>(레이저 마킹)</td>
+        <td>상·하부 1~4열 연속 마킹 (4~5사이클) 후 실물 확인</td>
+        <td>1~4열 위치·크기·각도·선명도·품질이 <strong>기존과 동일</strong>. (역방향 티칭 모델에서도 역 블록 <code>20~</code> 비활성화로 <strong>이중 각인 없음</strong>)</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">1-7</td>
+        <td class="col-menu">자동시작<br>(로그/택트)</td>
+        <td>Info / Laser / Tact 로그 확인</td>
+        <td><code>[자동시작/열 방향] 정정정정</code>, <code>C1~C4 방향 : 정, 블록군 : 0~</code> 출력. 택트 타임 기존과 동등</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">1-8</td>
+        <td class="col-menu">자동시작<br>(비전 검사)</td>
+        <td><code>CheckMarks2</code> / <code>CheckMarksParallel</code> 디코딩 및 저장 이미지 확인</td>
+        <td>상·하부 1~4열 모두 인식 성공. 저장 이미지 파일명이 각 열 lot(<code>lots[0..3]</code>)과 정확한 strip 번호로 저장됨</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">1-9</td>
+        <td class="col-menu">실물 ID 확인</td>
+        <td>마킹된 스트립 1~4번 바코드 스캔</td>
+        <td>1번(폐기): 한쪽 끝만 <code>0001</code> / 2번~양품: 1~4열 모두 양 끝(사내1·고객1) 동일 번호(<code>0002</code>, <code>0003</code>…)</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">1-10</td>
+        <td class="col-menu">ITS / 이어하기 / EOL</td>
+        <td>4사이클 → 일시정지 → 이어하기 → 2사이클 → 완료(EOL)</td>
+        <td>4절 공통 ITS·이어하기·EOL 체크 항목 통과 (<code>0001</code> 삭제, <code>0002~000(N-1)</code> + <code>EOL</code>)</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section 2 -->
+  <h2 class="page-break">2. 혼합 배열 (AABB) 티칭 &amp; 가드 테스트</h2>
+  <p class="section-note">※ 조건: 1~2열 정방향(A), 3~4열 역방향(B) 자재 투입 상태에서 모델당 <strong>최초 1회 역방향 티칭</strong> 및 가드 검증</p>
+  <table>
+    <colgroup>
+      <col style="width:6%"><col style="width:15%"><col style="width:34%"><col style="width:37%"><col style="width:8%">
+    </colgroup>
+    <thead>
+      <tr><th>No</th><th>항목(메뉴)</th><th>확인 절차</th><th>기대 결과</th><th>판정</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-no">2-1</td>
+        <td class="col-menu">티칭<br>(정방향 기준)</td>
+        <td><code>정방향</code> / <code>1열</code>에서 정방향 ROI 및 모션 기준점 확인</td>
+        <td><code>TopAlignY/TopMarkY/BotMarkY</code> 정상, <code>Align.bmp</code>/<code>Align2.bmp</code> 정상</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">2-2</td>
+        <td class="col-menu">티칭<br>(역방향 전환)</td>
+        <td><code>역방향(180°)</code> 라디오 클릭 → 전환 확인</td>
+        <td>캔버스 비어 있음(최초), [정방향 파라미터 복사 (+180°)] 활성화, 얼라인 썸네일 비어 있음</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">2-3</td>
+        <td class="col-menu">티칭<br>(열 이동)</td>
+        <td><code>티칭 열</code>을 역방향 열(<code>3열</code> 또는 <code>4열</code>) 선택 → [티칭 열 이동] 클릭</td>
+        <td>카메라가 <code>기준점 + StripIter[k]</code>로 이동, 화면에 역방향(180°) 스트립 경계 표시</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">2-4</td>
+        <td class="col-menu">티칭<br>(파라미터 복사)</td>
+        <td>상부·하부 각각 [정방향 파라미터 복사 (+180°)] 클릭</td>
+        <td>크기·포맷·파워·스피드·Flip 복사, <strong>각도 +180° 정규화</strong>, <strong>좌/우(<code>markPos</code>) 반전</strong> 확인</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">2-5</td>
+        <td class="col-menu">티칭<br>(더블클릭 편집)</td>
+        <td>역방향 캔버스에서 기존 마크 ROI 더블클릭 → 확인 후 저장</td>
+        <td>창이 열릴 때 좌/우 라디오가 <strong>역방향 기준</strong>으로 유지 (정방향으로 덮어쓰기 안 됨)</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">2-6</td>
+        <td class="col-menu">티칭<br>(저장 가드)</td>
+        <td>① Y를 <code>0.1mm</code> 이상 이동 후 저장 시도<br>② 역방향 고객 마크 Flip을 정방향과 다르게 변경 후 저장 시도</td>
+        <td>① "역방향 티칭 위치가 아닙니다" 경고 차단<br>② "정방향과 역방향의 반전 인쇄 값은 서로 다를 수 없습니다" 경고 차단</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">2-7</td>
+        <td class="col-menu">티칭<br>(역방향 저장)</td>
+        <td>[티칭 열 이동]으로 정위치 복귀 → 상·하부 ROI 위치 미세 조정 → <strong>저장</strong></td>
+        <td>① <code>Backup_Reverse_*</code> 최초 백업 폴더 생성<br>② DB <code>top_r</code>/<code>bot_r</code> 정상 저장 &amp; <strong>정방향 행 무변경</strong><br>③ <code>Align_R.bmp</code>, <code>Align2_R.bmp</code> 생성 (<code>Align.bmp</code> 무변경)<br>④ <code>Reverse.ini</code> 기록, 정방향 기준 Y 무변경<br>⑤ 레이저 이중 등록 성공, 상태 <code>역방향 상부 : OK, 하부 : OK</code></td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">2-8</td>
+        <td class="col-menu">티칭<br>(복사 재실행)</td>
+        <td>정방향 크기/각도 소폭 변경 후 역방향에서 [정방향 파라미터 복사] 재클릭</td>
+        <td>기존 역방향 ROI 중심 유지한 채 크기·미리보기 각도 갱신</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">2-9</td>
+        <td class="col-menu">티칭<br>(취소 원복)</td>
+        <td>역방향에서 ROI 임의 이동/추가 후 저장 없이 <strong>[취소]</strong> → 티칭 창 재진입</td>
+        <td><code>정방향</code> 화면·뱅크 0 썸네일 복원, 역방향 전환 시 미저장 변경 원복 확인</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">2-10</td>
+        <td class="col-menu">티칭<br>(Stale 감지)</td>
+        <td>정방향 Y를 <code>0.1mm</code> 이상 옮겨 정방향 저장 → <code>Lot 입력</code> 진입 <em>(확인 후 원위치 재저장)</em></td>
+        <td>"정방향 기준점이 변경되었습니다…" 경고, 상태 <code>재티칭 필요</code>, <code>LotWindow</code> 역방향 토글 비활성화 + 사유 툴팁</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">2-11</td>
+        <td class="col-menu">티칭<br>(초기화 격리)</td>
+        <td><em>(선택)</em> 역방향 화면에서 [초기화] 실행 <em>(확인 후 역방향 재티칭)</em></td>
+        <td><code>top_r</code>/<code>bot_r</code>, <code>Align_R/2_R.bmp</code>, 화면 썸네일만 삭제. <strong>정방향 DB·템플릿 100% 보존</strong></td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">2-12</td>
+        <td class="col-menu">가드<br>(미지원 옵션)</td>
+        <td><code>UseAOIMark=true</code> 또는 <code>MakringShiftCheck=true</code> 모델에서 <code>LotWindow</code> 진입</td>
+        <td>역방향 토글 비활성화 + 툴팁에 미지원 사유 표시 (강제 시작 불가)</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section 3 -->
+  <h2 class="page-break">3. 혼합 배열 (AABB) 자동시작 — 얼라인 · 마킹 품질 · 비전 검사</h2>
+  <p class="section-note">※ 조건: 2절 역방향 티칭 완료 후 실제 <strong>AABB</strong> 자재(1~2열 정방향, 3~4열 역방향) 투입</p>
+  <table>
+    <colgroup>
+      <col style="width:6%"><col style="width:15%"><col style="width:34%"><col style="width:37%"><col style="width:8%">
+    </colgroup>
+    <thead>
+      <tr><th>No</th><th>항목(메뉴)</th><th>확인 절차</th><th>기대 결과</th><th>판정</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-no">3-1</td>
+        <td class="col-menu">Lot 입력</td>
+        <td><code>LotWindow</code>에서 A·B=<strong>정방향</strong>, C·D=<strong>역방향</strong> 토글 후 확인</td>
+        <td>차단 없이 통과. (템플릿 누락 등 차단 후 창 닫기 시 전역 <code>orients</code> 미오염)</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">3-2</td>
+        <td class="col-menu">마킹정보 확인</td>
+        <td><code>WorkMarkInfoWindow</code> 확인</td>
+        <td><code>(A열) 정</code>, <code>(B열) 정</code>, <code>(C열) 역</code>, <code>(D열) 역</code> 표시. 역방향 열 ID가 <strong>좌/우 스왑</strong> 규칙대로 계산됨</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">3-3</td>
+        <td class="col-menu">자동시작<br>(첫 사이클 얼라인)</td>
+        <td><code>stripID=2</code> (<code>RightOnly</code>) 얼라인 실행 및 로그 확인</td>
+        <td>1열(정) 2번 ↔ 4열(역) 1번(화면 우측) 매칭 성공.<br>로그: <code>[Align] 정/역 혼합 베이스라인 보정 : +X.XXXX mm</code> — <span class="badge b-imp">반드시 양수(+)</span></td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">3-4</td>
+        <td class="col-menu">자동시작<br>(일반 얼라인)</td>
+        <td><code>stripID&gt;=3</code> (<code>MarkingAlignToROI</code>) 연속 실행</td>
+        <td>1열(정) 얼라인1 ↔ 4열(역) 좌측 얼라인2 매칭 성공, 보정값 <strong>양수(+)</strong> 유지, 1~4열 기울기 보정 정밀도 정상</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">3-5</td>
+        <td class="col-menu">자동시작<br>(마킹 품질)</td>
+        <td>상·하부 1~4열 연속 마킹 후 실물 육안/현미경 확인</td>
+        <td>① 1~2열(<code>0~</code>), 3~4열(<code>20~</code>)만 각인 — <span class="badge b-imp">이중 각인 없음</span><br>② 3~4열(역) 180° 회전 방향·위치·크기·선명도가 1~2열(정) 및 기존 <code>AAAA</code>와 <strong>동등한 품질</strong><br>③ Laser 로그: <code>C1~2 정(0~)</code>, <code>C3~4 역(20~)</code> 및 위치 스왑 기록</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">3-6</td>
+        <td class="col-menu">실물 ID 교차검증</td>
+        <td>시작번호 <code>2</code>로 4~5사이클 마킹 후 스트립 1~4번을 <strong>4개 열 모두</strong> 스캔</td>
+        <td>① 1번(폐기): 한쪽 끝만 <code>0001</code><br>② <span class="badge b-imp">2번(양품)</span>: 1~2열(정) · 3~4열(역) <strong>4열 모두 양 끝(사내1·고객1) <code>0002</code> 일치</strong><br>③ 3번(양품): 4열 모두 양 끝 <code>0003</code> 일치<br>④ 마지막 N(폐기): 한쪽 끝만 <code>000N</code></td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">3-7</td>
+        <td class="col-menu">자동시작<br>(첫 사이클 검사)</td>
+        <td><code>stripID=2</code> 마킹 직후 <code>RunMarkCheck</code> 알람 여부 확인</td>
+        <td><span class="badge b-warn">현장 집중 확인</span> 역방향 열(3~4열) 고객1은 폐기 strip(좌측)에 각인됨 → 기판 부재로 <code>COGNITION_FAIL</code> 알람 발생 여부 기록</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">3-8</td>
+        <td class="col-menu">자동시작<br>(비전 디코딩)</td>
+        <td><code>stripID&gt;=3</code> 상·하부 1~4열 비전 검사 및 저장 이미지 확인</td>
+        <td>① 1~2열(정) &amp; 3~4열(역, 180°) 상·하부 디코딩 성공 (폴백 알고리즘 포함)<br>② 3~4열 저장 <code>.jpg</code> 파일명의 lot(<code>lots[2..3]</code>) &amp; <strong>strip 번호</strong>가 실물과 일치</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">3-9</td>
+        <td class="col-menu">모델관리<br>(모델 전환)</td>
+        <td><code>AABB</code> 테스트 후 다른 모델 선택 → <code>LotWindow</code> 진입</td>
+        <td>이전 <code>AABB</code>가 남지 않고 4열 전부 <code>정방향</code>으로 초기화됨</td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="section-note">※ (선택) <code>BBAA</code> 시편 테스트 가능 시: 1~2사이클 실행해 베이스라인 보정 로그가 <strong>음수(-)</strong>로 출력되는지 추가 확인</p>
+
+  <!-- Section 4 -->
+  <h2>4. ITS · DB · 정지/이어하기 · EOL 공통 테스트 (AAAA / AABB 각각 수행)</h2>
+  <table>
+    <colgroup>
+      <col style="width:6%"><col style="width:15%"><col style="width:31%"><col style="width:36%"><col style="width:6%"><col style="width:6%">
+    </colgroup>
+    <thead>
+      <tr><th>No</th><th>항목(메뉴)</th><th>확인 절차</th><th>기대 결과</th><th>AAAA</th><th>AABB</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-no">4-1</td>
+        <td class="col-menu">ITS / DB<br>(매 사이클 기록)</td>
+        <td>시작번호 <code>2</code>로 <code>S=2, 3, 4</code> 진행 후 4열 ITS(<code>.lmh</code>, temp) &amp; DB <code>work_history</code> 확인</td>
+        <td>① <code>S=2</code>→ITS <code>0001</code>, DB <code>FirstID=2, StripID=1</code><br>② <code>S=3</code>→ITS <code>0002</code>, DB <code>FirstID=2, StripID=2</code><br>③ <code>S=4</code>→ITS <code>0003</code>, DB <code>FirstID=2, StripID=3</code><br>④ 4열 고객 ID가 실물 각인 문자열과 100% 일치</td>
+        <td class="col-chk"><input type="checkbox"></td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">4-2</td>
+        <td class="col-menu">일시정지 →<br>이어하기</td>
+        <td><code>0003</code> 기록·피딩 후 일시정지(<code>STOP</code>) → 자동시작 재실행 (<code>WorkHistoryWindow</code>)</td>
+        <td>① 시작 번호 <strong><code>5</code></strong>(<code>3 + 2</code>) 자동 세팅<br>② 팝업: <code>(ITS 마지막 완성 strip : 3 → 이번 사이클 완성 strip : 4)</code> 표시<br>③ 재개 후 ITS <strong><code>0004</code></strong> 연속 기록, DB <code>FirstID=2</code> 유지</td>
+        <td class="col-chk"><input type="checkbox"></td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">4-3</td>
+        <td class="col-menu">ITS 중복 차단</td>
+        <td><code>0004</code> 기록 상태에서 수동으로 기준 번호 <strong><code>5</code></strong>(완성 <code>0004</code>) 입력 시도</td>
+        <td><code>ITSHistoryWindow</code>에서 <code>lots[0] + " 0004"</code> 중복 감지 → <strong><code>OVERLAP_MARKING</code> 즉시 차단</strong></td>
+        <td class="col-chk"><input type="checkbox"></td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+      <tr>
+        <td class="col-no">4-4</td>
+        <td class="col-menu">작업 종료<br>(EOL)</td>
+        <td>이어하기 후 1~2사이클 추가 진행 → 작업 완료(<code>WorkEndWindow</code>) 후 4열 <code>ITS</code>·<code>ITS(temp)</code> 확인</td>
+        <td>① 첫 사이클 임시 기록 <strong><code>0001</code> 행 삭제</strong> (정식·temp 양쪽)<br>② 최종 내용: <strong><code>0002 ~ 000(N-1)</code> + <code>EOL</code></strong> (양품만 남음)</td>
+        <td class="col-chk"><input type="checkbox"></td>
+        <td class="col-chk"><input type="checkbox"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section 5 -->
+  <h2>5. 현장 테스트 결과 메모 / 특이사항</h2>
+  <table class="memo-table">
+    <tbody>
+      <tr><td class="memo-label">AAAA 마킹 품질 (기존 대비)</td><td></td></tr>
+      <tr><td class="memo-label">AABB 마킹 품질 &amp; 위치 정밀도</td><td></td></tr>
+      <tr><td class="memo-label">AABB 얼라인 베이스라인 보정 로그값</td><td></td></tr>
+      <tr><td class="memo-label">첫 사이클(stripID=2) 역방향 검사 알람 여부</td><td></td></tr>
+      <tr><td class="memo-label">기타 이슈 / 개선 요청 사항</td><td style="height:56px;"></td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

@@ -36,6 +36,4 @@ D:\BGA_ID_MARKING\HDS_ID_Marker\Common.Control\obj\x64\Debug\Common.C.523BA0ED.U
 D:\BGA_ID_MARKING\HDS_ID_Marker\Common.Control\obj\x64\Debug\Common.Control.dll
 D:\BGA_ID_MARKING\HDS_ID_Marker\Common.Control\obj\x64\Debug\Common.Control.pdb
 D:\BGA_ID_MARKING\HDS_ID_Marker\bin\dll\x64\OpenCvSharpExtern.dll
-D:\BGA_ID_MARKING\HDS_ID_Marker\bin\dll\x86\OpenCvSharpExtern.dll
-D:\BGA_ID_MARKING\HDS_ID_Marker\bin\dll\x86\opencv_videoio_ffmpeg451.dll
-D:\BGA_ID_MARKING\HDS_ID_Marker\bin\dll\x64\opencv_videoio_ffmpeg451_64.dll
+D:\BGA_ID_MARKING\HDS_ID_Marker\bin\dll\x64\opencv_videoio_ffmpeg4130_64.dll

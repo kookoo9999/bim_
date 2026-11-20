@@ -510,6 +510,8 @@ namespace DCS.Camera
             {
                 align = null;
                 align2 = null;
+                AlignTemplateBmp = null;
+                AlignTemplateBmp2 = null;
             }
         }
 
