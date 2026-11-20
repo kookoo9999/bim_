@@ -79,7 +79,7 @@ MarkRecipe GetRecipe(int row, Surface s) => orients[row] ? Rev[s] : Fwd[s];
 
 ### 3.1 화면
 - 상단에 **정방향 / 역방향** 라디오를 둔다. 캔버스에는 선택한 쪽의 ROI만 그리고, 메모리에는 정/역을 항상 함께 보관한다.
-- **티칭 열 선택**(1~4): 기존 `btnMove1Row~4Row`와 연동한다. 선택한 열 k의 위치(`기준점 + StripIter[k]`)로 이동한다.
+- **티칭 열 선택**(1~4) + **[티칭 열 이동]**: 선택한 열 k의 **카메라 위치**(`기준점 + StripIter[k]`)로 이동한다. 기존 `btnMove1Row~4Row`는 **레이저 위치(+CamToY)** 이동 버튼이라 연동하지 않고 그대로 둔다. 카메라 이동/마크 이동 버튼은 선택한 티칭 열의 간격을 반영한다.
 - 역방향 모드에서 **"정방향 파라미터 복사 + 각도 보정"** 버튼을 누르면 같은 `reference`(고객1/고객2/사내1)를 가진 정방향 마크에서 다음을 처리한다.
   - 그대로 복사: size, format, gap, power, speed, flip, shape
   - 각도: `degree + 180`을 Keyence 허용 범위로 정규화한다.
@@ -175,6 +175,7 @@ string GetRowMarkingLocation(int row) =>
 - 기록 내용: 사내 ID = `lots[i] + (S−1)`, 고객 ID = 열 i의 고객 ID를 strip S−1로 생성한 값(위치 보정 없이 strip 번호를 직접 지정). `ConvertInternal1ID`는 ITS 경로에서 더 이상 쓰지 않는다.
 - 첫 strip(시작번호 − 1 = `fisrtID − 1`) 레코드는 첫 사이클 직후 중단 시 이어하기 번호 계산(ITS 마지막 레코드 기준)을 위해 기록해 두고, EOL을 쓸 때 ITS 파일(정식/temp)에서 지운다. 앞/뒤 strip에 마크가 나눠 찍히는 경우에만 적용한다.
 - 실제 구현은 고객사 설정에 따라 일반화되어 있다: 이전 strip('우')에 찍히는 마크가 있으면 완성 strip = S−1, 없으면 S. 같은 쪽 설정 고객("사내1 좌, 고객1 좌" 등)은 기존 결과와 동일하다.
+- **단일 측 마크 모델(확정)**: 마크가 한쪽에만 있는 모델에 혼합 배열을 쓰면 열 방향에 따라 물리적 완성 시점이 다르다(정: S, 역: S−1). 각 열의 lot 파일에는 그 열의 완성 순서대로 기록되며, 첫 strip 삭제는 마크가 앞/뒤 strip에 나눠 찍히는 경우에만 적용한다. 의도된 동작으로 유지한다(`05_CODE_REVIEW_opus.md` M-4).
 
 **사이클별 결과 (시작번호 2, 이 제품 기준)**
 
@@ -271,4 +272,5 @@ string GetRowMarkingLocation(int row) =>
 | 확인 | DB `orientation` 컬럼 길이 5자 이상(`top_r`). 부족하면 역방향 저장 시 경고가 뜬다 |
 | 범위 밖 | `MarkingPLC`/`WorkSettingControl`(PLC), **`MarkingTEST`(테스트 모드)** — 실제 설비는 `MarkingPC` 루프만 사용, AOI ID 리더, 마킹 시프트 검사, 티칭창 단발 마킹/리딩 테스트 버튼(현장 미사용. 재사용 시 반대 방향 블록 Disable·`GetHeadFlip` 적용 필요) |
 | 현장 확인 | 첫 사이클(시작번호 2) 마킹 검사: 역방향 열(이 제품)은 고객1이 폐기 strip(화면 좌측)에 찍힌다. 그 위치에 기판이 없어 인식 불량 알람이 나면 "lot 첫 사이클의 폐기 strip 고객1 검사 생략"을 적용한다 |
+| 저장소 | 원격 기준점에 로컬 `5b01d8d`(2.0.7)가 없음 → `base/5b01d8d` 브랜치로 올린 뒤 병합 (`05_CODE_REVIEW_opus.md` §6) |
 | 별도 버그 | `ModelManager.RestoreSelectedModel` `:115`에서 `MarkingDirection`이 `MarkingLeft`로 덮어써짐(별도 작업) |
