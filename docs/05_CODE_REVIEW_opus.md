@@ -139,7 +139,7 @@ git show --stat 5b01d8d
    ```
 3. 1의 폴더를 GitHub 클론에 덮어쓴다. **빌드 산출물(`obj`, `bin`, `.vs`)은 빼고** 복사한다(Windows 예시).
    ```bash
-   robocopy D:\사내\HDS_ID_Marker D:\githubim_\HDS_ID_Marker /E /XD obj bin .vs
+   robocopy D:\사내\HDS_ID_Marker D:\github\bim_\HDS_ID_Marker /E /XD obj bin .vs
    ```
 4. 커밋하고 올린다.
    ```bash
