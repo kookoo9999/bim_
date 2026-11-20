@@ -115,23 +115,58 @@
 ## 6. 원격 기준점 정리 절차 (H-3, A-1)
 
 ### 현황
-- 원격 `main`은 `3d0abd0 init commit`(2.0.6 스냅샷)에서 시작하며, 로컬 `5b01d8d`(2.0.7, tact 체크 로그)가 **원격에 없다.**
-- 그래서 이 브랜치의 코드는 `5b01d8d`가 아닌 init 기준이다. 로컬에 반영하는 방식에 따라 2.0.7 변경이 빠지거나 충돌할 수 있다.
+- 원격 GitHub `main`은 `3d0abd0 init commit`(2.0.6 스냅샷)에서 시작하며, 사내 저장소 `5b01d8d`(2.0.7, tact 체크 로그)가 **GitHub에 없다.**
+- 운용 방식: 사내 저장소(사내망 리모트)와 GitHub 클론 사이를 **프로젝트 폴더 통째 복사**로 오간다. 사내 저장소에 GitHub 리모트를 추가하기는 어렵다(망 분리).
+- 폴더를 통째로 복사하면 이번 작업에서 **건드리지 않은 파일까지** GitHub 버전(2.0.6 기준)으로 덮어써진다. `MainWindow.xaml`·`AssemblyInfo.cs` 버전 되돌림(H-3)이 이렇게 생겼다.
 
-### 1단계 — 로컬에서 실행 (사용자)
-로컬 저장소가 이 GitHub 저장소와 이력이 달라도 그대로 동작하는 방법이다. `5b01d8d`를 원격에 **별도 브랜치**로 올린다(기존 브랜치는 변경하지 않음).
+### 1단계 — 차이 확인 (사내 저장소에서)
+`5b01d8d`가 GitHub 기준과 무엇이 다른지 먼저 확인한다.
 
 ```bash
-git remote add github https://github.com/kookoo9999/bim_.git
+git log --oneline -8 5b01d8d
 ```
 ```bash
-git push github 5b01d8d:refs/heads/base/5b01d8d
+git show --stat 5b01d8d
 ```
-- 첫 줄은 원격이 이미 등록돼 있으면 생략한다(`git remote -v`로 확인).
-- 로컬 저장소의 원격(origin)이 이미 이 GitHub 저장소라면 `git push origin 5b01d8d:refs/heads/base/5b01d8d` 한 줄이면 된다.
+- 결과가 버전·TEST 버튼 등 몇 개 파일뿐이면 → 그 파일 내용만 GitHub 브랜치에 반영하면 끝난다(2단계 생략 가능).
+- 소스 변경이 많거나 확실하지 않으면 → 2단계.
 
-### 2단계 — 원격 작업 (Claude)
-1. `base/5b01d8d`와 init(`3d0abd0`)의 차이를 확인한다(버전·TEST 버튼 외에 바뀐 소스가 있는지).
-2. 작업 브랜치에 `base/5b01d8d`를 병합한다(이력이 달라도 병합 가능, 강제 푸시 없음). 충돌이 생기면 2.0.7 쪽을 기준으로 정리한다.
-3. 병합 결과 기준으로 H-3(버전/TEST 버튼)을 확인하고, 이후 §5 수정 계획을 진행한다.
-4. 빌드 산출물(`.vs`, `obj`, `bin`) 추적 해제는 별도 커밋으로 한다(로컬 파일은 지워지지 않음).
+### 2단계 — 사내 기준 소스를 GitHub 별도 브랜치로 올리기 (GitHub 클론 PC에서)
+1. 사내 저장소에서 `5b01d8d` 상태의 프로젝트 폴더를 준비한다(작업 중 변경이 없는 깨끗한 체크아웃).
+2. GitHub 클론에서 `main` 기준 새 브랜치를 만든다.
+   ```bash
+   git switch -c base/5b01d8d origin/main
+   ```
+3. 1의 폴더를 GitHub 클론에 덮어쓴다. **빌드 산출물(`obj`, `bin`, `.vs`)은 빼고** 복사한다(Windows 예시).
+   ```bash
+   robocopy D:\사내\HDS_ID_Marker D:\githubim_\HDS_ID_Marker /E /XD obj bin .vs
+   ```
+4. 커밋하고 올린다.
+   ```bash
+   git add -A
+   ```
+   ```bash
+   git commit -m "사내 5b01d8d 기준 소스 동기화"
+   ```
+   ```bash
+   git push origin base/5b01d8d
+   ```
+→ 이 브랜치와 `main`의 차이 = GitHub에 빠져 있던 사내 변경분. Claude가 작업 브랜치에 병합(강제 푸시 없음, 충돌 시 2.0.7 기준)한 뒤 수정 계획을 진행한다.
+
+### 3단계 — 앞으로 GitHub → 사내 반영은 **패치로** (폴더 통째 복사 금지)
+GitHub 클론에서 작업 브랜치의 변경분만 패치 파일로 만든다.
+
+```bash
+git diff origin/main origin/workera/sharp-fermi-7qdwcq -- "*.cs" "*.xaml" "*.csproj" > mixed_layout.patch
+```
+사내 저장소에서 먼저 적용 가능 여부를 확인한 뒤 적용한다.
+
+```bash
+git apply --check mixed_layout.patch
+```
+```bash
+git apply mixed_layout.patch
+```
+- 패치에는 **변경된 줄만** 들어 있으므로 `MainWindow.xaml`·`AssemblyInfo.cs` 등 손대지 않은 파일의 2.0.7 내용이 유지된다.
+- `--check`에서 실패하는 파일은 사내 쪽과 내용이 다른 파일이다. 파일명을 알려주면 맞춰서 패치를 다시 만든다.
+- 빌드 산출물이 섞이지 않으므로, GitHub 쪽 산출물 추적 해제(A-2)와도 잘 맞는다.
